@@ -4,6 +4,8 @@ Aplicación web open source para el cálculo de peso y balance (Weight & Balance
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+### 🚀 [Demo en vivo](https://wb-aviation.pages.dev/)
+
 ![wb-aviation](./public/Captura%20de%20pantalla%202025-08-20%20a%20la(s)%2000.06.41.png)
 
 **Aeronaves soportadas:** King Air E90 (más próximamente)
