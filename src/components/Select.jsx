@@ -1,6 +1,23 @@
 import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 
+/**
+ * Base Select component using render props pattern
+ * Provides state management for custom select implementations
+ * 
+ * @param {Object} props - Component props
+ * @param {Function} props.children - Render prop function receiving select state
+ * @param {*} props.value - Current selected value
+ * @param {Function} props.onValueChange - Callback when value changes
+ * @returns {JSX.Element} Select container
+ * 
+ * @example
+ * <Select value={selected} onValueChange={setSelected}>
+ *   {({ value, onValueChange, isOpen, setIsOpen }) => (
+ *     // Custom select implementation
+ *   )}
+ * </Select>
+ */
 export function Select({ children, value, onValueChange }) {
   const [isOpen, setIsOpen] = useState(false)
   
@@ -11,6 +28,14 @@ export function Select({ children, value, onValueChange }) {
   )
 }
 
+/**
+ * Select trigger button that opens the dropdown
+ * 
+ * @param {Object} props - Component props
+ * @param {React.ReactNode} props.children - Content to display (typically SelectValue)
+ * @param {Function} props.onClick - Click handler to toggle dropdown
+ * @returns {JSX.Element} Styled button element
+ */
 export function SelectTrigger({ children, onClick }) {
   return (
     <button
@@ -24,6 +49,15 @@ export function SelectTrigger({ children, onClick }) {
   )
 }
 
+/**
+ * Displays the selected option label or placeholder text
+ * 
+ * @param {Object} props - Component props
+ * @param {string} props.placeholder - Text to show when no option is selected
+ * @param {*} props.value - Currently selected value
+ * @param {Array<{value: *, label: string}>} [props.options=[]] - Available options
+ * @returns {JSX.Element} Span with selected label or placeholder
+ */
 export function SelectValue({ placeholder, value, options = [] }) {
   const selectedOption = options.find(opt => opt.value === value)
   return (
@@ -33,6 +67,14 @@ export function SelectValue({ placeholder, value, options = [] }) {
   )
 }
 
+/**
+ * Dropdown content container for select options
+ * 
+ * @param {Object} props - Component props
+ * @param {React.ReactNode} props.children - SelectItem components
+ * @param {boolean} props.isOpen - Whether dropdown is visible
+ * @returns {JSX.Element|null} Dropdown container or null if closed
+ */
 export function SelectContent({ children, isOpen }) {
   if (!isOpen) return null
   
@@ -43,6 +85,15 @@ export function SelectContent({ children, isOpen }) {
   )
 }
 
+/**
+ * Individual option item in the select dropdown
+ * 
+ * @param {Object} props - Component props
+ * @param {*} props.value - Value of this option
+ * @param {React.ReactNode} props.children - Display content
+ * @param {Function} props.onSelect - Callback when item is selected
+ * @returns {JSX.Element} Clickable option item
+ */
 export function SelectItem({ value, children, onSelect }) {
   return (
     <div
@@ -54,6 +105,28 @@ export function SelectItem({ value, children, onSelect }) {
   )
 }
 
+/**
+ * Complete select component with all functionality built-in
+ * Simplified API for common use cases
+ * 
+ * @param {Object} props - Component props
+ * @param {*} props.value - Currently selected value
+ * @param {Function} props.onValueChange - Callback when selection changes
+ * @param {string} props.placeholder - Placeholder text when no selection
+ * @param {Array<{value: *, label: string}>} props.options - Available options
+ * @returns {JSX.Element} Complete select component
+ * 
+ * @example
+ * <SimpleSelect 
+ *   value={aircraft}
+ *   onValueChange={setAircraft}
+ *   placeholder="Select aircraft"
+ *   options={[
+ *     { value: "king-air-90", label: "King Air 90" },
+ *     { value: "cessna-172", label: "Cessna 172" }
+ *   ]}
+ * />
+ */
 export function SimpleSelect({ value, onValueChange, placeholder, options }) {
   const [isOpen, setIsOpen] = useState(false)
   

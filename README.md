@@ -94,6 +94,25 @@ npm run lint
 ```
 Ejecuta ESLint para verificar el código
 
+### Testing
+```bash
+# Run tests
+npm test
+
+# Run tests with UI
+npm run test:ui
+
+# Generate coverage report
+npm run test:coverage
+```
+
+El proyecto incluye tests unitarios usando **Vitest** y **Testing Library**:
+- ✅ Tests de componentes UI (Badge, Card, Input, Select, Separator)
+- ✅ Tests de lógica de cálculo (calculations.js)
+- ✅ Tests del componente principal (App.jsx)
+
+Los reportes de cobertura se generan en la carpeta `coverage/`.
+
 ## 📂 Estructura del Proyecto
 
 ```

@@ -1,3 +1,16 @@
+/**
+ * Badge component for displaying small labels or status indicators
+ * 
+ * @param {Object} props - Component props
+ * @param {React.ReactNode} props.children - Content to display inside the badge
+ * @param {string} [props.variant="default"] - Visual variant (default, destructive, outline, secondary)
+ * @param {string} [props.className=""] - Additional CSS classes
+ * @returns {JSX.Element} Badge component
+ * 
+ * @example
+ * <Badge variant="destructive">Error</Badge>
+ * <Badge variant="secondary">Info</Badge>
+ */
 export function Badge({ children, variant = "default", className = "" }) {
   const variants = {
     default: "bg-gray-900 text-gray-50 hover:bg-gray-900/80",

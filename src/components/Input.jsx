@@ -1,3 +1,14 @@
+/**
+ * Styled input component with consistent styling and focus states
+ * 
+ * @param {Object} props - Component props
+ * @param {string} [props.className=""] - Additional CSS classes
+ * @param {Object} props - All other standard input props (type, value, onChange, placeholder, etc.)
+ * @returns {JSX.Element} Styled input element
+ * 
+ * @example
+ * <Input type="number" placeholder="Enter weight" value={weight} onChange={handleChange} />
+ */
 export function Input({ className = "", ...props }) {
   return (
     <input
@@ -7,6 +18,18 @@ export function Input({ className = "", ...props }) {
   )
 }
 
+/**
+ * Label component for form inputs with consistent styling
+ * 
+ * @param {Object} props - Component props
+ * @param {React.ReactNode} props.children - Label text
+ * @param {string} [props.htmlFor] - ID of the associated input element
+ * @param {string} [props.className=""] - Additional CSS classes
+ * @returns {JSX.Element} Label element
+ * 
+ * @example
+ * <Label htmlFor="pilot-weight">Pilot Weight (lbs)</Label>
+ */
 export function Label({ children, htmlFor, className = "" }) {
   return (
     <label

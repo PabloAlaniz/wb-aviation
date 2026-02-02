@@ -14,6 +14,25 @@ import {
   ComposedChart,
 } from 'recharts'
 
+/**
+ * Interactive chart displaying the Center of Gravity (CG) envelope
+ * Shows the aircraft's operational limits and current operating point
+ * 
+ * @param {Object} props - Component props
+ * @param {Object} props.aircraft - Aircraft configuration object containing:
+ *   - cgEnvelope: {points: Array<{arm: number, weight: number}>} - CG envelope polygon points
+ *   - tcds: string - Type Certificate Data Sheet reference
+ * @param {number} props.currentCG - Current center of gravity position (inches aft of datum)
+ * @param {number} props.currentWeight - Current aircraft total weight (lbs)
+ * @returns {JSX.Element} Scatter chart with CG envelope and operating point
+ * 
+ * @example
+ * <CGEnvelopeChart 
+ *   aircraft={aircraftData}
+ *   currentCG={152.5}
+ *   currentWeight={9500}
+ * />
+ */
 export function CGEnvelopeChart({ aircraft, currentCG, currentWeight }) {
   // Preparar datos del envolvente para formar un polígono cerrado
   const envelopePoints = aircraft.cgEnvelope.points
