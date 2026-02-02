@@ -1,3 +1,18 @@
+/**
+ * Weight & Balance Calculator Application
+ * 
+ * Main application component for calculating aircraft weight and balance.
+ * Supports multiple aircraft types with full envelope validation and safety checks.
+ * 
+ * Features:
+ * - Real-time weight and CG calculations
+ * - Visual CG envelope validation
+ * - Safety warnings and recommendations
+ * - Data verification indicators
+ * 
+ * @see https://github.com/PabloAlaniz/wb-aviation
+ * @license MIT
+ */
 import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./components/Card"
 import { SimpleSelect } from "./components/Select"
