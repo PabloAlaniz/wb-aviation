@@ -20,8 +20,20 @@ jobs:
           node-version: 20
           cache: npm
 
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install coverage tools if missing
+        run: |
+          # Install vitest + coverage if not present
+          if ! npm ls vitest >/dev/null 2>&1; then
+            npm install -D vitest @vitest/coverage-v8
+          elif ! npm ls @vitest/coverage-v8 >/dev/null 2>&1; then
+            npm install -D @vitest/coverage-v8
+          fi
+
       - name: Run tests with coverage
-        run: npm ci && npx vitest run --coverage
+        run: npx vitest run --coverage
         continue-on-error: true
 
       - name: Report coverage to dashboard
