@@ -101,28 +101,47 @@ npm run preview
 
 Previsualiza el build de producción localmente
 
-### Linting
+### Tests
 
 ```bash
-npm run lint
+npm test              # Ejecuta los tests una vez
+npm run test:watch    # Modo watch
+npm run test:coverage # Reporte de cobertura
 ```
 
-Ejecuta ESLint para verificar el código
+### Linting y Formato
+
+```bash
+npm run lint          # ESLint
+npm run format        # Formatea el código con Prettier
+npm run format:check  # Verifica formato (usado en CI)
+```
 
 ## 📂 Estructura del Proyecto
 
 ```
 wb-aviation/
 ├── src/
-│   ├── components/         # Componentes reutilizables
-│   │   ├── Badge.jsx      # Componente de badge/etiqueta
-│   │   ├── Card.jsx       # Componente de tarjeta
+│   ├── components/         # Componentes de UI
+│   │   ├── AircraftInfo.jsx     # Resumen y metadata de la aeronave
+│   │   ├── Badge.jsx            # Badge/etiqueta
+│   │   ├── Card.jsx             # Tarjeta
 │   │   ├── CGEnvelopeChart.jsx  # Gráfico de envolvente CG
-│   │   ├── Input.jsx      # Input personalizado
-│   │   ├── Select.jsx     # Select personalizado
-│   │   └── Separator.jsx  # Separador visual
-│   ├── App.jsx            # Componente principal con lógica
+│   │   ├── DataSources.jsx      # Referencias y fuentes oficiales
+│   │   ├── Input.jsx            # Input personalizado
+│   │   ├── ResultsPanel.jsx     # Resultados y veredicto de despegue
+│   │   ├── SafetyAlerts.jsx     # Alertas de seguridad
+│   │   ├── Select.jsx           # Select personalizado
+│   │   ├── Separator.jsx        # Separador visual
+│   │   └── StationForm.jsx      # Formulario de carga (data-driven)
+│   ├── data/
+│   │   └── aircraft.js     # Base de datos de aeronaves
+│   ├── utils/
+│   │   ├── calculations.js      # Lógica de cálculo W&B
+│   │   └── calculations.test.js # Tests unitarios
+│   ├── App.jsx            # Componente principal (composición)
 │   └── main.jsx           # Punto de entrada
+├── docs/                  # Documentación (roadmap, datos de aeronave)
 ├── public/                # Recursos estáticos
 ├── data/                  # Imágenes de referencia del TCDS
 ├── package.json           # Dependencias y scripts
@@ -184,7 +203,7 @@ Para operaciones reales de vuelo:
 
 ### Variables de Aeronave
 
-Los datos de la aeronave están centralizados en `src/App.jsx` en el objeto `aircraftData`. Para agregar nuevas aeronaves o variantes, seguir la estructura existente.
+Los datos de las aeronaves están centralizados en `src/data/aircraft.js`. Para agregar nuevas aeronaves o variantes, seguir la guía en [docs/aircraft-data.md](docs/aircraft-data.md) — el formulario, los cálculos y el gráfico se generan automáticamente a partir de los datos.
 
 ### Factores de Seguridad
 
