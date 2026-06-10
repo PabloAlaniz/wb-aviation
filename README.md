@@ -6,7 +6,7 @@ Aplicación web open source para el cálculo de peso y balance (Weight & Balance
 
 ### 🚀 [Demo en vivo](https://wb-aviation.pages.dev/)
 
-![wb-aviation](./public/Captura%20de%20pantalla%202025-08-20%20a%20la(s)%2000.06.41.png)
+![wb-aviation](<./public/Captura%20de%20pantalla%202025-08-20%20a%20la(s)%2000.06.41.png>)
 
 **Aeronaves soportadas:** King Air E90 (más próximamente)
 
@@ -15,6 +15,7 @@ Aplicación web open source para el cálculo de peso y balance (Weight & Balance
 Esta herramienta permite calcular el peso total y el centro de gravedad (CG) de una aeronave King Air E90, verificando que se encuentre dentro de los límites operacionales seguros establecidos por el fabricante y la FAA.
 
 El sistema incluye:
+
 - ✅ Cálculo automático de peso total y centro de gravedad
 - ✅ Validación contra envolvente de CG oficial
 - ✅ Sistema de alertas de seguridad y advertencias
@@ -24,6 +25,7 @@ El sistema incluye:
 ## 🚀 Características Principales
 
 ### Cálculo de Peso y Balance
+
 - Peso vacío y brazo específicos de aeronave
 - Estaciones de carga para tripulación (piloto, copiloto)
 - Hasta 4 pasajeros en configuración club
@@ -31,18 +33,21 @@ El sistema incluye:
 - Cálculo de combustible
 
 ### Sistema de Validación
+
 - Verificación de peso máximo (10,100 lbs)
 - Validación de límites de CG (144.7" - 160.0")
 - Algoritmo de punto en polígono para envolvente irregular
 - Márgenes de seguridad configurables
 
 ### Alertas de Seguridad
+
 - **Advertencias de peso**: Alerta cuando se acerca al 95% del peso máximo
 - **Advertencias de CG**: Notificación de proximidad a límites frontales/posteriores
 - **Recomendaciones**: Sugerencias de ajustes para mayor seguridad
 - **Confiabilidad de datos**: Indicadores de verificación de información
 
 ### Visualización Gráfica
+
 - Gráfico interactivo del envolvente de CG
 - Representación del punto operativo actual
 - Líneas de referencia de límites
@@ -73,27 +78,35 @@ npm install
 ## 🚀 Uso
 
 ### Modo Desarrollo
+
 ```bash
 npm run dev
 ```
+
 Inicia el servidor de desarrollo en `http://localhost:5173`
 
 ### Build de Producción
+
 ```bash
 npm run build
 ```
+
 Genera la versión optimizada en la carpeta `dist/`
 
 ### Preview de Producción
+
 ```bash
 npm run preview
 ```
+
 Previsualiza el build de producción localmente
 
 ### Linting
+
 ```bash
 npm run lint
 ```
+
 Ejecuta ESLint para verificar el código
 
 ## 📂 Estructura del Proyecto
@@ -121,6 +134,7 @@ wb-aviation/
 ## ✈️ Datos de la Aeronave
 
 ### King Air Echo 90 (Beechcraft)
+
 - **TCDS**: 3A20 Revision 82 (2024)
 - **Fabricante**: Textron Aviation Inc. (anteriormente Beechcraft Corporation)
 - **Producción**: 1972-1981 (347 unidades fabricadas)
@@ -132,6 +146,7 @@ wb-aviation/
 - **Capacidad de combustible**: 474 galones
 
 ### Fuentes de Datos
+
 - Manual oficial Beechcraft E90 (LV-AYG)
 - FAA TCDS 3A20 Rev 81 (11 mayo 2018)
 - Weight & Balance Report específico
@@ -140,6 +155,7 @@ wb-aviation/
 ## ⚠️ Advertencias Importantes
 
 ### Disclaimer Legal
+
 **IMPORTANTE**: Esta herramienta es de **referencia general** y no sustituye la documentación oficial de la aeronave.
 
 - ⚠️ Los datos de peso vacío y brazo son **específicos de la aeronave LV-AYG** (S/N: LW-135)
@@ -149,13 +165,16 @@ wb-aviation/
 - ⚠️ NO utilizar para cálculos operacionales sin verificación oficial
 
 ### Uso Recomendado
+
 - Planificación preliminar de vuelos
 - Educación y entrenamiento
 - Verificación cruzada de cálculos manuales
 - Estudio de envolventes de CG
 
 ### Seguridad Operacional
+
 Para operaciones reales de vuelo:
+
 1. Consultar el Weight & Balance Report de su aeronave específica
 2. Verificar los datos con la documentación oficial vigente
 3. Seguir los procedimientos del manual de operaciones (AFM/POH)
@@ -164,9 +183,11 @@ Para operaciones reales de vuelo:
 ## 🔧 Configuración
 
 ### Variables de Aeronave
+
 Los datos de la aeronave están centralizados en `src/App.jsx` en el objeto `aircraftData`. Para agregar nuevas aeronaves o variantes, seguir la estructura existente.
 
 ### Factores de Seguridad
+
 ```javascript
 safetyFactors: {
   weightMargin: 0.95,        // 95% del peso máximo = alerta
@@ -190,6 +211,7 @@ isPointInEnvelope(cg, weight, envelopePoints)
 ## 🤝 Contribuciones
 
 Las contribuciones son bienvenidas, especialmente para:
+
 - Agregar más variantes de King Air
 - Mejorar visualizaciones
 - Agregar más validaciones de seguridad
@@ -209,6 +231,7 @@ Para preguntas técnicas o reportar problemas, abrir un issue en el repositorio.
 ## 🗺️ Roadmap
 
 ### Aeronaves Próximas
+
 - [ ] Cessna 172 (la más común para entrenamiento)
 - [ ] Piper PA-28 Cherokee
 - [ ] King Air 200/350
@@ -216,6 +239,7 @@ Para preguntas técnicas o reportar problemas, abrir un issue en el repositorio.
 - [ ] Bombardier Q400
 
 ### Features Futuras
+
 - [ ] PWA para uso offline en cabina
 - [ ] Exportar PDF del cálculo
 - [ ] Persistencia de datos del usuario
@@ -225,4 +249,4 @@ Para preguntas técnicas o reportar problemas, abrir un issue en el repositorio.
 
 **Desarrollado para la comunidad aeronáutica** 🛩️
 
-*Última actualización: Enero 2026*
+_Última actualización: Enero 2026_

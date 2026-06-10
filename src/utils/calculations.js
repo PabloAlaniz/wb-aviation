@@ -25,7 +25,7 @@ export function isPointInEnvelope(cg, weight, envelopePoints) {
     const xj = envelopePoints[j].arm
     const yj = envelopePoints[j].weight
 
-    if (((yi > weight) !== (yj > weight)) && (cg < (xj - xi) * (weight - yi) / (yj - yi) + xi)) {
+    if (yi > weight !== yj > weight && cg < ((xj - xi) * (weight - yi)) / (yj - yi) + xi) {
       inside = !inside
     }
     j = i
@@ -103,8 +103,16 @@ export function calculateWeightBalance(aircraft, weights) {
     fuelWeight
 
   const totalMoment =
-    emptyMoment + pilotMoment + copilotMoment + passenger1Moment + passenger2Moment +
-    passenger3Moment + passenger4Moment + baggage1Moment + baggage2Moment + fuelMoment
+    emptyMoment +
+    pilotMoment +
+    copilotMoment +
+    passenger1Moment +
+    passenger2Moment +
+    passenger3Moment +
+    passenger4Moment +
+    baggage1Moment +
+    baggage2Moment +
+    fuelMoment
 
   const centerOfGravity = calculateCG(totalMoment, totalWeight)
 
@@ -119,7 +127,7 @@ export function calculateWeightBalance(aircraft, weights) {
     isWeightOk,
     isCgOk,
     maxWeight: aircraft.maxWeight,
-    cgLimits: aircraft.cgLimits
+    cgLimits: aircraft.cgLimits,
   }
 }
 
@@ -137,17 +145,17 @@ export function validateSafetyConditions(aircraft, totalWeight, centerOfGravity)
   // Weight checks
   if (totalWeight > aircraft.maxWeight) {
     errors.push({
-      type: 'weight',
+      type: "weight",
       message: `Peso excede máximo permitido (${aircraft.maxWeight} lbs)`,
       value: totalWeight,
-      limit: aircraft.maxWeight
+      limit: aircraft.maxWeight,
     })
   } else if (totalWeight > aircraft.maxWeight * (aircraft.safetyFactors?.weightMargin || 0.95)) {
     warnings.push({
-      type: 'weight',
-      message: 'Peso cercano al límite máximo',
+      type: "weight",
+      message: "Peso cercano al límite máximo",
       value: totalWeight,
-      limit: aircraft.maxWeight
+      limit: aircraft.maxWeight,
     })
   }
 
@@ -155,39 +163,39 @@ export function validateSafetyConditions(aircraft, totalWeight, centerOfGravity)
   const cgMargin = aircraft.safetyFactors?.cgMargin || 0.1
   if (centerOfGravity < aircraft.cgLimits.forward) {
     errors.push({
-      type: 'cg',
-      message: 'CG adelante del límite',
+      type: "cg",
+      message: "CG adelante del límite",
       value: centerOfGravity,
-      limit: aircraft.cgLimits.forward
+      limit: aircraft.cgLimits.forward,
     })
   } else if (centerOfGravity < aircraft.cgLimits.forward + cgMargin) {
     warnings.push({
-      type: 'cg',
-      message: 'CG cercano al límite delantero',
+      type: "cg",
+      message: "CG cercano al límite delantero",
       value: centerOfGravity,
-      limit: aircraft.cgLimits.forward
+      limit: aircraft.cgLimits.forward,
     })
   }
 
   if (centerOfGravity > aircraft.cgLimits.aft) {
     errors.push({
-      type: 'cg',
-      message: 'CG detrás del límite',
+      type: "cg",
+      message: "CG detrás del límite",
       value: centerOfGravity,
-      limit: aircraft.cgLimits.aft
+      limit: aircraft.cgLimits.aft,
     })
   } else if (centerOfGravity > aircraft.cgLimits.aft - cgMargin) {
     warnings.push({
-      type: 'cg',
-      message: 'CG cercano al límite trasero',
+      type: "cg",
+      message: "CG cercano al límite trasero",
       value: centerOfGravity,
-      limit: aircraft.cgLimits.aft
+      limit: aircraft.cgLimits.aft,
     })
   }
 
   return {
     isValid: errors.length === 0,
     warnings,
-    errors
+    errors,
   }
 }

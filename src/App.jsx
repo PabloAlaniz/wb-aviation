@@ -11,7 +11,7 @@ const aircraftData = {
   "king-air-echo-90": {
     name: "King Air Echo 90 (Beechcraft)",
     tcds: "TCDS# 3A20 Revision 82",
-    
+
     // Metadata y referencias oficiales
     metadata: {
       manufacturer: "Beechcraft Corporation (now Textron Aviation Inc.)",
@@ -25,31 +25,32 @@ const aircraftData = {
       sourceDocuments: [
         "Manual oficial Beechcraft E90 (LV-AYG)",
         "FAA TCDS 3A20 Rev 81 (11 may 2018)",
-        "Weight & Balance Report específico"
+        "Weight & Balance Report específico",
       ],
       dataReliability: "verified-complete", // verified-complete, verified-partial, estimated
       notes: "Datos verificados con manual oficial de aeronave específica (LV-AYG)",
       aircraftSpecific: {
         registrationExample: "LV-AYG",
         serialNumber: "LW-135",
-        warning: "Los datos de peso vacío y brazo son específicos de esta aeronave. Consulte el Weight & Balance Report de su aeronave individual para datos precisos."
-      }
+        warning:
+          "Los datos de peso vacío y brazo son específicos de esta aeronave. Consulte el Weight & Balance Report de su aeronave individual para datos precisos.",
+      },
     },
 
     // Variantes del modelo
     variants: {
-      "E90": {
+      E90: {
         description: "Modelo estándar con motores PT6A-28",
         productionYears: "1972-1981",
-        modifications: []
-      }
+        modifications: [],
+      },
     },
 
     // Especificaciones de peso verificadas con manual oficial
     emptyWeight: 6682, // Peso vacío oficial del manual Beechcraft E90 (LV-AYG)
     emptyArm: 151.0415, // Brazo oficial del manual específico
     maxWeight: 10100, // Actualizado según datos oficiales (10,100 lbs)
-    
+
     // Límites operacionales
     operationalLimits: {
       maxAltitude: 28000, // feet
@@ -60,12 +61,12 @@ const aircraftData = {
     },
 
     // Límites de CG
-    cgLimits: { 
-      forward: 144.7, 
+    cgLimits: {
+      forward: 144.7,
       aft: 160.0,
-      notes: "Límites basados en envolvente de CG del TCDS"
+      notes: "Límites basados en envolvente de CG del TCDS",
     },
-    
+
     // Estaciones de carga (verificar con manual específico)
     stations: {
       pilot: 144.0,
@@ -77,9 +78,9 @@ const aircraftData = {
       baggage1: 280.0,
       baggage2: 310.0,
       fuel: 154.0,
-      notes: "Estaciones estimadas basadas en configuración típica King Air 90"
+      notes: "Estaciones estimadas basadas en configuración típica King Air 90",
     },
-    
+
     // Envolvente de CG (requiere verificación con TCDS oficial)
     cgEnvelope: {
       points: [
@@ -88,10 +89,10 @@ const aircraftData = {
         { arm: 152.0, weight: 10100 }, // Actualizado al peso máximo oficial
         { arm: 160.0, weight: 10100 },
         { arm: 160.0, weight: 6000 },
-        { arm: 144.7, weight: 6000 }
+        { arm: 144.7, weight: 6000 },
       ],
       source: "Manual oficial Beechcraft E90",
-      verificationStatus: "verified-complete"
+      verificationStatus: "verified-complete",
     },
 
     // Factores de seguridad y alertas
@@ -100,8 +101,8 @@ const aircraftData = {
       cgMargin: 0.1, // 0.1" de margen en límites de CG
       recommendedReserve: {
         fuel: 200, // lbs de combustible de reserva recomendado
-        weight: 200 // lbs de margen de peso recomendado
-      }
+        weight: 200, // lbs de margen de peso recomendado
+      },
     },
 
     // Validación de datos
@@ -110,10 +111,10 @@ const aircraftData = {
       verifiedAgainst: ["Manual oficial Beechcraft E90 (LV-AYG)", "TCDS 3A20 Rev 81"],
       pendingVerification: [
         "Estaciones de carga específicas para otras aeronaves",
-        "Verificación de número de serie específico para validación de peso vacío"
-      ]
-    }
-  }
+        "Verificación de número de serie específico para validación de peso vacío",
+      ],
+    },
+  },
 }
 
 export default function App() {
@@ -173,14 +174,22 @@ export default function App() {
       fuelWeight
 
     const totalMoment =
-      emptyMoment + pilotMoment + copilotMoment + passenger1Moment + passenger2Moment + 
-      passenger3Moment + passenger4Moment + baggage1Moment + baggage2Moment + fuelMoment
+      emptyMoment +
+      pilotMoment +
+      copilotMoment +
+      passenger1Moment +
+      passenger2Moment +
+      passenger3Moment +
+      passenger4Moment +
+      baggage1Moment +
+      baggage2Moment +
+      fuelMoment
 
     const centerOfGravity = totalMoment / totalWeight
 
     const isWeightOk = totalWeight <= aircraft.maxWeight
     const isCgOk = isPointInEnvelope(centerOfGravity, totalWeight, aircraft.cgEnvelope.points)
-    
+
     // Sistema de validación y alertas de seguridad
     const safetyChecks = validateSafetyConditions(aircraft, totalWeight, centerOfGravity)
 
@@ -193,7 +202,7 @@ export default function App() {
       cgLimits: aircraft.cgLimits,
       safetyChecks,
       metadata: aircraft.metadata,
-      dataValidation: aircraft.dataValidation
+      dataValidation: aircraft.dataValidation,
     }
   }
 
@@ -202,64 +211,64 @@ export default function App() {
     const safetyFactors = aircraft.safetyFactors
     const warnings = []
     const recommendations = []
-    
+
     // Verificar peso cerca del límite
     const weightPercentage = (totalWeight / aircraft.maxWeight) * 100
     if (weightPercentage > safetyFactors.weightMargin * 100) {
       warnings.push({
         type: "weight-warning",
         message: `Peso al ${weightPercentage.toFixed(1)}% del máximo permitido`,
-        severity: "medium"
+        severity: "medium",
       })
     }
-    
+
     // Verificar CG cerca de límites
     const cgForwardMargin = centerOfGravity - aircraft.cgLimits.forward
     const cgAftMargin = aircraft.cgLimits.aft - centerOfGravity
-    
+
     if (cgForwardMargin < safetyFactors.cgMargin) {
       warnings.push({
         type: "cg-forward-warning",
         message: `Centro de gravedad muy cerca del límite frontal (${cgForwardMargin.toFixed(2)}" de margen)`,
-        severity: "high"
+        severity: "high",
       })
     }
-    
+
     if (cgAftMargin < safetyFactors.cgMargin) {
       warnings.push({
-        type: "cg-aft-warning", 
+        type: "cg-aft-warning",
         message: `Centro de gravedad muy cerca del límite posterior (${cgAftMargin.toFixed(2)}" de margen)`,
-        severity: "high"
+        severity: "high",
       })
     }
-    
+
     // Recomendaciones de seguridad
     if (totalWeight > aircraft.maxWeight - safetyFactors.recommendedReserve.weight) {
       recommendations.push({
         type: "weight-reserve",
-        message: `Considerar reducir peso en ${(totalWeight - (aircraft.maxWeight - safetyFactors.recommendedReserve.weight)).toFixed(0)} lbs para mayor margen de seguridad`
+        message: `Considerar reducir peso en ${(totalWeight - (aircraft.maxWeight - safetyFactors.recommendedReserve.weight)).toFixed(0)} lbs para mayor margen de seguridad`,
       })
     }
-    
+
     // Verificación de confiabilidad de datos
     const dataReliability = aircraft.metadata.dataReliability
     if (dataReliability !== "verified-complete") {
       warnings.push({
         type: "data-reliability",
         message: `Datos ${dataReliability === "verified-partial" ? "parcialmente verificados" : "estimados"} - confirmar con documentación oficial`,
-        severity: "low"
+        severity: "low",
       })
     }
-    
+
     return {
       warnings,
       recommendations,
       weightPercentage: weightPercentage.toFixed(1),
       cgMargins: {
         forward: cgForwardMargin.toFixed(2),
-        aft: cgAftMargin.toFixed(2)
+        aft: cgAftMargin.toFixed(2),
       },
-      dataReliability: aircraft.metadata.dataReliability
+      dataReliability: aircraft.metadata.dataReliability,
     }
   }
 
@@ -267,27 +276,25 @@ export default function App() {
   const isPointInEnvelope = (cg, weight, envelopePoints) => {
     let inside = false
     let j = envelopePoints.length - 1
-    
+
     for (let i = 0; i < envelopePoints.length; i++) {
       const xi = envelopePoints[i].arm
       const yi = envelopePoints[i].weight
       const xj = envelopePoints[j].arm
       const yj = envelopePoints[j].weight
-      
-      if (((yi > weight) !== (yj > weight)) && (cg < (xj - xi) * (weight - yi) / (yj - yi) + xi)) {
+
+      if (yi > weight !== yj > weight && cg < ((xj - xi) * (weight - yi)) / (yj - yi) + xi) {
         inside = !inside
       }
       j = i
     }
-    
+
     return inside
   }
 
   const results = calculateWeightBalance()
 
-  const aircraftOptions = [
-    { value: "king-air-echo-90", label: "King Air Echo 90 (Beechcraft)" },
-  ]
+  const aircraftOptions = [{ value: "king-air-echo-90", label: "King Air Echo 90 (Beechcraft)" }]
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
@@ -297,7 +304,9 @@ export default function App() {
             <Plane className="h-8 w-8 text-blue-600" />
             <h1 className="text-3xl font-bold text-gray-900">King Air Echo 90 - Peso y Centrado</h1>
           </div>
-          <p className="text-gray-600">Cálculo de peso y centrado basado en TCDS# 3A20 Revision 81</p>
+          <p className="text-gray-600">
+            Cálculo de peso y centrado basado en TCDS# 3A20 Revision 81
+          </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -441,24 +450,27 @@ export default function App() {
               ) : results ? (
                 <div className="space-y-4">
                   <div className="bg-gray-50 p-4 rounded-lg">
-                    <h3 className="font-semibold mb-2">
-                      {aircraftData[selectedAircraft].name}
-                    </h3>
+                    <h3 className="font-semibold mb-2">{aircraftData[selectedAircraft].name}</h3>
                     <div className="text-sm text-gray-600 space-y-1">
-                      <p className="font-medium text-blue-700">{aircraftData[selectedAircraft].tcds}</p>
+                      <p className="font-medium text-blue-700">
+                        {aircraftData[selectedAircraft].tcds}
+                      </p>
                       <p>Peso vacío: {aircraftData[selectedAircraft].emptyWeight} lbs</p>
                       <p>Peso máximo: {aircraftData[selectedAircraft].maxWeight} lbs</p>
                       <p>
                         CG límites: {aircraftData[selectedAircraft].cgLimits.forward}" -{" "}
                         {aircraftData[selectedAircraft].cgLimits.aft}"
                       </p>
-                      
+
                       {/* Información de metadata y fuentes */}
                       {results.metadata && (
                         <div className="mt-3 pt-3 border-t border-gray-300">
                           <div className="flex items-center gap-2 mb-1">
                             <span className="text-xs font-medium">Producción:</span>
-                            <span className="text-xs">{results.metadata.productionYears} ({results.metadata.totalProduced} fabricados)</span>
+                            <span className="text-xs">
+                              {results.metadata.productionYears} ({results.metadata.totalProduced}{" "}
+                              fabricados)
+                            </span>
                           </div>
                           <div className="flex items-center gap-2 mb-1">
                             <span className="text-xs font-medium">Motores:</span>
@@ -466,17 +478,27 @@ export default function App() {
                           </div>
                           <div className="flex items-center gap-2 mb-1">
                             <span className="text-xs font-medium">Fabricante actual:</span>
-                            <span className="text-xs">{results.metadata.manufacturer.split("(")[0]}</span>
+                            <span className="text-xs">
+                              {results.metadata.manufacturer.split("(")[0]}
+                            </span>
                           </div>
                           <div className="flex items-center gap-2">
                             <span className="text-xs font-medium">Confiabilidad de datos:</span>
-                            <Badge 
-                              variant={results.metadata.dataReliability === "verified-complete" ? "default" : 
-                                     results.metadata.dataReliability === "verified-partial" ? "secondary" : "outline"}
+                            <Badge
+                              variant={
+                                results.metadata.dataReliability === "verified-complete"
+                                  ? "default"
+                                  : results.metadata.dataReliability === "verified-partial"
+                                    ? "secondary"
+                                    : "outline"
+                              }
                               className="text-xs"
                             >
-                              {results.metadata.dataReliability === "verified-complete" ? "Verificado" :
-                               results.metadata.dataReliability === "verified-partial" ? "Parcial" : "Estimado"}
+                              {results.metadata.dataReliability === "verified-complete"
+                                ? "Verificado"
+                                : results.metadata.dataReliability === "verified-partial"
+                                  ? "Parcial"
+                                  : "Estimado"}
                             </Badge>
                           </div>
                         </div>
@@ -490,7 +512,9 @@ export default function App() {
                     <div className="flex justify-between items-center">
                       <span className="font-medium">Peso Total:</span>
                       <div className="flex items-center gap-2">
-                        <span className="text-lg font-bold">{results.totalWeight.toFixed(1)} lbs</span>
+                        <span className="text-lg font-bold">
+                          {results.totalWeight.toFixed(1)} lbs
+                        </span>
                         {results.isWeightOk ? (
                           <Badge variant="default" className="bg-green-500">
                             <CheckCircle className="h-3 w-3 mr-1" />
@@ -508,7 +532,9 @@ export default function App() {
                     <div className="flex justify-between items-center">
                       <span className="font-medium">Centro de Gravedad:</span>
                       <div className="flex items-center gap-2">
-                        <span className="text-lg font-bold">{results.centerOfGravity.toFixed(2)}"</span>
+                        <span className="text-lg font-bold">
+                          {results.centerOfGravity.toFixed(2)}"
+                        </span>
                         {results.isCgOk ? (
                           <Badge variant="default" className="bg-green-500">
                             <CheckCircle className="h-3 w-3 mr-1" />
@@ -527,54 +553,68 @@ export default function App() {
                   <Separator />
 
                   {/* Alertas de seguridad y warnings */}
-                  {results.safetyChecks && (results.safetyChecks.warnings.length > 0 || results.safetyChecks.recommendations.length > 0) && (
-                    <div className="space-y-3">
-                      <h4 className="font-medium text-sm">Alertas de Seguridad</h4>
-                      
-                      {/* Warnings */}
-                      {results.safetyChecks.warnings.map((warning, index) => (
-                        <div 
-                          key={index}
-                          className={`p-3 rounded-lg border ${
-                            warning.severity === "high" ? "bg-red-50 border-red-200 text-red-800" :
-                            warning.severity === "medium" ? "bg-yellow-50 border-yellow-200 text-yellow-800" :
-                            "bg-blue-50 border-blue-200 text-blue-800"
-                          }`}
-                        >
-                          <div className="flex items-start gap-2">
-                            <AlertTriangle className={`h-4 w-4 mt-0.5 flex-shrink-0 ${
-                              warning.severity === "high" ? "text-red-600" :
-                              warning.severity === "medium" ? "text-yellow-600" :
-                              "text-blue-600"
-                            }`} />
-                            <p className="text-sm">{warning.message}</p>
+                  {results.safetyChecks &&
+                    (results.safetyChecks.warnings.length > 0 ||
+                      results.safetyChecks.recommendations.length > 0) && (
+                      <div className="space-y-3">
+                        <h4 className="font-medium text-sm">Alertas de Seguridad</h4>
+
+                        {/* Warnings */}
+                        {results.safetyChecks.warnings.map((warning, index) => (
+                          <div
+                            key={index}
+                            className={`p-3 rounded-lg border ${
+                              warning.severity === "high"
+                                ? "bg-red-50 border-red-200 text-red-800"
+                                : warning.severity === "medium"
+                                  ? "bg-yellow-50 border-yellow-200 text-yellow-800"
+                                  : "bg-blue-50 border-blue-200 text-blue-800"
+                            }`}
+                          >
+                            <div className="flex items-start gap-2">
+                              <AlertTriangle
+                                className={`h-4 w-4 mt-0.5 flex-shrink-0 ${
+                                  warning.severity === "high"
+                                    ? "text-red-600"
+                                    : warning.severity === "medium"
+                                      ? "text-yellow-600"
+                                      : "text-blue-600"
+                                }`}
+                              />
+                              <p className="text-sm">{warning.message}</p>
+                            </div>
                           </div>
-                        </div>
-                      ))}
-                      
-                      {/* Recommendations */}
-                      {results.safetyChecks.recommendations.map((rec, index) => (
-                        <div key={index} className="p-3 rounded-lg border bg-gray-50 border-gray-200">
-                          <div className="flex items-start gap-2">
-                            <CheckCircle className="h-4 w-4 mt-0.5 flex-shrink-0 text-gray-600" />
-                            <p className="text-sm text-gray-800">{rec.message}</p>
+                        ))}
+
+                        {/* Recommendations */}
+                        {results.safetyChecks.recommendations.map((rec, index) => (
+                          <div
+                            key={index}
+                            className="p-3 rounded-lg border bg-gray-50 border-gray-200"
+                          >
+                            <div className="flex items-start gap-2">
+                              <CheckCircle className="h-4 w-4 mt-0.5 flex-shrink-0 text-gray-600" />
+                              <p className="text-sm text-gray-800">{rec.message}</p>
+                            </div>
                           </div>
-                        </div>
-                      ))}
-                      
-                      {/* Información adicional de márgenes */}
-                      <div className="grid grid-cols-2 gap-3 text-xs">
-                        <div className="bg-gray-50 p-2 rounded">
-                          <span className="font-medium">Uso de peso:</span>
-                          <span className="ml-1">{results.safetyChecks.weightPercentage}%</span>
-                        </div>
-                        <div className="bg-gray-50 p-2 rounded">
-                          <span className="font-medium">Margen CG:</span>
-                          <span className="ml-1">+{results.safetyChecks.cgMargins.forward}" / -{results.safetyChecks.cgMargins.aft}"</span>
+                        ))}
+
+                        {/* Información adicional de márgenes */}
+                        <div className="grid grid-cols-2 gap-3 text-xs">
+                          <div className="bg-gray-50 p-2 rounded">
+                            <span className="font-medium">Uso de peso:</span>
+                            <span className="ml-1">{results.safetyChecks.weightPercentage}%</span>
+                          </div>
+                          <div className="bg-gray-50 p-2 rounded">
+                            <span className="font-medium">Margen CG:</span>
+                            <span className="ml-1">
+                              +{results.safetyChecks.cgMargins.forward}" / -
+                              {results.safetyChecks.cgMargins.aft}"
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
                   <Separator />
 
@@ -582,8 +622,12 @@ export default function App() {
                     {results.isWeightOk && results.isCgOk ? (
                       <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                         <CheckCircle className="h-8 w-8 text-green-600 mx-auto mb-2" />
-                        <p className="text-green-800 font-semibold">✅ AERONAVE LISTA PARA DESPEGUE</p>
-                        <p className="text-green-600 text-sm mt-1">Peso y centrado dentro de los límites</p>
+                        <p className="text-green-800 font-semibold">
+                          ✅ AERONAVE LISTA PARA DESPEGUE
+                        </p>
+                        <p className="text-green-600 text-sm mt-1">
+                          Peso y centrado dentro de los límites
+                        </p>
                       </div>
                     ) : (
                       <div className="bg-red-50 border border-red-200 rounded-lg p-4">
@@ -601,21 +645,24 @@ export default function App() {
 
                   <div className="space-y-3">
                     <h3 className="font-semibold text-center">Envolvente de Centro de Gravedad</h3>
-                    <CGEnvelopeChart 
+                    <CGEnvelopeChart
                       aircraft={aircraftData[selectedAircraft]}
                       currentCG={results.centerOfGravity}
                       currentWeight={results.totalWeight}
                     />
                     <p className="text-xs text-gray-500 text-center">
-                      El punto negro muestra la condición actual de peso y CG. Las líneas punteadas indican las coordenadas exactas. 
-                      La aeronave está segura para operar solo si el punto está dentro del área sombreada.
+                      El punto negro muestra la condición actual de peso y CG. Las líneas punteadas
+                      indican las coordenadas exactas. La aeronave está segura para operar solo si
+                      el punto está dentro del área sombreada.
                     </p>
                   </div>
 
                   {/* Referencias y fuentes oficiales */}
                   {results.dataValidation && (
                     <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                      <h4 className="font-medium text-sm text-blue-900 mb-2">Referencias y Fuentes Oficiales</h4>
+                      <h4 className="font-medium text-sm text-blue-900 mb-2">
+                        Referencias y Fuentes Oficiales
+                      </h4>
                       <div className="space-y-2 text-xs text-blue-800">
                         <div>
                           <span className="font-medium">Última actualización:</span>
@@ -625,16 +672,22 @@ export default function App() {
                           <span className="font-medium">Fuentes verificadas:</span>
                           <div className="mt-1">
                             {results.metadata.sourceDocuments.map((doc, index) => (
-                              <div key={index} className="ml-2">• {doc}</div>
+                              <div key={index} className="ml-2">
+                                • {doc}
+                              </div>
                             ))}
                           </div>
                         </div>
                         {results.dataValidation.pendingVerification.length > 0 && (
                           <div>
-                            <span className="font-medium text-orange-800">⚠️ Pendiente de verificación:</span>
+                            <span className="font-medium text-orange-800">
+                              ⚠️ Pendiente de verificación:
+                            </span>
                             <div className="mt-1 text-orange-700">
                               {results.dataValidation.pendingVerification.map((item, index) => (
-                                <div key={index} className="ml-2">• {item}</div>
+                                <div key={index} className="ml-2">
+                                  • {item}
+                                </div>
                               ))}
                             </div>
                           </div>
@@ -642,10 +695,13 @@ export default function App() {
                         {/* Advertencia específica sobre datos de aeronave individual */}
                         {results.metadata.aircraftSpecific && (
                           <div className="mt-3 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs">
-                            <div className="font-bold text-yellow-800 mb-1">⚠️ Datos de Aeronave Específica</div>
+                            <div className="font-bold text-yellow-800 mb-1">
+                              ⚠️ Datos de Aeronave Específica
+                            </div>
                             <div className="text-yellow-700">
                               <div className="mb-1">
-                                <strong>Ejemplo basado en:</strong> {results.metadata.aircraftSpecific.registrationExample} 
+                                <strong>Ejemplo basado en:</strong>{" "}
+                                {results.metadata.aircraftSpecific.registrationExample}
                                 (S/N: {results.metadata.aircraftSpecific.serialNumber})
                               </div>
                               <div className="text-xs">
@@ -654,10 +710,11 @@ export default function App() {
                             </div>
                           </div>
                         )}
-                        
+
                         <div className="mt-3 text-xs text-blue-600">
-                          <strong>Importante:</strong> Siempre consulte la documentación oficial específica de su aeronave 
-                          para cálculos de peso y balance operacionales. Esta herramienta es de referencia general.
+                          <strong>Importante:</strong> Siempre consulte la documentación oficial
+                          específica de su aeronave para cálculos de peso y balance operacionales.
+                          Esta herramienta es de referencia general.
                         </div>
                       </div>
                     </div>
