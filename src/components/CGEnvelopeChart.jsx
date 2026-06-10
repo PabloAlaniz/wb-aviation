@@ -7,11 +7,6 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  Line,
-  LineChart,
-  Area,
-  AreaChart,
-  ComposedChart,
 } from "recharts"
 
 export function CGEnvelopeChart({ aircraft, currentCG, currentWeight }) {
