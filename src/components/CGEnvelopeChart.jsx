@@ -13,6 +13,12 @@ export function CGEnvelopeChart({ aircraft, currentCG, currentWeight }) {
   // Preparar datos del envolvente para formar un polígono cerrado
   const envelopePoints = aircraft.cgEnvelope.points
 
+  // Dominios de los ejes derivados de la envolvente de cada aeronave
+  const arms = envelopePoints.map((point) => point.arm)
+  const envelopeWeights = envelopePoints.map((point) => point.weight)
+  const xDomain = [Math.floor(Math.min(...arms)), Math.ceil(Math.max(...arms)) + 2]
+  const yDomain = [Math.min(...envelopeWeights), Math.max(...envelopeWeights) + 100]
+
   // Crear el polígono del envolvente (cerrado)
   const envelopeData = [
     ...envelopePoints.map((point) => ({ x: point.arm, y: point.weight })),
@@ -42,9 +48,7 @@ export function CGEnvelopeChart({ aircraft, currentCG, currentWeight }) {
     <div className="w-full bg-white border-2 border-black">
       {/* Título superior como el documento original */}
       <div className="text-center py-2 border-b border-gray-300">
-        <h3 className="text-sm font-bold text-black">
-          Envolvente de CG extraída del {aircraft.tcds} (11 may 2018)
-        </h3>
+        <h3 className="text-sm font-bold text-black">Envolvente de CG — {aircraft.tcds}</h3>
         <p className="text-xs text-black mt-1">C.G. Arm - Inches aft of Datum STA 0.0</p>
       </div>
 
@@ -68,7 +72,7 @@ export function CGEnvelopeChart({ aircraft, currentCG, currentWeight }) {
               dataKey="x"
               name="Arm"
               unit=" inches"
-              domain={[144, 162]}
+              domain={xDomain}
               tickCount={10}
               fontSize={10}
               stroke="#000"
@@ -86,7 +90,7 @@ export function CGEnvelopeChart({ aircraft, currentCG, currentWeight }) {
               dataKey="y"
               name="Weight"
               unit=" lbs"
-              domain={[6000, 10200]}
+              domain={yDomain}
               width={80}
               fontSize={10}
               stroke="#000"
