@@ -1,14 +1,10 @@
-import { useState } from 'react'
-import { ChevronDown } from 'lucide-react'
+import { useState } from "react"
+import { ChevronDown } from "lucide-react"
 
 export function Select({ children, value, onValueChange }) {
   const [isOpen, setIsOpen] = useState(false)
-  
-  return (
-    <div className="relative">
-      {children({ value, onValueChange, isOpen, setIsOpen })}
-    </div>
-  )
+
+  return <div className="relative">{children({ value, onValueChange, isOpen, setIsOpen })}</div>
 }
 
 export function SelectTrigger({ children, onClick }) {
@@ -25,7 +21,7 @@ export function SelectTrigger({ children, onClick }) {
 }
 
 export function SelectValue({ placeholder, value, options = [] }) {
-  const selectedOption = options.find(opt => opt.value === value)
+  const selectedOption = options.find((opt) => opt.value === value)
   return (
     <span className={!selectedOption ? "text-gray-500" : ""}>
       {selectedOption ? selectedOption.label : placeholder}
@@ -35,7 +31,7 @@ export function SelectValue({ placeholder, value, options = [] }) {
 
 export function SelectContent({ children, isOpen }) {
   if (!isOpen) return null
-  
+
   return (
     <div className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
       {children}
@@ -56,16 +52,16 @@ export function SelectItem({ value, children, onSelect }) {
 
 export function SimpleSelect({ value, onValueChange, placeholder, options }) {
   const [isOpen, setIsOpen] = useState(false)
-  
+
   return (
     <div className="relative">
       <SelectTrigger onClick={() => setIsOpen(!isOpen)}>
         <SelectValue placeholder={placeholder} value={value} options={options} />
       </SelectTrigger>
       <SelectContent isOpen={isOpen}>
-        {options.map(option => (
-          <SelectItem 
-            key={option.value} 
+        {options.map((option) => (
+          <SelectItem
+            key={option.value}
             value={option.value}
             onSelect={(val) => {
               onValueChange(val)
