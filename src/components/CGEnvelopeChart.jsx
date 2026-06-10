@@ -8,6 +8,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts"
+import { messages as m } from "../i18n"
 
 export function CGEnvelopeChart({ aircraft, currentCG, currentWeight }) {
   // Preparar datos del envolvente para formar un polígono cerrado
@@ -27,7 +28,7 @@ export function CGEnvelopeChart({ aircraft, currentCG, currentWeight }) {
   ]
 
   // Datos para el punto de operación actual
-  const currentPointData = [{ x: currentCG, y: currentWeight, label: "Punto Operativo" }]
+  const currentPointData = [{ x: currentCG, y: currentWeight, label: m.chart.operatingPoint }]
 
   // Tooltip personalizado
   const CustomTooltip = ({ active, payload }) => {
@@ -35,9 +36,9 @@ export function CGEnvelopeChart({ aircraft, currentCG, currentWeight }) {
       const data = payload[0].payload
       return (
         <div className="bg-white border-2 border-black p-2 shadow-lg">
-          <p className="font-bold text-xs">Información del Punto</p>
-          <p className="text-xs">{`CG: ${data.x?.toFixed(1)}" Arm`}</p>
-          <p className="text-xs">{`Peso: ${data.y?.toLocaleString()} lbs`}</p>
+          <p className="font-bold text-xs">{m.chart.tooltipTitle}</p>
+          <p className="text-xs">{m.chart.tooltipCg(data.x?.toFixed(1))}</p>
+          <p className="text-xs">{m.chart.tooltipWeight(data.y?.toLocaleString())}</p>
         </div>
       )
     }
@@ -48,8 +49,8 @@ export function CGEnvelopeChart({ aircraft, currentCG, currentWeight }) {
     <div className="w-full bg-white border-2 border-black">
       {/* Título superior como el documento original */}
       <div className="text-center py-2 border-b border-gray-300">
-        <h3 className="text-sm font-bold text-black">Envolvente de CG — {aircraft.tcds}</h3>
-        <p className="text-xs text-black mt-1">C.G. Arm - Inches aft of Datum STA 0.0</p>
+        <h3 className="text-sm font-bold text-black">{m.chart.title(aircraft.tcds)}</h3>
+        <p className="text-xs text-black mt-1">{m.chart.axisNote}</p>
       </div>
 
       {/* Gráfico principal */}
@@ -77,7 +78,7 @@ export function CGEnvelopeChart({ aircraft, currentCG, currentWeight }) {
               fontSize={10}
               stroke="#000"
               label={{
-                value: "inches",
+                value: m.chart.xUnit,
                 position: "insideBottom",
                 offset: -10,
                 style: { textAnchor: "middle", fontSize: "11px", fontWeight: "bold" },
@@ -96,7 +97,7 @@ export function CGEnvelopeChart({ aircraft, currentCG, currentWeight }) {
               stroke="#000"
               tickFormatter={(value) => value.toLocaleString()}
               label={{
-                value: "pounds",
+                value: m.chart.yUnit,
                 angle: -90,
                 position: "insideLeft",
                 style: { textAnchor: "middle", fontSize: "11px", fontWeight: "bold" },
@@ -110,7 +111,7 @@ export function CGEnvelopeChart({ aircraft, currentCG, currentWeight }) {
 
             {/* Polígono del envolvente como línea conectada */}
             <Scatter
-              name="Límite del Envolvente"
+              name={m.chart.envelopeLimit}
               data={envelopeData}
               line={{ stroke: "#8884d8", strokeWidth: 2 }}
               fill="transparent"
@@ -118,7 +119,12 @@ export function CGEnvelopeChart({ aircraft, currentCG, currentWeight }) {
             />
 
             {/* Punto de operación actual */}
-            <Scatter name="Punto Operativo" data={currentPointData} fill="#ff0000" shape="circle" />
+            <Scatter
+              name={m.chart.operatingPoint}
+              data={currentPointData}
+              fill="#ff0000"
+              shape="circle"
+            />
           </ScatterChart>
         </ResponsiveContainer>
       </div>

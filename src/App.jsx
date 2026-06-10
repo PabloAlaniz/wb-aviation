@@ -12,6 +12,7 @@ import { Plane, Calculator, RotateCcw } from "lucide-react"
 import { aircraftData, aircraftOptions, emptyWeightsFor } from "./data/aircraft"
 import { calculateWeightBalance, buildSafetyReport } from "./utils/calculations"
 import { useLocalStorage } from "./hooks/useLocalStorage"
+import { messages as m } from "./i18n"
 
 const DEFAULT_AIRCRAFT = "king-air-echo-90"
 
@@ -50,9 +51,9 @@ export default function App() {
         <div className="text-center space-y-2">
           <div className="flex items-center justify-center gap-2">
             <Plane className="h-8 w-8 text-blue-600" />
-            <h1 className="text-3xl font-bold text-gray-900">{aircraft.name} - Peso y Centrado</h1>
+            <h1 className="text-3xl font-bold text-gray-900">{m.app.title(aircraft.name)}</h1>
           </div>
-          <p className="text-gray-600">Cálculo de peso y centrado basado en {aircraft.tcds}</p>
+          <p className="text-gray-600">{m.app.subtitle(aircraft.tcds)}</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -60,18 +61,18 @@ export default function App() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Calculator className="h-5 w-5" />
-                Datos de la Aeronave
+                {m.app.aircraftCardTitle}
               </CardTitle>
-              <CardDescription>Selecciona el tipo de avión e ingresa los pesos</CardDescription>
+              <CardDescription>{m.app.aircraftCardDescription}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="aircraft">Tipo de Aeronave</Label>
+                <Label htmlFor="aircraft">{m.app.aircraftSelectLabel}</Label>
                 <SimpleSelect
                   id="aircraft"
                   value={selectedAircraft}
                   onValueChange={handleAircraftChange}
-                  placeholder="Selecciona una aeronave"
+                  placeholder={m.app.aircraftSelectPlaceholder}
                   options={aircraftOptions}
                 />
               </div>
@@ -90,21 +91,21 @@ export default function App() {
                 className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 border border-gray-200 rounded-md px-3 py-2 hover:bg-gray-50"
               >
                 <RotateCcw className="h-4 w-4" />
-                Limpiar pesos
+                {m.app.clearWeights}
               </button>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle>Resultados del Cálculo</CardTitle>
-              <CardDescription>Peso total y centro de gravedad</CardDescription>
+              <CardTitle>{m.app.resultsCardTitle}</CardTitle>
+              <CardDescription>{m.app.resultsCardDescription}</CardDescription>
             </CardHeader>
             <CardContent>
               {!aircraft ? (
                 <div className="text-center py-8 text-gray-500">
                   <Plane className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Selecciona una aeronave para ver los resultados</p>
+                  <p>{m.app.noAircraftSelected}</p>
                 </div>
               ) : results ? (
                 <div className="space-y-4">
@@ -125,17 +126,13 @@ export default function App() {
                   <Separator />
 
                   <div className="space-y-3">
-                    <h3 className="font-semibold text-center">Envolvente de Centro de Gravedad</h3>
+                    <h3 className="font-semibold text-center">{m.app.envelopeSectionTitle}</h3>
                     <CGEnvelopeChart
                       aircraft={aircraft}
                       currentCG={results.centerOfGravity}
                       currentWeight={results.totalWeight}
                     />
-                    <p className="text-xs text-gray-500 text-center">
-                      El punto negro muestra la condición actual de peso y CG. Las líneas punteadas
-                      indican las coordenadas exactas. La aeronave está segura para operar solo si
-                      el punto está dentro del área sombreada.
-                    </p>
+                    <p className="text-xs text-gray-500 text-center">{m.app.envelopeCaption}</p>
                   </div>
 
                   <DataSources aircraft={aircraft} />

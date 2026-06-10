@@ -1,4 +1,5 @@
 import { AlertTriangle, CheckCircle } from "lucide-react"
+import { messages as m } from "../i18n"
 
 /**
  * Safety warnings, recommendations and margin summary for the current
@@ -16,7 +17,7 @@ export function SafetyAlerts({ safetyChecks }) {
 
   return (
     <div className="space-y-3" role="alert">
-      <h4 className="font-medium text-sm">Alertas de Seguridad</h4>
+      <h4 className="font-medium text-sm">{m.safety.title}</h4>
 
       {safetyChecks.warnings.map((warning, index) => (
         <div
@@ -55,11 +56,11 @@ export function SafetyAlerts({ safetyChecks }) {
 
       <div className="grid grid-cols-2 gap-3 text-xs">
         <div className="bg-gray-50 p-2 rounded">
-          <span className="font-medium">Uso de peso:</span>
+          <span className="font-medium">{m.safety.weightUsage}</span>
           <span className="ml-1">{safetyChecks.weightPercentage}%</span>
         </div>
         <div className="bg-gray-50 p-2 rounded">
-          <span className="font-medium">Margen CG:</span>
+          <span className="font-medium">{m.safety.cgMargin}</span>
           <span className="ml-1">
             +{safetyChecks.cgMargins.forward}" / -{safetyChecks.cgMargins.aft}"
           </span>

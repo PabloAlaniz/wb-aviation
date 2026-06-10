@@ -1,4 +1,5 @@
 import { Badge } from "./Badge"
+import { messages as m } from "../i18n"
 
 /**
  * Aircraft summary box: name, TCDS, key weights, CG limits and metadata
@@ -14,30 +15,28 @@ export function AircraftInfo({ aircraft }) {
       <h3 className="font-semibold mb-2">{aircraft.name}</h3>
       <div className="text-sm text-gray-600 space-y-1">
         <p className="font-medium text-blue-700">{aircraft.tcds}</p>
-        <p>Peso vacío: {aircraft.emptyWeight} lbs</p>
-        <p>Peso máximo: {aircraft.maxWeight} lbs</p>
-        <p>
-          CG límites: {aircraft.cgLimits.forward}" - {aircraft.cgLimits.aft}"
-        </p>
+        <p>{m.aircraftInfo.emptyWeight(aircraft.emptyWeight)}</p>
+        <p>{m.aircraftInfo.maxWeight(aircraft.maxWeight)}</p>
+        <p>{m.aircraftInfo.cgLimits(aircraft.cgLimits.forward, aircraft.cgLimits.aft)}</p>
 
         {metadata && (
           <div className="mt-3 pt-3 border-t border-gray-300">
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-xs font-medium">Producción:</span>
+              <span className="text-xs font-medium">{m.aircraftInfo.production}</span>
               <span className="text-xs">
-                {metadata.productionYears} ({metadata.totalProduced} fabricados)
+                {m.aircraftInfo.productionDetail(metadata.productionYears, metadata.totalProduced)}
               </span>
             </div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-xs font-medium">Motores:</span>
+              <span className="text-xs font-medium">{m.aircraftInfo.engines}</span>
               <span className="text-xs">{metadata.engines}</span>
             </div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-xs font-medium">Fabricante actual:</span>
+              <span className="text-xs font-medium">{m.aircraftInfo.manufacturer}</span>
               <span className="text-xs">{metadata.manufacturer.split("(")[0]}</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-medium">Confiabilidad de datos:</span>
+              <span className="text-xs font-medium">{m.aircraftInfo.dataReliability}</span>
               <Badge
                 variant={
                   metadata.dataReliability === "verified-complete"
@@ -49,10 +48,10 @@ export function AircraftInfo({ aircraft }) {
                 className="text-xs"
               >
                 {metadata.dataReliability === "verified-complete"
-                  ? "Verificado"
+                  ? m.aircraftInfo.reliabilityVerified
                   : metadata.dataReliability === "verified-partial"
-                    ? "Parcial"
-                    : "Estimado"}
+                    ? m.aircraftInfo.reliabilityPartial
+                    : m.aircraftInfo.reliabilityEstimated}
               </Badge>
             </div>
           </div>

@@ -1,5 +1,6 @@
 import { Component } from "react"
 import { AlertTriangle } from "lucide-react"
+import { messages as m } from "../i18n"
 
 /**
  * Global error boundary: shows a recoverable fallback instead of a blank
@@ -28,17 +29,14 @@ export class ErrorBoundary extends Component {
         >
           <div className="bg-white rounded-lg border border-red-200 shadow-sm p-8 max-w-md text-center space-y-4">
             <AlertTriangle className="h-10 w-10 text-red-600 mx-auto" />
-            <h1 className="text-xl font-semibold text-gray-900">Algo salió mal</h1>
-            <p className="text-sm text-gray-600">
-              Ocurrió un error inesperado en la aplicación. Podés reintentar o recargar la página.
-              Si el problema persiste, probá limpiar los datos guardados del navegador.
-            </p>
+            <h1 className="text-xl font-semibold text-gray-900">{m.errorBoundary.title}</h1>
+            <p className="text-sm text-gray-600">{m.errorBoundary.description}</p>
             <button
               type="button"
               onClick={this.handleRetry}
               className="bg-blue-600 text-white rounded-md px-4 py-2 text-sm font-medium hover:bg-blue-700"
             >
-              Reintentar
+              {m.errorBoundary.retry}
             </button>
           </div>
         </div>
