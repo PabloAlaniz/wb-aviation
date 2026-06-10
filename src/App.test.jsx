@@ -1,8 +1,12 @@
-import { describe, it, expect } from "vitest"
+import { describe, it, expect, beforeEach } from "vitest"
 import { render, screen, fireEvent } from "@testing-library/react"
 import App from "./App"
 
 describe("App (integración)", () => {
+  beforeEach(() => {
+    window.localStorage.clear()
+  })
+
   it("renders the calculator with the default aircraft", () => {
     render(<App />)
 
@@ -42,5 +46,25 @@ describe("App (integración)", () => {
     fireEvent.change(screen.getByLabelText("Combustible (lbs)"), { target: { value: "3100" } })
 
     expect(screen.getByText(/del máximo permitido/)).toBeInTheDocument()
+  })
+
+  it("persists entered weights across remounts", () => {
+    const { unmount } = render(<App />)
+    fireEvent.change(screen.getByLabelText("Piloto (lbs)"), { target: { value: "180" } })
+    unmount()
+
+    render(<App />)
+
+    expect(screen.getByLabelText("Piloto (lbs)")).toHaveValue(180)
+  })
+
+  it("clears weights with the reset button", () => {
+    render(<App />)
+    fireEvent.change(screen.getByLabelText("Piloto (lbs)"), { target: { value: "180" } })
+
+    fireEvent.click(screen.getByText("Limpiar pesos"))
+
+    expect(screen.getByLabelText("Piloto (lbs)")).toHaveValue(null)
+    expect(screen.getByText("6682.0 lbs")).toBeInTheDocument()
   })
 })
