@@ -58,6 +58,32 @@ describe("App (integración)", () => {
     expect(screen.getByLabelText("Piloto (lbs)")).toHaveValue(180)
   })
 
+  it("switches aircraft: updates stations and resets weights", () => {
+    render(<App />)
+    fireEvent.change(screen.getByLabelText("Piloto (lbs)"), { target: { value: "180" } })
+
+    fireEvent.click(screen.getByLabelText("Tipo de Aeronave"))
+    fireEvent.click(screen.getByText("Cessna 172S Skyhawk"))
+
+    // título y estaciones del C172
+    expect(screen.getByText(/Cessna 172S Skyhawk - Peso y Centrado/)).toBeInTheDocument()
+    expect(screen.getByLabelText("Pasajero trasero 1 (lbs)")).toBeInTheDocument()
+    // los pesos se resetean y el total es el peso vacío del C172
+    expect(screen.getByLabelText("Piloto (lbs)")).toHaveValue(null)
+    expect(screen.getByText("1663.0 lbs")).toBeInTheDocument()
+  })
+
+  it("persists the selected aircraft across remounts", () => {
+    const { unmount } = render(<App />)
+    fireEvent.click(screen.getByLabelText("Tipo de Aeronave"))
+    fireEvent.click(screen.getByText("Cessna 172S Skyhawk"))
+    unmount()
+
+    render(<App />)
+
+    expect(screen.getByText(/Cessna 172S Skyhawk - Peso y Centrado/)).toBeInTheDocument()
+  })
+
   it("clears weights with the reset button", () => {
     render(<App />)
     fireEvent.change(screen.getByLabelText("Piloto (lbs)"), { target: { value: "180" } })

@@ -33,6 +33,12 @@ export default function App() {
     setWeights((prev) => ({ ...prev, [field]: value }))
   }
 
+  const handleAircraftChange = (value) => {
+    setSelectedAircraft(value)
+    // las estaciones difieren entre aeronaves: empezar el cálculo de cero
+    setWeights(emptyWeightsFor(aircraftData[value]))
+  }
+
   const results = calculateWeightBalance(aircraft, weights)
   const safetyChecks = results
     ? buildSafetyReport(aircraft, results.totalWeight, results.centerOfGravity)
@@ -64,7 +70,7 @@ export default function App() {
                 <SimpleSelect
                   id="aircraft"
                   value={selectedAircraft}
-                  onValueChange={setSelectedAircraft}
+                  onValueChange={handleAircraftChange}
                   placeholder="Selecciona una aeronave"
                   options={aircraftOptions}
                 />
