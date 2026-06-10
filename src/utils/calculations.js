@@ -2,6 +2,7 @@
  * Weight & Balance calculation utilities
  * Extracted for testing and reusability
  */
+import { messages as m } from "../i18n"
 
 /**
  * Check if a point (CG, weight) is inside the CG envelope
@@ -182,7 +183,7 @@ export function buildSafetyReport(aircraft, totalWeight, centerOfGravity) {
   if (weightPercentage > safetyFactors.weightMargin * 100) {
     warnings.push({
       type: "weight-warning",
-      message: `Peso al ${weightPercentage.toFixed(1)}% del máximo permitido`,
+      message: m.safety.weightNearLimit(weightPercentage.toFixed(1)),
       severity: "medium",
     })
   }
@@ -194,7 +195,7 @@ export function buildSafetyReport(aircraft, totalWeight, centerOfGravity) {
   if (cgForwardMargin < safetyFactors.cgMargin) {
     warnings.push({
       type: "cg-forward-warning",
-      message: `Centro de gravedad muy cerca del límite frontal (${cgForwardMargin.toFixed(2)}" de margen)`,
+      message: m.safety.cgNearForward(cgForwardMargin.toFixed(2)),
       severity: "high",
     })
   }
@@ -202,7 +203,7 @@ export function buildSafetyReport(aircraft, totalWeight, centerOfGravity) {
   if (cgAftMargin < safetyFactors.cgMargin) {
     warnings.push({
       type: "cg-aft-warning",
-      message: `Centro de gravedad muy cerca del límite posterior (${cgAftMargin.toFixed(2)}" de margen)`,
+      message: m.safety.cgNearAft(cgAftMargin.toFixed(2)),
       severity: "high",
     })
   }
@@ -211,7 +212,9 @@ export function buildSafetyReport(aircraft, totalWeight, centerOfGravity) {
   if (totalWeight > aircraft.maxWeight - safetyFactors.recommendedReserve.weight) {
     recommendations.push({
       type: "weight-reserve",
-      message: `Considerar reducir peso en ${(totalWeight - (aircraft.maxWeight - safetyFactors.recommendedReserve.weight)).toFixed(0)} lbs para mayor margen de seguridad`,
+      message: m.safety.reduceWeight(
+        (totalWeight - (aircraft.maxWeight - safetyFactors.recommendedReserve.weight)).toFixed(0)
+      ),
     })
   }
 
@@ -220,7 +223,8 @@ export function buildSafetyReport(aircraft, totalWeight, centerOfGravity) {
   if (dataReliability !== "verified-complete") {
     warnings.push({
       type: "data-reliability",
-      message: `Datos ${dataReliability === "verified-partial" ? "parcialmente verificados" : "estimados"} - confirmar con documentación oficial`,
+      message:
+        dataReliability === "verified-partial" ? m.safety.dataPartial : m.safety.dataEstimated,
       severity: "low",
     })
   }
