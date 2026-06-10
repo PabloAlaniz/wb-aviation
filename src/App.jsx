@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./components/Card"
 import { SimpleSelect } from "./components/Select"
 import { Label } from "./components/Input"
@@ -9,13 +8,24 @@ import { AircraftInfo } from "./components/AircraftInfo"
 import { ResultsPanel, TakeoffVerdict } from "./components/ResultsPanel"
 import { SafetyAlerts } from "./components/SafetyAlerts"
 import { DataSources } from "./components/DataSources"
-import { Plane, Calculator } from "lucide-react"
+import { Plane, Calculator, RotateCcw } from "lucide-react"
 import { aircraftData, aircraftOptions, emptyWeightsFor } from "./data/aircraft"
 import { calculateWeightBalance, buildSafetyReport } from "./utils/calculations"
+import { useLocalStorage } from "./hooks/useLocalStorage"
+
+const DEFAULT_AIRCRAFT = "king-air-echo-90"
 
 export default function App() {
-  const [selectedAircraft, setSelectedAircraft] = useState("king-air-echo-90")
-  const [weights, setWeights] = useState(() => emptyWeightsFor(aircraftData["king-air-echo-90"]))
+  const [selectedAircraft, setSelectedAircraft] = useLocalStorage(
+    "wb-selected-aircraft",
+    DEFAULT_AIRCRAFT,
+    (value) => typeof value === "string" && value in aircraftData
+  )
+  const [weights, setWeights, resetWeights] = useLocalStorage(
+    "wb-weights",
+    emptyWeightsFor(aircraftData[DEFAULT_AIRCRAFT]),
+    (value) => value !== null && typeof value === "object" && !Array.isArray(value)
+  )
 
   const aircraft = aircraftData[selectedAircraft]
 
@@ -66,6 +76,15 @@ export default function App() {
                 weights={weights}
                 onWeightChange={handleWeightChange}
               />
+
+              <button
+                type="button"
+                onClick={resetWeights}
+                className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 border border-gray-200 rounded-md px-3 py-2 hover:bg-gray-50"
+              >
+                <RotateCcw className="h-4 w-4" />
+                Limpiar pesos
+              </button>
             </CardContent>
           </Card>
 
