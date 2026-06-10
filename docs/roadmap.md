@@ -73,7 +73,6 @@ Ser LA calculadora de peso y balance gratuita/barata para pilotos privados y esc
   - Beechcraft Baron 58
   - Pilatus PC-12
   - Aeronaves de entrenamiento populares
-  
 - [ ] **Modelo freemium**
   - Gratis: 2-3 aeronaves genéricas
   - $2-5 USD one-time: Desbloquear todas
@@ -103,31 +102,34 @@ Ser LA calculadora de peso y balance gratuita/barata para pilotos privados y esc
 
 ## 🛠️ Deuda Técnica
 
-| Item | Prioridad | Esfuerzo |
-|------|-----------|----------|
-| Sin tests | Alta | 4-6h |
-| Sin TypeScript | Media | 4-8h |
-| Sin CI/CD | Media | 1h |
-| Componentes sin PropTypes | Baja | 2h |
+| Item                      | Prioridad | Esfuerzo |
+| ------------------------- | --------- | -------- |
+| Sin tests                 | Alta      | 4-6h     |
+| Sin TypeScript            | Media     | 4-8h     |
+| Sin CI/CD                 | Media     | 1h       |
+| Componentes sin PropTypes | Baja      | 2h       |
 
 ---
 
 ## 📈 Métricas de Éxito
 
 ### Fase 1
+
 - [ ] Repo público ✓
 - [ ] Deploy en producción ✓
-- [ ] >100 visitas en primer mes
-- [ ] >5 estrellas en GitHub
+- [ ] > 100 visitas en primer mes
+- [ ] > 5 estrellas en GitHub
 
 ### Fase 2
-- [ ] >500 visitas/mes
-- [ ] >10 usuarios activos semanales
+
+- [ ] > 500 visitas/mes
+- [ ] > 10 usuarios activos semanales
 - [ ] 0 bugs reportados en cálculos
 
 ### Fase 3
-- [ ] >50 USD en revenue (validación)
-- [ ] >1000 usuarios registrados
+
+- [ ] > 50 USD en revenue (validación)
+- [ ] > 1000 usuarios registrados
 - [ ] Aparición en comunidad de aviación
 
 ---
@@ -140,4 +142,4 @@ Ser LA calculadora de peso y balance gratuita/barata para pilotos privados y esc
 
 ---
 
-*Roadmap generado automáticamente por Margarita. Revisar con Pablo para priorización final.*
+_Roadmap generado automáticamente por Margarita. Revisar con Pablo para priorización final._

@@ -133,15 +133,15 @@
 
 ## 📊 Resumen Ejecutivo
 
-| Dimensión | Score | Notas |
-|-----------|-------|-------|
-| Fortalezas | ⭐⭐⭐⭐ | Código sólido, datos verificados |
-| Debilidades | ⭐⭐⭐ | Falta persistencia, tests, más aeronaves |
-| Oportunidades | ⭐⭐⭐⭐⭐ | Mercado desatendido con dolor real |
-| Amenazas | ⭐⭐ | Manejables con disclaimers claros |
+| Dimensión     | Score      | Notas                                    |
+| ------------- | ---------- | ---------------------------------------- |
+| Fortalezas    | ⭐⭐⭐⭐   | Código sólido, datos verificados         |
+| Debilidades   | ⭐⭐⭐     | Falta persistencia, tests, más aeronaves |
+| Oportunidades | ⭐⭐⭐⭐⭐ | Mercado desatendido con dolor real       |
+| Amenazas      | ⭐⭐       | Manejables con disclaimers claros        |
 
 **Veredicto:** Proyecto con alto potencial de micro-SaaS. El 80% del trabajo core está hecho. Falta el 20% final (PWA, más aeronaves, deploy, monetización) que típicamente es lo que Pablo evita. Recomiendo priorizar este proyecto sobre nuevos.
 
 ---
 
-*Análisis generado automáticamente por Margarita*
+_Análisis generado automáticamente por Margarita_
