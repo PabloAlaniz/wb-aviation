@@ -15,7 +15,7 @@ export function SafetyAlerts({ safetyChecks }) {
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3" role="alert">
       <h4 className="font-medium text-sm">Alertas de Seguridad</h4>
 
       {safetyChecks.warnings.map((warning, index) => (

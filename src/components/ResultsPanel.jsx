@@ -56,7 +56,7 @@ export function ResultsPanel({ results }) {
  */
 export function TakeoffVerdict({ results }) {
   return (
-    <div className="text-center">
+    <div className="text-center" role="status">
       {results.isWeightOk && results.isCgOk ? (
         <div className="bg-green-50 border border-green-200 rounded-lg p-4">
           <CheckCircle className="h-8 w-8 text-green-600 mx-auto mb-2" />

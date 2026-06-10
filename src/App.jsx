@@ -62,6 +62,7 @@ export default function App() {
               <div className="space-y-2">
                 <Label htmlFor="aircraft">Tipo de Aeronave</Label>
                 <SimpleSelect
+                  id="aircraft"
                   value={selectedAircraft}
                   onValueChange={setSelectedAircraft}
                   placeholder="Selecciona una aeronave"
