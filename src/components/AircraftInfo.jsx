@@ -4,8 +4,7 @@ import { messages as m } from "../i18n"
 /**
  * Aircraft summary box: name, TCDS, key weights, CG limits and metadata
  * (production, engines, data reliability badge).
- * @param {Object} props
- * @param {Object} props.aircraft - Aircraft data entry
+ * @param {{ aircraft: import("../types").Aircraft }} props
  */
 export function AircraftInfo({ aircraft }) {
   const { metadata } = aircraft

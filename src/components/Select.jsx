@@ -1,12 +1,32 @@
 import { useRef, useState } from "react"
 import { ChevronDown } from "lucide-react"
 
+/**
+ * @param {{
+ *   children: (state: {
+ *     value: string,
+ *     onValueChange: (value: string) => void,
+ *     isOpen: boolean,
+ *     setIsOpen: (open: boolean) => void,
+ *   }) => import("react").ReactNode,
+ *   value: string,
+ *   onValueChange: (value: string) => void,
+ * }} props
+ */
 export function Select({ children, value, onValueChange }) {
   const [isOpen, setIsOpen] = useState(false)
 
   return <div className="relative">{children({ value, onValueChange, isOpen, setIsOpen })}</div>
 }
 
+/**
+ * @param {{
+ *   children?: import("react").ReactNode,
+ *   onClick?: () => void,
+ *   id?: string,
+ *   isOpen?: boolean,
+ * }} props
+ */
 export function SelectTrigger({ children, onClick, id, isOpen }) {
   return (
     <button
@@ -23,6 +43,13 @@ export function SelectTrigger({ children, onClick, id, isOpen }) {
   )
 }
 
+/**
+ * @param {{
+ *   placeholder?: string,
+ *   value?: string,
+ *   options?: import("../types").SelectOption[],
+ * }} props
+ */
 export function SelectValue({ placeholder, value, options = [] }) {
   const selectedOption = options.find((opt) => opt.value === value)
   return (
@@ -32,6 +59,7 @@ export function SelectValue({ placeholder, value, options = [] }) {
   )
 }
 
+/** @param {{ children?: import("react").ReactNode, isOpen?: boolean }} props */
 export function SelectContent({ children, isOpen }) {
   if (!isOpen) return null
 
@@ -45,6 +73,14 @@ export function SelectContent({ children, isOpen }) {
   )
 }
 
+/**
+ * @param {{
+ *   value: string,
+ *   children?: import("react").ReactNode,
+ *   onSelect: (value: string) => void,
+ *   isSelected?: boolean,
+ * }} props
+ */
 export function SelectItem({ value, children, onSelect, isSelected }) {
   return (
     <div
@@ -65,20 +101,32 @@ export function SelectItem({ value, children, onSelect, isSelected }) {
   )
 }
 
+/**
+ * @param {{
+ *   id?: string,
+ *   value: string,
+ *   onValueChange: (value: string) => void,
+ *   placeholder?: string,
+ *   options: import("../types").SelectOption[],
+ * }} props
+ */
 export function SimpleSelect({ id, value, onValueChange, placeholder, options }) {
   const [isOpen, setIsOpen] = useState(false)
-  const containerRef = useRef(null)
+  const containerRef = useRef(/** @type {HTMLDivElement | null} */ (null))
 
   const close = () => setIsOpen(false)
 
-  const handleBlur = (e) => {
+  const handleBlur = (/** @type {import("react").FocusEvent<HTMLDivElement>} */ e) => {
     // close only when focus leaves the whole select (trigger + options)
-    if (containerRef.current && !containerRef.current.contains(e.relatedTarget)) {
+    if (
+      containerRef.current &&
+      !containerRef.current.contains(/** @type {Node | null} */ (e.relatedTarget))
+    ) {
       close()
     }
   }
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (/** @type {import("react").KeyboardEvent<HTMLDivElement>} */ e) => {
     if (e.key === "Escape") close()
   }
 

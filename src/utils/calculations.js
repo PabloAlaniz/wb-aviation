@@ -9,7 +9,7 @@ import { messages as m } from "../i18n"
  * Uses ray casting algorithm
  * @param {number} cg - Center of gravity position (arm)
  * @param {number} weight - Total weight
- * @param {Array<{arm: number, weight: number}>} envelopePoints - Envelope polygon points
+ * @param {import('../types').EnvelopePoint[]} envelopePoints - Envelope polygon points
  * @returns {boolean} - True if point is inside envelope
  */
 export function isPointInEnvelope(cg, weight, envelopePoints) {
@@ -60,14 +60,14 @@ export function calculateCG(totalMoment, totalWeight) {
  * Calculate total weight and balance for an aircraft.
  * Iterates over every numeric station defined in aircraft.stations, so it
  * works for any aircraft regardless of its cabin configuration.
- * @param {Object} aircraft - Aircraft data with emptyWeight, emptyArm, stations
- * @param {Object} weights - Weights for each station (keyed by station name)
- * @returns {Object} - Calculation results
+ * @param {import('../types').Aircraft} aircraft - Aircraft data with emptyWeight, emptyArm, stations
+ * @param {import('../types').StationWeights} weights - Weights for each station (keyed by station name)
+ * @returns {import('../types').WeightBalanceResult | null} - Calculation results
  */
 export function calculateWeightBalance(aircraft, weights) {
   if (!aircraft || !weights) return null
 
-  const parseWeight = (val) => Number.parseFloat(val) || 0
+  const parseWeight = (/** @type {string} */ val) => Number.parseFloat(val) || 0
 
   let totalWeight = aircraft.emptyWeight
   let totalMoment = calculateMoment(aircraft.emptyWeight, aircraft.emptyArm)
@@ -98,13 +98,15 @@ export function calculateWeightBalance(aircraft, weights) {
 
 /**
  * Validate safety conditions for flight
- * @param {Object} aircraft - Aircraft data
+ * @param {import('../types').Aircraft} aircraft - Aircraft data
  * @param {number} totalWeight - Total weight
  * @param {number} centerOfGravity - CG position
- * @returns {Object} - Safety validation results
+ * @returns {import('../types').SafetyValidation} - Safety validation results
  */
 export function validateSafetyConditions(aircraft, totalWeight, centerOfGravity) {
+  /** @type {import('../types').SafetyIssue[]} */
   const warnings = []
+  /** @type {import('../types').SafetyIssue[]} */
   const errors = []
 
   // Weight checks
@@ -168,14 +170,16 @@ export function validateSafetyConditions(aircraft, totalWeight, centerOfGravity)
 /**
  * Build the safety report shown in the UI: severity-tagged warnings,
  * recommendations, weight usage percentage and CG margins.
- * @param {Object} aircraft - Aircraft data (safetyFactors, cgLimits, metadata)
+ * @param {import('../types').Aircraft} aircraft - Aircraft data (safetyFactors, cgLimits, metadata)
  * @param {number} totalWeight - Total weight (lbs)
  * @param {number} centerOfGravity - CG position (inches)
- * @returns {Object} - { warnings, recommendations, weightPercentage, cgMargins, dataReliability }
+ * @returns {import('../types').SafetyReport} - { warnings, recommendations, weightPercentage, cgMargins, dataReliability }
  */
 export function buildSafetyReport(aircraft, totalWeight, centerOfGravity) {
   const safetyFactors = aircraft.safetyFactors
+  /** @type {import('../types').SafetyIssue[]} */
   const warnings = []
+  /** @type {import('../types').SafetyRecommendation[]} */
   const recommendations = []
 
   // Verificar peso cerca del límite

@@ -1,3 +1,4 @@
+/** @param {import("react").ComponentProps<"input">} props */
 export function Input({ className = "", ...props }) {
   return (
     <input
@@ -7,6 +8,13 @@ export function Input({ className = "", ...props }) {
   )
 }
 
+/**
+ * @param {{
+ *   children?: import("react").ReactNode,
+ *   htmlFor?: string,
+ *   className?: string,
+ * }} props
+ */
 export function Label({ children, htmlFor, className = "" }) {
   return (
     <label

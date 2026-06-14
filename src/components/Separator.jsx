@@ -1,3 +1,4 @@
+/** @param {{ orientation?: "horizontal" | "vertical", className?: string }} props */
 export function Separator({ orientation = "horizontal", className = "" }) {
   return (
     <div
