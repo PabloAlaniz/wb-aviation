@@ -1,11 +1,10 @@
+import { messages as m } from "../i18n"
+
 /**
  * Official references and data sources panel: last update, verified sources,
  * pending verification items and the aircraft-specific data warning.
- * @param {Object} props
- * @param {Object} props.aircraft - Aircraft data entry (uses metadata, dataValidation)
+ * @param {{ aircraft: import("../types").Aircraft }} props
  */
-import { messages as m } from "../i18n"
-
 export function DataSources({ aircraft }) {
   const { metadata, dataValidation } = aircraft
   if (!dataValidation) return null

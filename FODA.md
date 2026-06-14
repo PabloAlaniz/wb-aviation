@@ -1,7 +1,7 @@
 # FODA - wb-aviation
 
-**Fecha de análisis:** 2026-02-15  
-**Analista:** Margarita (AI)
+**Fecha de análisis:** 2026-06-14 (revisión)
+**Análisis original:** 2026-02-15
 
 ---
 
@@ -38,33 +38,37 @@
 
 ---
 
-## 🚧 Debilidades
+## ✅ Debilidades ya resueltas (desde el análisis de febrero)
 
-1. **Single aircraft support**
-   - Solo King Air E90 implementado
-   - Estructura preparada pero sin más aeronaves
+- **Persistencia** → resuelto con `useLocalStorage` (carga + aeronave).
+- **Modo offline** → resuelto: PWA instalable con `vite-plugin-pwa`.
+- **Sin tests** → resuelto: ~79 tests, ~88% de cobertura.
+- **Deploy / CI/CD** → resuelto: Cloudflare Pages + workflow de CI.
+- **Single aircraft** → parcialmente: ya son 2 aeronaves (King Air E90 + Cessna 172S).
 
-2. **Sin persistencia**
-   - No guarda configuraciones del usuario
-   - No hay localStorage/IndexedDB
-   - Pierde datos al recargar
+## 🚧 Debilidades vigentes
 
-3. **Sin modo offline**
-   - No es PWA todavía
-   - Requiere conexión para uso
+1. **Catálogo aún corto**
+   - 2 aeronaves; el valor crece con cada modelo verificado.
+   - La arquitectura data-driven facilita sumar más.
 
-4. **Sin tests**
-   - 0 tests unitarios o de integración
-   - Cálculos críticos de seguridad sin cobertura
+2. **i18n incompleto** _(resuelto)_
+   - Trilingüe español/inglés/portugués con selector y detección de navegador.
 
-5. **Deploy pendiente**
-   - Repo privado
-   - No hay CI/CD configurado
-   - Sin hosting en producción
+3. **Sin export ni unidades métricas**
+   - No hay PDF imprimible del cálculo.
+   - Solo unidades imperiales (lbs/in), sin kg/cm.
 
-6. **Sin i18n**
-   - Solo español
-   - Mercado aeronáutico es mayormente en inglés
+4. **Deuda técnica de tipos** _(resuelto)_
+   - Type-check con TypeScript (`checkJs` + JSDoc, `strict`) sobre todo `src`:
+     lógica crítica (`utils/`, `data/`, `hooks/`, `i18n/`) y componentes
+     (`.jsx`), con `src/types.d.ts` del dominio y `npm run typecheck` en CI.
+
+5. **Métricas de uso / SEO** _(base lista)_
+   - SEO básico: Open Graph + Twitter Card, `sitemap.xml`, `robots.txt`,
+     canonical y meta description.
+   - Analytics privacy-friendly (Plausible) opt-in vía `VITE_PLAUSIBLE_DOMAIN`;
+     resta activarlo en producción con la cuenta del sitio.
 
 ---
 
@@ -133,15 +137,15 @@
 
 ## 📊 Resumen Ejecutivo
 
-| Dimensión     | Score      | Notas                                    |
-| ------------- | ---------- | ---------------------------------------- |
-| Fortalezas    | ⭐⭐⭐⭐   | Código sólido, datos verificados         |
-| Debilidades   | ⭐⭐⭐     | Falta persistencia, tests, más aeronaves |
-| Oportunidades | ⭐⭐⭐⭐⭐ | Mercado desatendido con dolor real       |
-| Amenazas      | ⭐⭐       | Manejables con disclaimers claros        |
+| Dimensión     | Score      | Notas                                         |
+| ------------- | ---------- | --------------------------------------------- |
+| Fortalezas    | ⭐⭐⭐⭐⭐ | Código sólido, datos verificados, tests + PWA |
+| Debilidades   | ⭐⭐       | Catálogo corto, i18n incompleto, sin export   |
+| Oportunidades | ⭐⭐⭐⭐⭐ | Mercado desatendido con dolor real            |
+| Amenazas      | ⭐⭐       | Manejables con disclaimers claros             |
 
-**Veredicto:** Proyecto con alto potencial de micro-SaaS. El 80% del trabajo core está hecho. Falta el 20% final (PWA, más aeronaves, deploy, monetización) que típicamente es lo que Pablo evita. Recomiendo priorizar este proyecto sobre nuevos.
+**Veredicto:** El MVP público ya está entregado (PWA, persistencia, tests, CI/CD, deploy y 2 aeronaves). El foco se mueve de "terminar el core" a **crecer**: más aeronaves, internacionalización (inglés), features de UX (PDF, métricas) y validar monetización. Ver el plan en [docs/sprints.md](./docs/sprints.md).
 
 ---
 
-_Análisis generado automáticamente por Margarita_
+_Análisis original generado por Margarita; revisión de junio 2026._

@@ -8,6 +8,8 @@
  * - cgLimits: { forward, aft } in inches
  * - cgEnvelope.points: closed polygon of { arm, weight } pairs
  * - safetyFactors, metadata and dataValidation (see docs/aircraft-data.md)
+ *
+ * @type {Record<string, import('../types').Aircraft>}
  */
 export const aircraftData = {
   "king-air-echo-90": {
@@ -249,7 +251,11 @@ export const aircraftOptions = Object.entries(aircraftData).map(([value, aircraf
   label: aircraft.name,
 }))
 
-/** Build an empty weights state object for a given aircraft */
+/**
+ * Build an empty weights state object for a given aircraft
+ * @param {import('../types').Aircraft} aircraft
+ * @returns {import('../types').StationWeights}
+ */
 export function emptyWeightsFor(aircraft) {
   return Object.fromEntries(aircraft.loadStations.map((station) => [station.key, ""]))
 }

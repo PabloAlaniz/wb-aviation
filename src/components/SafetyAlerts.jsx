@@ -4,8 +4,7 @@ import { messages as m } from "../i18n"
 /**
  * Safety warnings, recommendations and margin summary for the current
  * calculation. Renders nothing when there is nothing to alert about.
- * @param {Object} props
- * @param {Object} props.safetyChecks - Report from buildSafetyReport()
+ * @param {{ safetyChecks: import("../types").SafetyReport | null }} props
  */
 export function SafetyAlerts({ safetyChecks }) {
   if (

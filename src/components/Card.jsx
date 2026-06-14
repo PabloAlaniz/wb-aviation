@@ -1,11 +1,14 @@
+/** @param {{ children?: import("react").ReactNode, className?: string }} props */
 export function Card({ children, className = "" }) {
   return <div className={`rounded-lg border bg-white shadow-sm ${className}`}>{children}</div>
 }
 
+/** @param {{ children?: import("react").ReactNode, className?: string }} props */
 export function CardHeader({ children, className = "" }) {
   return <div className={`flex flex-col space-y-1.5 p-6 ${className}`}>{children}</div>
 }
 
+/** @param {{ children?: import("react").ReactNode, className?: string }} props */
 export function CardTitle({ children, className = "" }) {
   return (
     <h3 className={`text-2xl font-semibold leading-none tracking-tight ${className}`}>
@@ -14,10 +17,12 @@ export function CardTitle({ children, className = "" }) {
   )
 }
 
+/** @param {{ children?: import("react").ReactNode, className?: string }} props */
 export function CardDescription({ children, className = "" }) {
   return <p className={`text-sm text-gray-500 ${className}`}>{children}</p>
 }
 
+/** @param {{ children?: import("react").ReactNode, className?: string }} props */
 export function CardContent({ children, className = "" }) {
   return <div className={`p-6 pt-0 ${className}`}>{children}</div>
 }
