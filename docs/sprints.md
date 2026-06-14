@@ -1,0 +1,134 @@
+# Plan de Sprints - wb-aviation
+
+**Fecha de planificación:** 2026-06-14
+**Estado del proyecto:** En producción ([wb-aviation.pages.dev](https://wb-aviation.pages.dev/)), 2 aeronaves, PWA, tests + CI.
+**Duración sugerida por sprint:** 1–2 semanas.
+
+> Este plan parte del estado **real** del repositorio (no del roadmap viejo de
+> febrero). Varios items del `roadmap.md` original ya están hechos: PWA,
+> persistencia, tests, CI/CD, deploy y una segunda aeronave (Cessna 172S).
+
+---
+
+## Snapshot del estado actual (2026-06-14)
+
+| Área              | Estado | Detalle                                                        |
+| ----------------- | ------ | -------------------------------------------------------------- |
+| Aeronaves         | 🟡     | 2 implementadas (King Air E90, Cessna 172S)                    |
+| PWA / offline     | ✅     | `vite-plugin-pwa` configurado                                  |
+| Persistencia      | ✅     | `useLocalStorage` (carga + aeronave seleccionada)              |
+| Tests             | ✅     | ~79 tests, ~88% cobertura                                      |
+| CI/CD             | ✅     | lint + format + test + build en cada push/PR                  |
+| Deploy            | ✅     | Cloudflare Pages                                               |
+| i18n              | 🟡     | Módulo armado, **solo español** disponible                     |
+| Accesibilidad     | ✅     | Mejoras + error boundary global                                |
+| Documentación     | 🔴     | README/roadmap/FODA desactualizados                            |
+| Export PDF        | 🔴     | No implementado                                                |
+| Unidades métricas | 🔴     | Solo imperiales (lbs/in)                                       |
+| TypeScript/Types  | 🔴     | JS plano, sin PropTypes                                        |
+| SEO / analytics   | 🔴     | Sin Open Graph ni métricas de uso                             |
+| Monetización      | 🔴     | Sin explorar                                                   |
+
+---
+
+## 🏁 Sprint 1 — Documentación al día (base limpia)
+
+**Objetivo:** Que la documentación refleje la realidad del proyecto. Es el
+prerrequisito para que cualquier colaborador (o el yo del futuro) entienda
+dónde está parado el proyecto.
+
+- [ ] Actualizar `README.md`:
+  - Lista de aeronaves soportadas (King Air E90 **+ Cessna 172S**).
+  - Stack real: agregar Vitest, vite-plugin-pwa, i18n.
+  - Sección Roadmap: mover a "hecho" lo ya entregado, linkear a este doc.
+  - Fecha de última actualización.
+- [ ] Reescribir `roadmap.md` o reemplazarlo por un puntero a `docs/sprints.md`.
+- [ ] Actualizar `FODA.md`: mover de Debilidades lo resuelto (persistencia,
+      offline, tests, deploy, single-aircraft) y reflejar el estado nuevo.
+- [ ] Verificar que `docs/aircraft-data.md` siga vigente (hoy está OK).
+- [ ] Añadir `CONTRIBUTING.md` corto (cómo correr, testear, agregar aeronave).
+- [ ] Capturas/GIF actualizados si la UI cambió.
+
+**Entregable:** docs coherentes con el código en `main`.
+**Esfuerzo:** ~1 semana (bajo riesgo).
+
+---
+
+## ✈️ Sprint 2 — Expansión del catálogo de aeronaves
+
+**Objetivo:** Pasar de 2 a 4–5 aeronaves, que es el principal driver de valor
+y de tráfico. La arquitectura ya es data-driven (`docs/aircraft-data.md`).
+
+- [ ] Agregar **Piper PA-28 Cherokee** (muy común en escuelas).
+- [ ] Agregar **King Air 200** (familia ya conocida del proyecto).
+- [ ] Opcional: Beechcraft Baron 58 o Cessna 182.
+- [ ] Para cada una: TCDS citado, `dataReliability` honesto, `pendingVerification`.
+- [ ] Tests por aeronave: validar un cálculo del POH contra `calculateWeightBalance`.
+- [ ] Revisar UX del selector con 4+ aeronaves (agrupar por categoría si hace falta).
+
+**Entregable:** catálogo de 4–5 aeronaves verificadas + tests.
+**Esfuerzo:** ~1–2 semanas (depende de conseguir datos oficiales).
+
+---
+
+## 🌍 Sprint 3 — Internacionalización real + alcance (SEO)
+
+**Objetivo:** Abrir el mercado angloparlante (el grande en aviación) y mejorar
+la presencia. El módulo i18n ya existe pero solo tiene español.
+
+- [ ] Traducir todas las strings a **inglés** (`src/i18n/en.js`).
+- [ ] Resolver locale por preferencia del navegador + selector manual persistido.
+- [ ] (Stretch) Portugués (`pt.js`) para mercado brasileño.
+- [ ] Open Graph + Twitter Card tags para previews en redes.
+- [ ] Analytics privacy-friendly (Plausible / Umami) para medir uso real.
+- [ ] `sitemap.xml` + meta description.
+
+**Entregable:** app bilingüe (ES/EN) con SEO básico y métricas de uso.
+**Esfuerzo:** ~1–2 semanas.
+
+---
+
+## 🧰 Sprint 4 — Features que piden los pilotos
+
+**Objetivo:** Diferenciadores de UX que aparecen una y otra vez en feedback
+de pilotos.
+
+- [ ] **Export a PDF** del cálculo (hoja de W&B imprimible para el vuelo).
+- [ ] **Unidades métricas** (kg/cm) además de imperiales, con toggle persistido.
+- [ ] **Modo oscuro** (útil en cabina).
+- [ ] Validar export PDF y unidades con tests.
+
+**Entregable:** export PDF + unidades configurables + dark mode.
+**Esfuerzo:** ~2 semanas (el PDF es lo más pesado).
+
+---
+
+## 🏗️ Sprint 5 — Robustez técnica + cimientos de monetización
+
+**Objetivo:** Bajar deuda técnica y dejar lista la base para el modelo
+freemium del roadmap.
+
+- [ ] Migración incremental a **TypeScript** (empezar por `data/` y `utils/`,
+      que es lógica crítica de seguridad) **o** PropTypes si TS es demasiado.
+- [ ] Cobertura de tests > 90% en `calculations.js`.
+- [ ] **Aeronave custom por matrícula**: el usuario ingresa su peso vacío y
+      brazo, se guarda en localStorage (precursor del freemium).
+- [ ] Spike de monetización: evaluar LemonSqueezy/Stripe, definir qué es free
+      vs. premium (sin cobrar todavía, solo dejar la arquitectura).
+
+**Entregable:** base tipada + aeronave custom + decisión de modelo de negocio.
+**Esfuerzo:** ~2 semanas.
+
+---
+
+## Resumen
+
+| Sprint | Tema                         | Driver principal            |
+| ------ | ---------------------------- | --------------------------- |
+| 1      | Documentación al día         | Base limpia / mantenibilidad|
+| 2      | Catálogo de aeronaves        | Valor de producto / tráfico |
+| 3      | i18n (EN/PT) + SEO           | Expansión de mercado        |
+| 4      | PDF + métricas + dark mode   | UX / retención              |
+| 5      | TypeScript + monetización    | Robustez / negocio          |
+
+_Plan vivo: revisar al cierre de cada sprint y reordenar según feedback real de usuarios._
