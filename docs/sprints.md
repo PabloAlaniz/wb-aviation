@@ -12,42 +12,42 @@
 
 ## Snapshot del estado actual (2026-06-14)
 
-| Área              | Estado | Detalle                                                        |
-| ----------------- | ------ | -------------------------------------------------------------- |
-| Aeronaves         | 🟡     | 2 implementadas (King Air E90, Cessna 172S)                    |
-| PWA / offline     | ✅     | `vite-plugin-pwa` configurado                                  |
-| Persistencia      | ✅     | `useLocalStorage` (carga + aeronave seleccionada)              |
-| Tests             | ✅     | ~79 tests, ~88% cobertura                                      |
-| CI/CD             | ✅     | lint + format + test + build en cada push/PR                  |
-| Deploy            | ✅     | Cloudflare Pages                                               |
-| i18n              | 🟡     | Módulo armado, **solo español** disponible                     |
-| Accesibilidad     | ✅     | Mejoras + error boundary global                                |
-| Documentación     | 🔴     | README/roadmap/FODA desactualizados                            |
-| Export PDF        | 🔴     | No implementado                                                |
-| Unidades métricas | 🔴     | Solo imperiales (lbs/in)                                       |
-| TypeScript/Types  | 🔴     | JS plano, sin PropTypes                                        |
-| SEO / analytics   | 🔴     | Sin Open Graph ni métricas de uso                             |
-| Monetización      | 🔴     | Sin explorar                                                   |
+| Área              | Estado | Detalle                                                      |
+| ----------------- | ------ | ------------------------------------------------------------ |
+| Aeronaves         | 🟡     | 2 implementadas (King Air E90, Cessna 172S)                  |
+| PWA / offline     | ✅     | `vite-plugin-pwa` configurado                                |
+| Persistencia      | ✅     | `useLocalStorage` (carga + aeronave seleccionada)            |
+| Tests             | ✅     | ~79 tests, ~88% cobertura                                    |
+| CI/CD             | ✅     | lint + format + test + build en cada push/PR                 |
+| Deploy            | ✅     | Cloudflare Pages                                             |
+| i18n              | 🟡     | Módulo armado, **solo español** disponible                   |
+| Accesibilidad     | ✅     | Mejoras + error boundary global                              |
+| Documentación     | ✅     | README/FODA al día, roadmap→sprints, CONTRIBUTING (Sprint 1) |
+| Export PDF        | 🔴     | No implementado                                              |
+| Unidades métricas | 🔴     | Solo imperiales (lbs/in)                                     |
+| TypeScript/Types  | 🔴     | JS plano, sin PropTypes                                      |
+| SEO / analytics   | 🔴     | Sin Open Graph ni métricas de uso                            |
+| Monetización      | 🔴     | Sin explorar                                                 |
 
 ---
 
-## 🏁 Sprint 1 — Documentación al día (base limpia)
+## 🏁 Sprint 1 — Documentación al día (base limpia) — ✅ COMPLETADO
 
 **Objetivo:** Que la documentación refleje la realidad del proyecto. Es el
 prerrequisito para que cualquier colaborador (o el yo del futuro) entienda
 dónde está parado el proyecto.
 
-- [ ] Actualizar `README.md`:
+- [x] Actualizar `README.md`:
   - Lista de aeronaves soportadas (King Air E90 **+ Cessna 172S**).
   - Stack real: agregar Vitest, vite-plugin-pwa, i18n.
   - Sección Roadmap: mover a "hecho" lo ya entregado, linkear a este doc.
-  - Fecha de última actualización.
-- [ ] Reescribir `roadmap.md` o reemplazarlo por un puntero a `docs/sprints.md`.
-- [ ] Actualizar `FODA.md`: mover de Debilidades lo resuelto (persistencia,
+  - Datos del Cessna 172S y fecha de última actualización.
+- [x] Reemplazar `roadmap.md` por un puntero a `docs/sprints.md`.
+- [x] Actualizar `FODA.md`: mover de Debilidades lo resuelto (persistencia,
       offline, tests, deploy, single-aircraft) y reflejar el estado nuevo.
-- [ ] Verificar que `docs/aircraft-data.md` siga vigente (hoy está OK).
-- [ ] Añadir `CONTRIBUTING.md` corto (cómo correr, testear, agregar aeronave).
-- [ ] Capturas/GIF actualizados si la UI cambió.
+- [x] Verificar que `docs/aircraft-data.md` siga vigente (está OK).
+- [x] Añadir `CONTRIBUTING.md` (cómo correr, testear, agregar aeronave).
+- [ ] Capturas/GIF actualizados si la UI cambió. _(pendiente: requiere captura)_
 
 **Entregable:** docs coherentes con el código en `main`.
 **Esfuerzo:** ~1 semana (bajo riesgo).
@@ -123,12 +123,12 @@ freemium del roadmap.
 
 ## Resumen
 
-| Sprint | Tema                         | Driver principal            |
-| ------ | ---------------------------- | --------------------------- |
-| 1      | Documentación al día         | Base limpia / mantenibilidad|
-| 2      | Catálogo de aeronaves        | Valor de producto / tráfico |
-| 3      | i18n (EN/PT) + SEO           | Expansión de mercado        |
-| 4      | PDF + métricas + dark mode   | UX / retención              |
-| 5      | TypeScript + monetización    | Robustez / negocio          |
+| Sprint | Tema                       | Driver principal             |
+| ------ | -------------------------- | ---------------------------- |
+| 1      | Documentación al día       | Base limpia / mantenibilidad |
+| 2      | Catálogo de aeronaves      | Valor de producto / tráfico  |
+| 3      | i18n (EN/PT) + SEO         | Expansión de mercado         |
+| 4      | PDF + métricas + dark mode | UX / retención               |
+| 5      | TypeScript + monetización  | Robustez / negocio           |
 
 _Plan vivo: revisar al cierre de cada sprint y reordenar según feedback real de usuarios._
