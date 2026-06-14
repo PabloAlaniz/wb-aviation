@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest"
-import { resolveLocale, locales, localeOptions, DEFAULT_LOCALE } from "./index"
+import { resolveLocale, locales, localeNames, localeOptions, DEFAULT_LOCALE } from "./index"
 import { es } from "./es"
-import { en } from "./en"
 
 describe("resolveLocale", () => {
   it("prefers a valid stored preference over the browser language", () => {
@@ -25,9 +24,15 @@ describe("resolveLocale", () => {
 })
 
 describe("locale catalog", () => {
-  it("exposes one option per locale", () => {
+  it("exposes one named option per locale", () => {
     expect(localeOptions.map((o) => o.value).sort()).toEqual(Object.keys(locales).sort())
     expect(localeOptions.every((o) => typeof o.label === "string" && o.label.length > 0)).toBe(true)
+  })
+
+  it("has a display name for every locale", () => {
+    for (const code of Object.keys(locales)) {
+      expect(localeNames[code]).toBeTruthy()
+    }
   })
 })
 
@@ -39,8 +44,12 @@ function shapeOf(obj, prefix = "") {
   })
 }
 
-describe("es / en parity", () => {
-  it("English mirrors the Spanish structure (same keys and value kinds)", () => {
-    expect(shapeOf(en).sort()).toEqual(shapeOf(es).sort())
-  })
+describe("locale parity", () => {
+  const reference = shapeOf(es).sort()
+
+  for (const [code, catalog] of Object.entries(locales)) {
+    it(`"${code}" mirrors the Spanish structure (same keys and value kinds)`, () => {
+      expect(shapeOf(catalog).sort()).toEqual(reference)
+    })
+  }
 })
