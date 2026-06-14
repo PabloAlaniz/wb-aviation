@@ -5,8 +5,7 @@ import { messages as m } from "../i18n"
 /**
  * Total weight / CG rows with OK / out-of-limits badges, plus the final
  * takeoff verdict box.
- * @param {Object} props
- * @param {Object} props.results - Results from calculateWeightBalance()
+ * @param {{ results: import("../types").WeightBalanceResult }} props
  */
 export function ResultsPanel({ results }) {
   return (
@@ -52,8 +51,7 @@ export function ResultsPanel({ results }) {
 
 /**
  * Final go / no-go verdict box based on weight and CG checks.
- * @param {Object} props
- * @param {Object} props.results - Results from calculateWeightBalance()
+ * @param {{ results: import("../types").WeightBalanceResult }} props
  */
 export function TakeoffVerdict({ results }) {
   return (

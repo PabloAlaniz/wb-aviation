@@ -10,6 +10,13 @@ import {
 } from "recharts"
 import { messages as m } from "../i18n"
 
+/**
+ * @param {{
+ *   aircraft: import("../types").Aircraft,
+ *   currentCG: number,
+ *   currentWeight: number,
+ * }} props
+ */
 export function CGEnvelopeChart({ aircraft, currentCG, currentWeight }) {
   // Preparar datos del envolvente para formar un polígono cerrado
   const envelopePoints = aircraft.cgEnvelope.points
@@ -31,6 +38,7 @@ export function CGEnvelopeChart({ aircraft, currentCG, currentWeight }) {
   const currentPointData = [{ x: currentCG, y: currentWeight, label: m.chart.operatingPoint }]
 
   // Tooltip personalizado
+  /** @param {{ active?: boolean, payload?: Array<{ payload: { x: number, y: number } }> }} props */
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload

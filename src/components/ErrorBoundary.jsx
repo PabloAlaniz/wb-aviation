@@ -5,8 +5,10 @@ import { messages as m } from "../i18n"
 /**
  * Global error boundary: shows a recoverable fallback instead of a blank
  * screen when a render error occurs.
+ * @extends {Component<{ children?: import("react").ReactNode }, { hasError: boolean }>}
  */
 export class ErrorBoundary extends Component {
+  /** @param {{ children?: import("react").ReactNode }} props */
   constructor(props) {
     super(props)
     this.state = { hasError: false }

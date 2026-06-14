@@ -3,10 +3,11 @@ import { Input, Label } from "./Input"
 /**
  * Data-driven load station form. Renders one numeric input per entry in
  * aircraft.loadStations, in pairs (or full width when station.fullWidth).
- * @param {Object} props
- * @param {Object} props.aircraft - Aircraft data (uses loadStations)
- * @param {Object} props.weights - Current weight values keyed by station key
- * @param {Function} props.onWeightChange - (key, value) => void
+ * @param {{
+ *   aircraft: import("../types").Aircraft,
+ *   weights: import("../types").StationWeights,
+ *   onWeightChange: (key: string, value: string) => void,
+ * }} props
  */
 export function StationForm({ aircraft, weights, onWeightChange }) {
   const stations = aircraft.loadStations
@@ -18,7 +19,7 @@ export function StationForm({ aircraft, weights, onWeightChange }) {
     rows.push(paired.slice(i, i + 2))
   }
 
-  const renderField = (station) => (
+  const renderField = (/** @type {import("../types").LoadStation} */ station) => (
     <div key={station.key} className="space-y-2">
       <Label htmlFor={station.key}>{station.label}</Label>
       <Input

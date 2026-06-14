@@ -30,11 +30,11 @@ export default function App() {
 
   const aircraft = aircraftData[selectedAircraft]
 
-  const handleWeightChange = (field, value) => {
+  const handleWeightChange = (/** @type {string} */ field, /** @type {string} */ value) => {
     setWeights((prev) => ({ ...prev, [field]: value }))
   }
 
-  const handleAircraftChange = (value) => {
+  const handleAircraftChange = (/** @type {string} */ value) => {
     setSelectedAircraft(value)
     // las estaciones difieren entre aeronaves: empezar el cálculo de cero
     setWeights(emptyWeightsFor(aircraftData[value]))
