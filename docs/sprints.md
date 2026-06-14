@@ -18,14 +18,14 @@
 | PWA / offline     | ✅     | `vite-plugin-pwa` configurado                                |
 | Persistencia      | ✅     | `useLocalStorage` (carga + aeronave seleccionada)            |
 | Tests             | ✅     | ~79 tests, ~88% cobertura                                    |
-| CI/CD             | ✅     | lint + format + test + build en cada push/PR                 |
+| CI/CD             | ✅     | lint + format + typecheck + test + build en cada push/PR     |
 | Deploy            | ✅     | Cloudflare Pages                                             |
 | i18n              | 🟡     | Módulo armado, **solo español** disponible                   |
 | Accesibilidad     | ✅     | Mejoras + error boundary global                              |
 | Documentación     | ✅     | README/FODA al día, roadmap→sprints, CONTRIBUTING (Sprint 1) |
 | Export PDF        | 🔴     | No implementado                                              |
 | Unidades métricas | 🔴     | Solo imperiales (lbs/in)                                     |
-| TypeScript/Types  | 🔴     | JS plano, sin PropTypes                                      |
+| TypeScript/Types  | 🟡     | Type-check (checkJs) en utils/data/hooks/i18n; UI pendiente  |
 | SEO / analytics   | 🔴     | Sin Open Graph ni métricas de uso                            |
 | Monetización      | 🔴     | Sin explorar                                                 |
 
@@ -108,8 +108,10 @@ de pilotos.
 **Objetivo:** Bajar deuda técnica y dejar lista la base para el modelo
 freemium del roadmap.
 
-- [ ] Migración incremental a **TypeScript** (empezar por `data/` y `utils/`,
-      que es lógica crítica de seguridad) **o** PropTypes si TS es demasiado.
+- [x] Migración incremental a **TypeScript** (type-check vía `checkJs` + JSDoc
+      sobre `utils/`, `data/`, `hooks/` e `i18n/`, con `src/types.d.ts` del
+      dominio y `npm run typecheck` en CI). _Adelantado antes del Sprint 2._
+- [ ] Extender el type-check a los componentes (`.jsx`) o sumar PropTypes.
 - [ ] Cobertura de tests > 90% en `calculations.js`.
 - [ ] **Aeronave custom por matrícula**: el usuario ingresa su peso vacío y
       brazo, se guarda en localStorage (precursor del freemium).

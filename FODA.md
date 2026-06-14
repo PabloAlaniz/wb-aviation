@@ -60,8 +60,10 @@
    - No hay PDF imprimible del cálculo.
    - Solo unidades imperiales (lbs/in), sin kg/cm.
 
-4. **Deuda técnica de tipos**
-   - JS plano, sin TypeScript ni PropTypes en lógica crítica.
+4. **Deuda técnica de tipos** _(parcialmente resuelto)_
+   - Type-check con TypeScript (`checkJs` + JSDoc) sobre la lógica crítica
+     (`utils/`, `data/`, `hooks/`, `i18n/`) con `src/types.d.ts` del dominio.
+   - Pendiente: extender el tipado a los componentes (`.jsx`) o PropTypes.
 
 5. **Sin métricas de uso**
    - Sin analytics ni SEO (Open Graph) para medir y crecer.

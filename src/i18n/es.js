@@ -6,8 +6,8 @@
  */
 export const es = {
   app: {
-    title: (aircraftName) => `${aircraftName} - Peso y Centrado`,
-    subtitle: (tcds) => `Cálculo de peso y centrado basado en ${tcds}`,
+    title: (/** @type {string} */ aircraftName) => `${aircraftName} - Peso y Centrado`,
+    subtitle: (/** @type {string} */ tcds) => `Cálculo de peso y centrado basado en ${tcds}`,
     aircraftCardTitle: "Datos de la Aeronave",
     aircraftCardDescription: "Selecciona el tipo de avión e ingresa los pesos",
     aircraftSelectLabel: "Tipo de Aeronave",
@@ -38,22 +38,25 @@ export const es = {
     title: "Alertas de Seguridad",
     weightUsage: "Uso de peso:",
     cgMargin: "Margen CG:",
-    weightNearLimit: (pct) => `Peso al ${pct}% del máximo permitido`,
-    cgNearForward: (margin) =>
+    weightNearLimit: (/** @type {string|number} */ pct) => `Peso al ${pct}% del máximo permitido`,
+    cgNearForward: (/** @type {string|number} */ margin) =>
       `Centro de gravedad muy cerca del límite frontal (${margin}" de margen)`,
-    cgNearAft: (margin) =>
+    cgNearAft: (/** @type {string|number} */ margin) =>
       `Centro de gravedad muy cerca del límite posterior (${margin}" de margen)`,
-    reduceWeight: (lbs) => `Considerar reducir peso en ${lbs} lbs para mayor margen de seguridad`,
+    reduceWeight: (/** @type {string|number} */ lbs) =>
+      `Considerar reducir peso en ${lbs} lbs para mayor margen de seguridad`,
     dataPartial: "Datos parcialmente verificados - confirmar con documentación oficial",
     dataEstimated: "Datos estimados - confirmar con documentación oficial",
   },
 
   aircraftInfo: {
-    emptyWeight: (lbs) => `Peso vacío: ${lbs} lbs`,
-    maxWeight: (lbs) => `Peso máximo: ${lbs} lbs`,
-    cgLimits: (forward, aft) => `CG límites: ${forward}" - ${aft}"`,
+    emptyWeight: (/** @type {string|number} */ lbs) => `Peso vacío: ${lbs} lbs`,
+    maxWeight: (/** @type {string|number} */ lbs) => `Peso máximo: ${lbs} lbs`,
+    cgLimits: (/** @type {string|number} */ forward, /** @type {string|number} */ aft) =>
+      `CG límites: ${forward}" - ${aft}"`,
     production: "Producción:",
-    productionDetail: (years, total) => `${years} (${total} fabricados)`,
+    productionDetail: (/** @type {string|number} */ years, /** @type {string|number} */ total) =>
+      `${years} (${total} fabricados)`,
     engines: "Motores:",
     manufacturer: "Fabricante actual:",
     dataReliability: "Confiabilidad de datos:",
@@ -75,11 +78,11 @@ export const es = {
   },
 
   chart: {
-    title: (tcds) => `Envolvente de CG — ${tcds}`,
+    title: (/** @type {string} */ tcds) => `Envolvente de CG — ${tcds}`,
     axisNote: "C.G. Arm - Inches aft of Datum STA 0.0",
     tooltipTitle: "Información del Punto",
-    tooltipCg: (value) => `CG: ${value}" Arm`,
-    tooltipWeight: (value) => `Peso: ${value} lbs`,
+    tooltipCg: (/** @type {string|number} */ value) => `CG: ${value}" Arm`,
+    tooltipWeight: (/** @type {string|number} */ value) => `Peso: ${value} lbs`,
     envelopeLimit: "Límite del Envolvente",
     operatingPoint: "Punto Operativo",
     xUnit: "inches",
