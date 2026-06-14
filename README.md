@@ -24,7 +24,7 @@ El sistema incluye:
 - ✅ Datos verificados con documentación oficial
 - ✅ Persistencia local de los datos cargados y la aeronave seleccionada
 - ✅ Uso offline (PWA instalable)
-- ✅ Bilingüe español/inglés con selector y detección de idioma del navegador
+- ✅ Trilingüe español/inglés/portugués con selector y detección de idioma del navegador
 - ✅ Accesibilidad y manejo global de errores
 
 ## 🚀 Características Principales
@@ -69,7 +69,7 @@ El sistema incluye:
 - **Vitest 4.x + Testing Library** - Tests unitarios y de componentes
 - **ESLint 9.33.0 + Prettier** - Linter y formateo de código
 
-La interfaz usa un módulo de i18n (`src/i18n/`) para centralizar los textos; disponible en **español e inglés**, con resolución automática por idioma del navegador y selector manual persistido. Para sumar un idioma: crear `src/i18n/<locale>.js` y registrarlo en `src/i18n/index.js`.
+La interfaz usa un módulo de i18n (`src/i18n/`) para centralizar los textos; disponible en **español, inglés y portugués**, con resolución automática por idioma del navegador y selector manual persistido. Para sumar un idioma: crear `src/i18n/<locale>.js` y registrarlo en `src/i18n/index.js`.
 
 ## 📦 Instalación
 
@@ -122,9 +122,16 @@ npm run test:coverage # Reporte de cobertura
 
 ```bash
 npm run lint          # ESLint
+npm run typecheck     # Chequeo de tipos con TypeScript (checkJs)
 npm run format        # Formatea el código con Prettier
 npm run format:check  # Verifica formato (usado en CI)
 ```
+
+### Variables de entorno
+
+Copiá `.env.example` a `.env.local` para habilitar integraciones opcionales (todas con prefijo `VITE_`):
+
+- `VITE_PLAUSIBLE_DOMAIN` — dominio del sitio en [Plausible](https://plausible.io) para activar analytics sin cookies. Si queda vacío, no se carga ningún script de métricas.
 
 ## 📂 Estructura del Proyecto
 
@@ -289,12 +296,12 @@ La planificación detallada vive en [docs/sprints.md](docs/sprints.md).
 - [x] Accesibilidad y error boundary global
 - [x] Módulo i18n (base para multi-idioma)
 
-- [x] Multi-idioma (español / inglés)
+- [x] Multi-idioma (español / inglés / portugués)
+- [x] SEO básico (Open Graph, sitemap, robots) + analytics opt-in
 
 ### Próximo
 
 - [ ] Más aeronaves (Piper PA-28, King Air 200, Baron 58)
-- [ ] Portugués (i18n)
 - [ ] Exportar PDF del cálculo
 - [ ] Unidades métricas (kg / cm)
 

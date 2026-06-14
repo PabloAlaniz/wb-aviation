@@ -52,9 +52,8 @@
    - 2 aeronaves; el valor crece con cada modelo verificado.
    - La arquitectura data-driven facilita sumar más.
 
-2. **i18n incompleto** _(resuelto para ES/EN)_
-   - Bilingüe español/inglés con selector y detección de navegador.
-   - Pendiente opcional: portugués (mercado brasileño).
+2. **i18n incompleto** _(resuelto)_
+   - Trilingüe español/inglés/portugués con selector y detección de navegador.
 
 3. **Sin export ni unidades métricas**
    - No hay PDF imprimible del cálculo.
@@ -65,8 +64,11 @@
      lógica crítica (`utils/`, `data/`, `hooks/`, `i18n/`) y componentes
      (`.jsx`), con `src/types.d.ts` del dominio y `npm run typecheck` en CI.
 
-5. **Sin métricas de uso**
-   - Sin analytics ni SEO (Open Graph) para medir y crecer.
+5. **Métricas de uso / SEO** _(base lista)_
+   - SEO básico: Open Graph + Twitter Card, `sitemap.xml`, `robots.txt`,
+     canonical y meta description.
+   - Analytics privacy-friendly (Plausible) opt-in vía `VITE_PLAUSIBLE_DOMAIN`;
+     resta activarlo en producción con la cuenta del sitio.
 
 ---
 

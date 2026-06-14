@@ -17,16 +17,16 @@
 | Aeronaves         | 🟡     | 2 implementadas (King Air E90, Cessna 172S)                  |
 | PWA / offline     | ✅     | `vite-plugin-pwa` configurado                                |
 | Persistencia      | ✅     | `useLocalStorage` (carga + aeronave seleccionada)            |
-| Tests             | ✅     | ~79 tests, ~88% cobertura                                    |
+| Tests             | ✅     | 98 tests, alta cobertura                                     |
 | CI/CD             | ✅     | lint + format + typecheck + test + build en cada push/PR     |
 | Deploy            | ✅     | Cloudflare Pages                                             |
-| i18n              | ✅     | Bilingüe ES/EN con selector y detección de navegador         |
+| i18n              | ✅     | Trilingüe ES/EN/PT con selector y detección de navegador     |
 | Accesibilidad     | ✅     | Mejoras + error boundary global                              |
 | Documentación     | ✅     | README/FODA al día, roadmap→sprints, CONTRIBUTING (Sprint 1) |
 | Export PDF        | 🔴     | No implementado                                              |
 | Unidades métricas | 🔴     | Solo imperiales (lbs/in)                                     |
 | TypeScript/Types  | ✅     | Type-check (checkJs) en todo `src` (lógica + componentes)    |
-| SEO / analytics   | 🔴     | Sin Open Graph ni métricas de uso                            |
+| SEO / analytics   | 🟡     | OG/Twitter + sitemap/robots; analytics Plausible opt-in      |
 | Monetización      | 🔴     | Sin explorar                                                 |
 
 ---
@@ -71,7 +71,7 @@ y de tráfico. La arquitectura ya es data-driven (`docs/aircraft-data.md`).
 
 ---
 
-## 🌍 Sprint 3 — Internacionalización real + alcance (SEO)
+## 🌍 Sprint 3 — Internacionalización real + alcance (SEO) — ✅ COMPLETADO
 
 **Objetivo:** Abrir el mercado angloparlante (el grande en aviación) y mejorar
 la presencia. El módulo i18n ya existe pero solo tiene español.
@@ -79,13 +79,13 @@ la presencia. El módulo i18n ya existe pero solo tiene español.
 - [x] Traducir todas las strings a **inglés** (`src/i18n/en.js`).
 - [x] Resolver locale por preferencia guardada + idioma del navegador, con
       selector manual persistido (`resolveLocale`, `setLocale`, `<html lang>`).
-- [x] Test de paridad de claves es/en y de resolución de locale.
-- [ ] (Stretch) Portugués (`pt.js`) para mercado brasileño.
-- [ ] Open Graph + Twitter Card tags para previews en redes.
-- [ ] Analytics privacy-friendly (Plausible / Umami) para medir uso real.
-- [ ] `sitemap.xml` + meta description.
+- [x] Test de paridad de claves (todos los locales) y de resolución de locale.
+- [x] **Portugués** (`src/i18n/pt.js`) para mercado brasileño.
+- [x] Open Graph + Twitter Card tags para previews en redes.
+- [x] Analytics privacy-friendly (Plausible, opt-in vía `VITE_PLAUSIBLE_DOMAIN`).
+- [x] `sitemap.xml` + `robots.txt` + meta description / canonical.
 
-**Entregable:** app bilingüe (ES/EN) con SEO básico y métricas de uso.
+**Entregable:** app trilingüe (ES/EN/PT) con SEO básico y métricas opt-in. ✅
 **Esfuerzo:** ~1–2 semanas.
 
 ---
