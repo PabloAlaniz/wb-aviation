@@ -8,19 +8,23 @@ Aplicación web open source para el cálculo de peso y balance (Weight & Balance
 
 ![wb-aviation](<./public/Captura%20de%20pantalla%202025-08-20%20a%20la(s)%2000.06.41.png>)
 
-**Aeronaves soportadas:** King Air E90 (más próximamente)
+**Aeronaves soportadas:** King Air E90 (Beechcraft) · Cessna 172S Skyhawk _(más próximamente)_
 
 ## 📋 Descripción
 
-Esta herramienta permite calcular el peso total y el centro de gravedad (CG) de una aeronave King Air E90, verificando que se encuentre dentro de los límites operacionales seguros establecidos por el fabricante y la FAA.
+Esta herramienta permite calcular el peso total y el centro de gravedad (CG) de una aeronave, verificando que se encuentre dentro de los límites operacionales seguros establecidos por el fabricante y la FAA. La aplicación es multi-aeronave y data-driven: el formulario, los cálculos y los gráficos se generan automáticamente a partir de los datos de cada aeronave.
 
 El sistema incluye:
 
 - ✅ Cálculo automático de peso total y centro de gravedad
+- ✅ Selector de aeronaves (King Air E90, Cessna 172S)
 - ✅ Validación contra envolvente de CG oficial
 - ✅ Sistema de alertas de seguridad y advertencias
 - ✅ Visualización gráfica del envolvente de CG
 - ✅ Datos verificados con documentación oficial
+- ✅ Persistencia local de los datos cargados y la aeronave seleccionada
+- ✅ Uso offline (PWA instalable)
+- ✅ Accesibilidad y manejo global de errores
 
 ## 🚀 Características Principales
 
@@ -60,7 +64,11 @@ El sistema incluye:
 - **Tailwind CSS 4.1.12** - Framework de estilos
 - **Recharts 3.1.2** - Librería de gráficos
 - **Lucide React 0.540.0** - Sistema de iconos
-- **ESLint 9.33.0** - Linter de código
+- **vite-plugin-pwa 1.3.0** - Soporte PWA / offline
+- **Vitest 4.x + Testing Library** - Tests unitarios y de componentes
+- **ESLint 9.33.0 + Prettier** - Linter y formateo de código
+
+La interfaz usa un módulo de i18n (`src/i18n/`) para centralizar los textos; actualmente está disponible en español, preparado para sumar más idiomas.
 
 ## 📦 Instalación
 
@@ -133,15 +141,22 @@ wb-aviation/
 │   │   ├── SafetyAlerts.jsx     # Alertas de seguridad
 │   │   ├── Select.jsx           # Select personalizado
 │   │   ├── Separator.jsx        # Separador visual
-│   │   └── StationForm.jsx      # Formulario de carga (data-driven)
+│   │   ├── StationForm.jsx      # Formulario de carga (data-driven)
+│   │   └── *.test.jsx           # Tests de componentes
 │   ├── data/
-│   │   └── aircraft.js     # Base de datos de aeronaves
+│   │   ├── aircraft.js          # Base de datos de aeronaves
+│   │   └── aircraft.test.js     # Tests de integridad de datos
+│   ├── hooks/
+│   │   └── useLocalStorage.js   # Persistencia en localStorage
+│   ├── i18n/
+│   │   ├── es.js                # Textos en español
+│   │   └── index.js             # Resolución de locale
 │   ├── utils/
 │   │   ├── calculations.js      # Lógica de cálculo W&B
 │   │   └── calculations.test.js # Tests unitarios
 │   ├── App.jsx            # Componente principal (composición)
 │   └── main.jsx           # Punto de entrada
-├── docs/                  # Documentación (roadmap, datos de aeronave)
+├── docs/                  # Documentación (sprints, datos de aeronave)
 ├── public/                # Recursos estáticos
 ├── data/                  # Imágenes de referencia del TCDS
 ├── package.json           # Dependencias y scripts
@@ -170,6 +185,18 @@ wb-aviation/
 - FAA TCDS 3A20 Rev 81 (11 mayo 2018)
 - Weight & Balance Report específico
 - Última verificación: 21 agosto 2024
+
+### Cessna 172S Skyhawk
+
+- **TCDS**: 3A12 (FAA)
+- **Fabricante**: Cessna Aircraft Company (Textron Aviation)
+- **Producción**: 1998-presente
+- **Motor**: 1x Lycoming IO-360-L2A (180 HP)
+- **Peso máximo**: 2,550 lbs (categoría normal)
+- **Límites de CG**: 35.0" - 47.3" (límite frontal variable con el peso)
+- **Capacidad de combustible**: 56 galones (53 usables)
+
+> ⚠️ Los datos del 172S son **valores típicos de fábrica** (`dataReliability: estimated`). El peso vacío y su brazo deben tomarse del Weight & Balance Report de la aeronave individual.
 
 ## ⚠️ Advertencias Importantes
 
@@ -249,23 +276,27 @@ Para preguntas técnicas o reportar problemas, abrir un issue en el repositorio.
 
 ## 🗺️ Roadmap
 
-### Aeronaves Próximas
+La planificación detallada vive en [docs/sprints.md](docs/sprints.md).
 
-- [ ] Cessna 172 (la más común para entrenamiento)
-- [ ] Piper PA-28 Cherokee
-- [ ] King Air 200/350
-- [ ] Beechcraft Baron 58
-- [ ] Bombardier Q400
+### Ya entregado
 
-### Features Futuras
+- [x] Multi-aeronave con selector (King Air E90, Cessna 172S)
+- [x] PWA para uso offline en cabina
+- [x] Persistencia de datos del usuario (localStorage)
+- [x] Tests + CI/CD (lint, formato, tests, build)
+- [x] Deploy en producción (Cloudflare Pages)
+- [x] Accesibilidad y error boundary global
+- [x] Módulo i18n (base para multi-idioma)
 
-- [ ] PWA para uso offline en cabina
+### Próximo
+
+- [ ] Más aeronaves (Piper PA-28, King Air 200, Baron 58)
+- [ ] Multi-idioma real (inglés / portugués)
 - [ ] Exportar PDF del cálculo
-- [ ] Persistencia de datos del usuario
-- [ ] Multi-idioma (español/inglés/portugués)
+- [ ] Unidades métricas (kg / cm)
 
 ---
 
 **Desarrollado para la comunidad aeronáutica** 🛩️
 
-_Última actualización: Enero 2026_
+_Última actualización: Junio 2026_
