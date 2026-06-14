@@ -52,9 +52,9 @@
    - 2 aeronaves; el valor crece con cada modelo verificado.
    - La arquitectura data-driven facilita sumar más.
 
-2. **i18n incompleto**
-   - Módulo armado pero solo español disponible.
-   - El mercado aeronáutico grande es angloparlante.
+2. **i18n incompleto** _(resuelto para ES/EN)_
+   - Bilingüe español/inglés con selector y detección de navegador.
+   - Pendiente opcional: portugués (mercado brasileño).
 
 3. **Sin export ni unidades métricas**
    - No hay PDF imprimible del cálculo.

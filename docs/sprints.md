@@ -20,7 +20,7 @@
 | Tests             | ✅     | ~79 tests, ~88% cobertura                                    |
 | CI/CD             | ✅     | lint + format + typecheck + test + build en cada push/PR     |
 | Deploy            | ✅     | Cloudflare Pages                                             |
-| i18n              | 🟡     | Módulo armado, **solo español** disponible                   |
+| i18n              | ✅     | Bilingüe ES/EN con selector y detección de navegador         |
 | Accesibilidad     | ✅     | Mejoras + error boundary global                              |
 | Documentación     | ✅     | README/FODA al día, roadmap→sprints, CONTRIBUTING (Sprint 1) |
 | Export PDF        | 🔴     | No implementado                                              |
@@ -76,8 +76,10 @@ y de tráfico. La arquitectura ya es data-driven (`docs/aircraft-data.md`).
 **Objetivo:** Abrir el mercado angloparlante (el grande en aviación) y mejorar
 la presencia. El módulo i18n ya existe pero solo tiene español.
 
-- [ ] Traducir todas las strings a **inglés** (`src/i18n/en.js`).
-- [ ] Resolver locale por preferencia del navegador + selector manual persistido.
+- [x] Traducir todas las strings a **inglés** (`src/i18n/en.js`).
+- [x] Resolver locale por preferencia guardada + idioma del navegador, con
+      selector manual persistido (`resolveLocale`, `setLocale`, `<html lang>`).
+- [x] Test de paridad de claves es/en y de resolución de locale.
 - [ ] (Stretch) Portugués (`pt.js`) para mercado brasileño.
 - [ ] Open Graph + Twitter Card tags para previews en redes.
 - [ ] Analytics privacy-friendly (Plausible / Umami) para medir uso real.

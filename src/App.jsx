@@ -12,7 +12,7 @@ import { Plane, Calculator, RotateCcw } from "lucide-react"
 import { aircraftData, aircraftOptions, emptyWeightsFor } from "./data/aircraft"
 import { calculateWeightBalance, buildSafetyReport } from "./utils/calculations"
 import { useLocalStorage } from "./hooks/useLocalStorage"
-import { messages as m } from "./i18n"
+import { messages as m, getLocale, setLocale, localeOptions } from "./i18n"
 
 const DEFAULT_AIRCRAFT = "king-air-echo-90"
 
@@ -48,6 +48,17 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="max-w-4xl mx-auto space-y-6">
+        <div className="flex justify-end">
+          <div className="w-44">
+            <SimpleSelect
+              id="locale"
+              value={getLocale()}
+              onValueChange={setLocale}
+              options={localeOptions}
+            />
+          </div>
+        </div>
+
         <div className="text-center space-y-2">
           <div className="flex items-center justify-center gap-2">
             <Plane className="h-8 w-8 text-blue-600" />
