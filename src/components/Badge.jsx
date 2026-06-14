@@ -1,3 +1,10 @@
+/**
+ * @param {{
+ *   children?: import("react").ReactNode,
+ *   variant?: "default" | "destructive" | "outline" | "secondary",
+ *   className?: string,
+ * }} props
+ */
 export function Badge({ children, variant = "default", className = "" }) {
   const variants = {
     default: "bg-gray-900 text-gray-50 hover:bg-gray-900/80",

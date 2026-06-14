@@ -35,11 +35,29 @@ export interface SafetyFactors {
 
 export type DataReliability = "verified-complete" | "verified-partial" | "estimated"
 
+/** Data tied to a specific tail number (shown as a warning in the UI). */
+export interface AircraftSpecific {
+  registrationExample?: string
+  serialNumber?: string
+  warning?: string
+}
+
 export interface AircraftMetadata {
-  manufacturer?: string
+  manufacturer: string
+  productionYears: string
+  totalProduced: number
+  engines: string
   dataReliability: DataReliability
-  /** Other descriptive metadata (engines, production, sources, ...). */
+  sourceDocuments: string[]
+  aircraftSpecific?: AircraftSpecific
+  /** Other descriptive metadata (tcdsDate, previousHolder, notes, ...). */
   [key: string]: unknown
+}
+
+export interface DataValidation {
+  lastUpdated?: string
+  verifiedAgainst?: string[]
+  pendingVerification: string[]
 }
 
 export interface CgEnvelope {
@@ -63,7 +81,7 @@ export interface LoadStation {
  */
 export interface Aircraft {
   name: string
-  tcds?: string
+  tcds: string
   emptyWeight: number
   emptyArm: number
   maxWeight: number
@@ -75,11 +93,17 @@ export interface Aircraft {
   metadata: AircraftMetadata
   operationalLimits?: Record<string, unknown>
   variants?: Record<string, unknown>
-  dataValidation?: Record<string, unknown>
+  dataValidation?: DataValidation
 }
 
 /** Weights entered in the form, keyed by station (raw string values). */
 export type StationWeights = Record<string, string>
+
+/** Option for the aircraft selector. */
+export interface SelectOption {
+  value: string
+  label: string
+}
 
 export interface WeightBalanceResult {
   totalWeight: number
