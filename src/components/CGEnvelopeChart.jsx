@@ -158,7 +158,8 @@ export function CGEnvelopeChart({
             {/* Tooltip para mostrar datos al pasar el mouse */}
             <Tooltip content={<CustomTooltip />} />
 
-            <Legend />
+            {/* paddingTop deja lugar a la etiqueta del eje X */}
+            <Legend wrapperStyle={{ paddingTop: 24 }} />
 
             {/* Polígono del envolvente como línea conectada */}
             <Scatter
