@@ -93,6 +93,67 @@ describe("App (integración)", () => {
     expect(screen.getByLabelText("Piloto (lbs)")).toHaveValue(null)
     expect(screen.getByText("6682.0 lbs")).toBeInTheDocument()
   })
+
+  describe("custom aircraft by registration", () => {
+    function addCustomC172(registration = "lv-abc", emptyWeight = "1700", emptyArm = "40") {
+      fireEvent.click(screen.getByLabelText("Modelo base"))
+      fireEvent.click(screen.getByRole("option", { name: "Cessna 172S Skyhawk" }))
+      fireEvent.change(screen.getByLabelText("Matrícula"), { target: { value: registration } })
+      fireEvent.change(screen.getByLabelText("Peso vacío (lbs)"), {
+        target: { value: emptyWeight },
+      })
+      fireEvent.change(screen.getByLabelText("Brazo del peso vacío (in)"), {
+        target: { value: emptyArm },
+      })
+      fireEvent.click(screen.getByRole("button", { name: /Guardar aeronave/ }))
+    }
+
+    it("selects a newly saved aircraft and uses its own empty weight", () => {
+      render(<App />)
+
+      addCustomC172()
+
+      expect(
+        screen.getByText(/LV-ABC \(Cessna 172S Skyhawk\) - Peso y Centrado/)
+      ).toBeInTheDocument()
+      expect(screen.getByLabelText("Pasajero trasero 1 (lbs)")).toBeInTheDocument()
+      expect(screen.getByText("1700.0 lbs")).toBeInTheDocument()
+    })
+
+    it("offers saved aircraft in the selector and persists them across remounts", () => {
+      const { unmount } = render(<App />)
+      addCustomC172()
+      unmount()
+
+      render(<App />)
+
+      expect(
+        screen.getByText(/LV-ABC \(Cessna 172S Skyhawk\) - Peso y Centrado/)
+      ).toBeInTheDocument()
+      fireEvent.click(screen.getByLabelText("Tipo de Aeronave"))
+      expect(
+        screen.getByRole("option", { name: "LV-ABC (Cessna 172S Skyhawk)" })
+      ).toBeInTheDocument()
+    })
+
+    it("falls back to the default aircraft when the selected one is deleted", () => {
+      render(<App />)
+      addCustomC172()
+
+      fireEvent.click(screen.getByRole("button", { name: "Eliminar LV-ABC" }))
+
+      expect(screen.getByText(/King Air Echo 90.*Peso y Centrado/)).toBeInTheDocument()
+      expect(screen.getByText("6682.0 lbs")).toBeInTheDocument()
+    })
+
+    it("falls back to the default aircraft for an unknown stored custom id", () => {
+      window.localStorage.setItem("wb-selected-aircraft", JSON.stringify("custom:GONE"))
+
+      render(<App />)
+
+      expect(screen.getByText(/King Air Echo 90.*Peso y Centrado/)).toBeInTheDocument()
+    })
+  })
 })
 
 describe("App: fuel burn, landing and zero-fuel", () => {
