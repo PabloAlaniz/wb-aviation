@@ -84,6 +84,37 @@ describe("App (integración)", () => {
     expect(screen.getByText(/Cessna 172S Skyhawk - Peso y Centrado/)).toBeInTheDocument()
   })
 
+  it("switches to metric units: inputs in kg, results in kg/mm, same calculation", () => {
+    render(<App />)
+    fireEvent.change(screen.getByLabelText("Piloto (lbs)"), { target: { value: "180" } })
+
+    fireEvent.click(screen.getByRole("button", { name: "kg · mm" }))
+
+    // el estado sigue en lbs: 180 lbs se muestran como 81.6 kg
+    expect(screen.getByLabelText("Piloto (kg)")).toHaveValue(81.6)
+    // 6862 lbs = 3112.6 kg
+    expect(screen.getByText("3112.6 kg")).toBeInTheDocument()
+    expect(screen.getByText(/^Peso vacío: 3030\.9 kg$/)).toBeInTheDocument()
+
+    // ingresar en kg suma al cálculo en lbs: 6682 + 180 + 100 kg (220.46 lbs)
+    fireEvent.change(screen.getByLabelText("Copiloto (kg)"), { target: { value: "100" } })
+    expect(screen.getByText("3212.6 kg")).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole("button", { name: "lbs · in" }))
+    expect(screen.getByText("7082.5 lbs")).toBeInTheDocument()
+  })
+
+  it("persists the unit system across remounts", () => {
+    const { unmount } = render(<App />)
+    fireEvent.click(screen.getByRole("button", { name: "kg · mm" }))
+    unmount()
+
+    render(<App />)
+
+    expect(screen.getByLabelText("Piloto (kg)")).toBeInTheDocument()
+    expect(window.localStorage.getItem("wb-units")).toBe('"metric"')
+  })
+
   it("clears weights with the reset button", () => {
     render(<App />)
     fireEvent.change(screen.getByLabelText("Piloto (lbs)"), { target: { value: "180" } })

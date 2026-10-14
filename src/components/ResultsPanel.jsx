@@ -1,19 +1,23 @@
 import { AlertTriangle, CheckCircle } from "lucide-react"
 import { Badge } from "./Badge"
 import { messages as m } from "../i18n"
+import { formatArm, formatWeight } from "../utils/units"
 
 /**
  * Total weight / CG rows with OK / out-of-limits badges, plus the final
  * takeoff verdict box.
- * @param {{ results: import("../types").WeightBalanceResult }} props
+ * @param {{
+ *   results: import("../types").WeightBalanceResult,
+ *   units?: import("../types").UnitSystem,
+ * }} props
  */
-export function ResultsPanel({ results }) {
+export function ResultsPanel({ results, units = "imperial" }) {
   return (
     <div className="space-y-3">
       <div className="flex justify-between items-center">
         <span className="font-medium">{m.results.totalWeight}</span>
         <div className="flex items-center gap-2">
-          <span className="text-lg font-bold">{results.totalWeight.toFixed(1)} lbs</span>
+          <span className="text-lg font-bold">{formatWeight(results.totalWeight, units)}</span>
           {results.isWeightOk ? (
             <Badge variant="default" className="bg-green-500">
               <CheckCircle className="h-3 w-3 mr-1" />
@@ -31,7 +35,7 @@ export function ResultsPanel({ results }) {
       <div className="flex justify-between items-center">
         <span className="font-medium">{m.results.centerOfGravity}</span>
         <div className="flex items-center gap-2">
-          <span className="text-lg font-bold">{results.centerOfGravity.toFixed(2)}"</span>
+          <span className="text-lg font-bold">{formatArm(results.centerOfGravity, units)}</span>
           {results.isCgOk ? (
             <Badge variant="default" className="bg-green-500">
               <CheckCircle className="h-3 w-3 mr-1" />

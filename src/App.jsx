@@ -8,10 +8,12 @@ import { AircraftInfo } from "./components/AircraftInfo"
 import { ResultsPanel, TakeoffVerdict } from "./components/ResultsPanel"
 import { SafetyAlerts } from "./components/SafetyAlerts"
 import { DataSources } from "./components/DataSources"
+import { UnitToggle } from "./components/UnitToggle"
 import { Plane, Calculator, RotateCcw } from "lucide-react"
 import { aircraftData, aircraftOptions, emptyWeightsFor } from "./data/aircraft"
 import { calculateWeightBalance, buildSafetyReport } from "./utils/calculations"
 import { useLocalStorage } from "./hooks/useLocalStorage"
+import { useUnits } from "./hooks/useUnits"
 import { messages as m, getLocale, setLocale, localeOptions } from "./i18n"
 
 const DEFAULT_AIRCRAFT = "king-air-echo-90"
@@ -27,6 +29,8 @@ export default function App() {
     emptyWeightsFor(aircraftData[DEFAULT_AIRCRAFT]),
     (value) => value !== null && typeof value === "object" && !Array.isArray(value)
   )
+
+  const [units, setUnits] = useUnits()
 
   const aircraft = aircraftData[selectedAircraft]
 
@@ -48,7 +52,8 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="max-w-4xl mx-auto space-y-6">
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-2">
+          <UnitToggle units={units} onUnitsChange={setUnits} />
           <div className="w-44">
             <SimpleSelect
               id="locale"
@@ -94,6 +99,7 @@ export default function App() {
                 aircraft={aircraft}
                 weights={weights}
                 onWeightChange={handleWeightChange}
+                units={units}
               />
 
               <button
@@ -120,15 +126,15 @@ export default function App() {
                 </div>
               ) : results ? (
                 <div className="space-y-4">
-                  <AircraftInfo aircraft={aircraft} />
+                  <AircraftInfo aircraft={aircraft} units={units} />
 
                   <Separator />
 
-                  <ResultsPanel results={results} />
+                  <ResultsPanel results={results} units={units} />
 
                   <Separator />
 
-                  <SafetyAlerts safetyChecks={safetyChecks} />
+                  <SafetyAlerts safetyChecks={safetyChecks} units={units} />
 
                   <Separator />
 
@@ -142,6 +148,7 @@ export default function App() {
                       aircraft={aircraft}
                       currentCG={results.centerOfGravity}
                       currentWeight={results.totalWeight}
+                      units={units}
                     />
                     <p className="text-xs text-gray-500 text-center">{m.app.envelopeCaption}</p>
                   </div>

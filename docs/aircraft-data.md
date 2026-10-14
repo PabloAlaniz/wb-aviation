@@ -41,9 +41,12 @@ Si `dataReliability` no es `verified-complete`, la UI muestra automáticamente u
 
   // Configuración del formulario: orden, etiquetas y placeholders.
   // Los campos se renderizan de a pares; fullWidth: true ocupa la fila.
+  // labelKey apunta al namespace `stations` de src/i18n/{es,en,pt}.js; la UI
+  // agrega la unidad (lbs/kg, gal/L). label (sin unidades) es solo un respaldo
+  // para estaciones sin traducción. max y placeholder van en lbs.
   loadStations: [
-    { key: "pilot", label: "Piloto (lbs)", placeholder: "200" },
-    { key: "fuel", label: "Combustible (lbs)", placeholder: "1500", fullWidth: true },
+    { key: "pilot", labelKey: "stations.pilot", placeholder: "200" },
+    { key: "fuel", labelKey: "stations.fuel", max: 318, placeholder: "1500", fullWidth: true },
   ],
 
   // Envolvente de CG: polígono cerrado (el último punto repite el primero).

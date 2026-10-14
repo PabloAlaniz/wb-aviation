@@ -63,3 +63,52 @@ describe("SafetyAlerts", () => {
     expect(screen.getByText(/\+5\.00" \/ -5\.00"/)).toBeInTheDocument()
   })
 })
+
+describe("SafetyAlerts (metric)", () => {
+  it("re-renders CG warnings and margins in mm", () => {
+    const report = {
+      ...emptyReport,
+      warnings: [
+        {
+          type: "cg-aft-warning",
+          message: 'Centro de gravedad muy cerca del límite posterior (0.05" de margen)',
+          severity: "high",
+        },
+      ],
+      cgMargins: { forward: "5.00", aft: "0.05" },
+    }
+    render(<SafetyAlerts safetyChecks={report} units="metric" />)
+
+    expect(
+      screen.getByText("Centro de gravedad muy cerca del límite posterior (1.3 mm de margen)")
+    ).toBeInTheDocument()
+    expect(screen.getByText(/\+127 mm \/ -1\.3 mm/)).toBeInTheDocument()
+  })
+
+  it("re-renders the weight reserve recommendation in kg", () => {
+    const report = {
+      ...emptyReport,
+      recommendations: [
+        {
+          type: "weight-reserve",
+          message: "Considerar reducir peso en 100 lbs para mayor margen de seguridad",
+        },
+      ],
+    }
+    render(<SafetyAlerts safetyChecks={report} units="metric" />)
+
+    expect(
+      screen.getByText("Considerar reducir peso en 45 kg para mayor margen de seguridad")
+    ).toBeInTheDocument()
+  })
+
+  it("leaves unit-free messages untouched", () => {
+    const report = {
+      ...emptyReport,
+      warnings: [{ type: "weight-warning", message: "Peso al 96.0% del máximo permitido" }],
+    }
+    render(<SafetyAlerts safetyChecks={report} units="metric" />)
+
+    expect(screen.getByText("Peso al 96.0% del máximo permitido")).toBeInTheDocument()
+  })
+})

@@ -36,6 +36,16 @@ describe("ResultsPanel", () => {
   })
 })
 
+describe("ResultsPanel (metric)", () => {
+  it("shows total weight in kg and CG in mm", () => {
+    render(<ResultsPanel results={{ ...okResults, centerOfGravity: 152 }} units="metric" />)
+
+    // 8000 lbs × 0.45359237 = 3628.7 kg; 152" × 25.4 = 3860.8 mm
+    expect(screen.getByText("3628.7 kg")).toBeInTheDocument()
+    expect(screen.getByText("3860.8 mm")).toBeInTheDocument()
+  })
+})
+
 describe("TakeoffVerdict", () => {
   it("approves takeoff when weight and CG are ok", () => {
     render(<TakeoffVerdict results={okResults} />)

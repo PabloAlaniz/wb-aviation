@@ -37,21 +37,26 @@ export const pt = {
     weightUsage: "Uso de peso:",
     cgMargin: "Margem CG:",
     weightNearLimit: (/** @type {string|number} */ pct) => `Peso a ${pct}% do máximo permitido`,
-    cgNearForward: (/** @type {string|number} */ margin) =>
-      `Centro de gravidade muito próximo do limite dianteiro (${margin}" de margem)`,
-    cgNearAft: (/** @type {string|number} */ margin) =>
-      `Centro de gravidade muito próximo do limite traseiro (${margin}" de margem)`,
-    reduceWeight: (/** @type {string|number} */ lbs) =>
-      `Considere reduzir o peso em ${lbs} lbs para uma maior margem de segurança`,
+    cgNearForward: (/** @type {string|number} */ margin, /** @type {string} */ unit = '"') =>
+      `Centro de gravidade muito próximo do limite dianteiro (${margin}${unit} de margem)`,
+    cgNearAft: (/** @type {string|number} */ margin, /** @type {string} */ unit = '"') =>
+      `Centro de gravidade muito próximo do limite traseiro (${margin}${unit} de margem)`,
+    reduceWeight: (/** @type {string|number} */ value, /** @type {string} */ unit = "lbs") =>
+      `Considere reduzir o peso em ${value} ${unit} para uma maior margem de segurança`,
     dataPartial: "Dados parcialmente verificados - confirme com a documentação oficial",
     dataEstimated: "Dados estimados - confirme com a documentação oficial",
   },
 
   aircraftInfo: {
-    emptyWeight: (/** @type {string|number} */ lbs) => `Peso vazio: ${lbs} lbs`,
-    maxWeight: (/** @type {string|number} */ lbs) => `Peso máximo: ${lbs} lbs`,
-    cgLimits: (/** @type {string|number} */ forward, /** @type {string|number} */ aft) =>
-      `Limites CG: ${forward}" - ${aft}"`,
+    emptyWeight: (/** @type {string|number} */ value, /** @type {string} */ unit = "lbs") =>
+      `Peso vazio: ${value} ${unit}`,
+    maxWeight: (/** @type {string|number} */ value, /** @type {string} */ unit = "lbs") =>
+      `Peso máximo: ${value} ${unit}`,
+    cgLimits: (
+      /** @type {string|number} */ forward,
+      /** @type {string|number} */ aft,
+      /** @type {string} */ unit = '"'
+    ) => `Limites CG: ${forward}${unit} - ${aft}${unit}`,
     production: "Produção:",
     productionDetail: (/** @type {string|number} */ years, /** @type {string|number} */ total) =>
       `${years} (${total} fabricados)`,
@@ -61,6 +66,43 @@ export const pt = {
     reliabilityVerified: "Verificado",
     reliabilityPartial: "Parcial",
     reliabilityEstimated: "Estimado",
+  },
+
+  stations: {
+    pilot: "Piloto",
+    copilot: "Copiloto",
+    frontPassenger: "Acompanhante",
+    passenger1: "Passageiro 1",
+    passenger2: "Passageiro 2",
+    passenger3: "Passageiro 3",
+    passenger4: "Passageiro 4",
+    rearPassenger1: "Passageiro traseiro 1",
+    rearPassenger2: "Passageiro traseiro 2",
+    baggage1: "Bagagem 1",
+    baggage2: "Bagagem 2",
+    baggageArea1: "Bagagem área 1",
+    baggageArea2: "Bagagem área 2",
+    fuel: "Combustível",
+  },
+
+  units: {
+    label: "Unidades",
+    imperial: "Imperial (lbs, in, gal)",
+    metric: "Métrico (kg, mm, L)",
+    stationLabel: (/** @type {string} */ label, /** @type {string} */ unit) => `${label} (${unit})`,
+    stationLabelMax: (
+      /** @type {string} */ label,
+      /** @type {string} */ unit,
+      /** @type {string|number} */ max
+    ) => `${label} (${unit}, máx ${max})`,
+    fuelInputMode: "Inserir combustível por",
+    byWeight: "Peso",
+    byVolume: "Volume",
+    fuelEquivalent: (/** @type {string} */ value) => `Equivale a ${value}`,
+    fuelDensityNote: (/** @type {string} */ density) => `Densidade AVGAS: ${density}`,
+    millimeters: "milímetros",
+    kilograms: "quilogramas",
+    axisNoteMetric: "Braço C.G. - mm atrás do Datum STA 0.0",
   },
 
   dataSources: {
@@ -79,8 +121,10 @@ export const pt = {
     title: (/** @type {string} */ tcds) => `Envelope de CG — ${tcds}`,
     axisNote: "C.G. Arm - Inches aft of Datum STA 0.0",
     tooltipTitle: "Informações do Ponto",
-    tooltipCg: (/** @type {string|number} */ value) => `CG: ${value}" Arm`,
-    tooltipWeight: (/** @type {string|number} */ value) => `Peso: ${value} lbs`,
+    tooltipCg: (/** @type {string|number} */ value, /** @type {string} */ unit = '"') =>
+      `CG: ${value}${unit} Arm`,
+    tooltipWeight: (/** @type {string|number} */ value, /** @type {string} */ unit = "lbs") =>
+      `Peso: ${value} ${unit}`,
     envelopeLimit: "Limite do Envelope",
     operatingPoint: "Ponto Operacional",
     xUnit: "inches",
