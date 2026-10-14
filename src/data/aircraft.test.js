@@ -1,6 +1,8 @@
 import { describe, it, expect } from "vitest"
 import { aircraftData, aircraftOptions, emptyWeightsFor } from "./aircraft"
 import { calculateWeightBalance, isPointInEnvelope } from "../utils/calculations"
+import { resolveStationLabel } from "../utils/stationLabel"
+import { locales } from "../i18n"
 
 // Invariantes estructurales que toda aeronave de la base debe cumplir.
 // Si se agrega una aeronave nueva, estos tests la validan automáticamente.
@@ -25,7 +27,10 @@ describe.each(Object.entries(aircraftData))("aircraftData: %s", (key, aircraft) 
     expect(aircraft.loadStations.length).toBeGreaterThan(0)
     for (const station of aircraft.loadStations) {
       expect(typeof aircraft.stations[station.key], `station ${station.key}`).toBe("number")
-      expect(station.label).toBeTruthy()
+      expect(station.labelKey, `station ${station.key}`).toMatch(/^stations\./)
+      for (const catalog of Object.values(locales)) {
+        expect(resolveStationLabel(station, catalog)).not.toBe(station.key)
+      }
     }
   })
 

@@ -35,7 +35,26 @@ describe("CustomAircraftManager", () => {
 
     expect(screen.getByText("LV-ABC")).toBeInTheDocument()
     expect(screen.getByText(/Cessna 172S Skyhawk/)).toBeInTheDocument()
-    expect(screen.getByText(/1700 lbs @ 40.5"/)).toBeInTheDocument()
+    expect(screen.getByText(/1700.0 lbs @ 40.50"/)).toBeInTheDocument()
+  })
+
+  it("shows and accepts weighing data in metric units, saving it in lbs/in", () => {
+    const onSave = makeOnSave()
+    render(
+      <CustomAircraftManager records={records} onSave={onSave} onRemove={() => {}} units="metric" />
+    )
+
+    expect(screen.getByText(/771.1 kg @ 1028.7 mm/)).toBeInTheDocument()
+    fireEvent.change(screen.getByLabelText("Matrícula"), { target: { value: "lv-new" } })
+    fireEvent.change(screen.getByLabelText("Peso vacío (kg)"), { target: { value: "748.4" } })
+    fireEvent.change(screen.getByLabelText("Brazo del peso vacío (mm)"), {
+      target: { value: "1010.92" },
+    })
+    fireEvent.click(screen.getByRole("button", { name: /Guardar aeronave/ }))
+
+    const saved = onSave.mock.calls[0][0]
+    expect(Number(saved.emptyWeight)).toBeCloseTo(1649.9, 1)
+    expect(Number(saved.emptyArm)).toBeCloseTo(39.8, 4)
   })
 
   it("submits the form values and clears it on success", () => {

@@ -39,21 +39,26 @@ export const es = {
     weightUsage: "Uso de peso:",
     cgMargin: "Margen CG:",
     weightNearLimit: (/** @type {string|number} */ pct) => `Peso al ${pct}% del máximo permitido`,
-    cgNearForward: (/** @type {string|number} */ margin) =>
-      `Centro de gravedad muy cerca del límite frontal (${margin}" de margen)`,
-    cgNearAft: (/** @type {string|number} */ margin) =>
-      `Centro de gravedad muy cerca del límite posterior (${margin}" de margen)`,
-    reduceWeight: (/** @type {string|number} */ lbs) =>
-      `Considerar reducir peso en ${lbs} lbs para mayor margen de seguridad`,
+    cgNearForward: (/** @type {string|number} */ margin, /** @type {string} */ unit = '"') =>
+      `Centro de gravedad muy cerca del límite frontal (${margin}${unit} de margen)`,
+    cgNearAft: (/** @type {string|number} */ margin, /** @type {string} */ unit = '"') =>
+      `Centro de gravedad muy cerca del límite posterior (${margin}${unit} de margen)`,
+    reduceWeight: (/** @type {string|number} */ value, /** @type {string} */ unit = "lbs") =>
+      `Considerar reducir peso en ${value} ${unit} para mayor margen de seguridad`,
     dataPartial: "Datos parcialmente verificados - confirmar con documentación oficial",
     dataEstimated: "Datos estimados - confirmar con documentación oficial",
   },
 
   aircraftInfo: {
-    emptyWeight: (/** @type {string|number} */ lbs) => `Peso vacío: ${lbs} lbs`,
-    maxWeight: (/** @type {string|number} */ lbs) => `Peso máximo: ${lbs} lbs`,
-    cgLimits: (/** @type {string|number} */ forward, /** @type {string|number} */ aft) =>
-      `CG límites: ${forward}" - ${aft}"`,
+    emptyWeight: (/** @type {string|number} */ value, /** @type {string} */ unit = "lbs") =>
+      `Peso vacío: ${value} ${unit}`,
+    maxWeight: (/** @type {string|number} */ value, /** @type {string} */ unit = "lbs") =>
+      `Peso máximo: ${value} ${unit}`,
+    cgLimits: (
+      /** @type {string|number} */ forward,
+      /** @type {string|number} */ aft,
+      /** @type {string} */ unit = '"'
+    ) => `CG límites: ${forward}${unit} - ${aft}${unit}`,
     production: "Producción:",
     productionDetail: (/** @type {string|number} */ years, /** @type {string|number} */ total) =>
       `${years} (${total} fabricados)`,
@@ -63,6 +68,43 @@ export const es = {
     reliabilityVerified: "Verificado",
     reliabilityPartial: "Parcial",
     reliabilityEstimated: "Estimado",
+  },
+
+  stations: {
+    pilot: "Piloto",
+    copilot: "Copiloto",
+    frontPassenger: "Acompañante",
+    passenger1: "Pasajero 1",
+    passenger2: "Pasajero 2",
+    passenger3: "Pasajero 3",
+    passenger4: "Pasajero 4",
+    rearPassenger1: "Pasajero trasero 1",
+    rearPassenger2: "Pasajero trasero 2",
+    baggage1: "Equipaje 1",
+    baggage2: "Equipaje 2",
+    baggageArea1: "Equipaje área 1",
+    baggageArea2: "Equipaje área 2",
+    fuel: "Combustible",
+  },
+
+  units: {
+    label: "Unidades",
+    imperial: "Imperial (lbs, in, gal)",
+    metric: "Métrico (kg, mm, L)",
+    stationLabel: (/** @type {string} */ label, /** @type {string} */ unit) => `${label} (${unit})`,
+    stationLabelMax: (
+      /** @type {string} */ label,
+      /** @type {string} */ unit,
+      /** @type {string|number} */ max
+    ) => `${label} (${unit}, máx ${max})`,
+    fuelInputMode: "Ingresar combustible por",
+    byWeight: "Peso",
+    byVolume: "Volumen",
+    fuelEquivalent: (/** @type {string} */ value) => `Equivale a ${value}`,
+    fuelDensityNote: (/** @type {string} */ density) => `Densidad AVGAS: ${density}`,
+    millimeters: "milímetros",
+    kilograms: "kilogramos",
+    axisNoteMetric: "Brazo C.G. - mm detrás del Datum STA 0.0",
   },
 
   dataSources: {
@@ -81,8 +123,10 @@ export const es = {
     title: (/** @type {string} */ tcds) => `Envolvente de CG — ${tcds}`,
     axisNote: "C.G. Arm - Inches aft of Datum STA 0.0",
     tooltipTitle: "Información del Punto",
-    tooltipCg: (/** @type {string|number} */ value) => `CG: ${value}" Arm`,
-    tooltipWeight: (/** @type {string|number} */ value) => `Peso: ${value} lbs`,
+    tooltipCg: (/** @type {string|number} */ value, /** @type {string} */ unit = '"') =>
+      `CG: ${value}${unit} Arm`,
+    tooltipWeight: (/** @type {string|number} */ value, /** @type {string} */ unit = "lbs") =>
+      `Peso: ${value} ${unit}`,
     envelopeLimit: "Límite del Envolvente",
     operatingPoint: "Punto Operativo",
     xUnit: "inches",
@@ -91,9 +135,10 @@ export const es = {
 
   flightPhases: {
     title: "Aterrizaje y peso sin combustible",
-    fuelBurnLabel: "Combustible a consumir en vuelo (lbs)",
+    fuelBurnLabel: "Combustible a consumir en vuelo",
     fuelBurnPlaceholder: "800",
-    fuelLoaded: (/** @type {string|number} */ lbs) => `Combustible cargado: ${lbs} lbs`,
+    fuelLoaded: (/** @type {string|number} */ value, unit = "lbs") =>
+      `Combustible cargado: ${value} ${unit}`,
     noFuelStation: "Esta aeronave no tiene estación de combustible definida",
     phase: "Fase",
     weight: "Peso",
@@ -107,14 +152,18 @@ export const es = {
     readyForLanding: "✅ ATERRIZAJE DENTRO DE LÍMITES",
     landingOkDetail: "Peso y centrado al aterrizar dentro de límites",
     notFitForLanding: "⚠️ ATERRIZAJE FUERA DE LÍMITES",
-    overMaxLandingWeight: (/** @type {string|number} */ lbs) =>
-      `Peso de aterrizaje excede el máximo (${lbs} lbs)`,
-    overMaxZeroFuelWeight: (/** @type {string|number} */ lbs) =>
-      `Peso sin combustible excede el máximo (${lbs} lbs)`,
+    overMaxLandingWeight: (/** @type {string|number} */ value, unit = "lbs") =>
+      `Peso de aterrizaje excede el máximo (${value} ${unit})`,
+    overMaxZeroFuelWeight: (/** @type {string|number} */ value, unit = "lbs") =>
+      `Peso sin combustible excede el máximo (${value} ${unit})`,
     landingOutOfEnvelope: "Centro de gravedad al aterrizar fuera de la envolvente",
     zeroFuelOutOfEnvelope: "Centro de gravedad sin combustible fuera de la envolvente",
-    burnExceedsFuel: (/** @type {string|number} */ burn, /** @type {string|number} */ loaded) =>
-      `El consumo planificado (${burn} lbs) supera el combustible cargado (${loaded} lbs)`,
+    burnExceedsFuel: (
+      /** @type {string|number} */ burn,
+      /** @type {string|number} */ loaded,
+      unit = "lbs"
+    ) =>
+      `El consumo planificado (${burn} ${unit}) supera el combustible cargado (${loaded} ${unit})`,
     chartLanding: "Aterrizaje",
     chartZeroFuel: "Sin combustible",
     chartBurnPath: "Consumo de combustible",
@@ -127,13 +176,12 @@ export const es = {
     baseModelLabel: "Modelo base",
     registrationLabel: "Matrícula",
     registrationPlaceholder: "LV-ABC",
-    emptyWeightLabel: "Peso vacío (lbs)",
-    emptyArmLabel: "Brazo del peso vacío (in)",
+    emptyWeightLabel: "Peso vacío",
+    emptyArmLabel: "Brazo del peso vacío",
     save: "Guardar aeronave",
     empty: "Todavía no guardaste ninguna aeronave.",
     listLabel: "Aeronaves guardadas",
-    recordDetail: (/** @type {string|number} */ lbs, /** @type {string|number} */ arm) =>
-      `${lbs} lbs @ ${arm}"`,
+    recordDetail: (/** @type {string} */ weight, /** @type {string} */ arm) => `${weight} @ ${arm}`,
     remove: (/** @type {string} */ registration) => `Eliminar ${registration}`,
     sourceDocument: "Weight & Balance Report de la aeronave (datos ingresados por el usuario)",
     specificWarning:

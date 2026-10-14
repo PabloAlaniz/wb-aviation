@@ -5,6 +5,16 @@ import { SimpleSelect } from "./Select"
 import { aircraftData, aircraftOptions } from "../data/aircraft"
 import { customAircraftId } from "../utils/customAircraft"
 import { messages as m } from "../i18n"
+import {
+  armFromDisplay,
+  formatArm,
+  formatWeight,
+  trimNumber,
+  unitSymbols,
+  armToDisplay,
+  weightFromDisplay,
+  weightToDisplay,
+} from "../utils/units"
 
 const EMPTY_FORM = {
   baseModelId: aircraftOptions[0]?.value ?? "",
@@ -21,9 +31,24 @@ const EMPTY_FORM = {
  *   onSave: (input: import("../utils/customAircraft").CustomAircraftInput) =>
  *     { id: string | null, errors: import("../utils/customAircraft").CustomAircraftErrors },
  *   onRemove: (id: string) => void,
+ *   units?: import("../types").UnitSystem,
  * }} props
  */
-export function CustomAircraftManager({ records, onSave, onRemove }) {
+export function CustomAircraftManager({ records, onSave, onRemove, units = "imperial" }) {
+  const symbols = unitSymbols(units)
+  // Weight and arm are typed in the selected units but stored in lbs/in;
+  // non-numeric text is passed through so validation still reports it.
+  /** @param {string} text @param {(value: number, units: import("../types").UnitSystem) => number} fromDisplay */
+  const toImperial = (text, fromDisplay) => {
+    const value = Number(text)
+    return units === "imperial" || text.trim() === "" || !Number.isFinite(value)
+      ? text
+      : trimNumber(fromDisplay(value, units), 4)
+  }
+  /** @param {number | undefined} value @param {(value: number, units: import("../types").UnitSystem) => number} toDisplay */
+  const placeholderFor = (value, toDisplay) =>
+    value === undefined ? "" : trimNumber(toDisplay(value, units), 1)
+
   const [form, setForm] = useState(EMPTY_FORM)
   const [errors, setErrors] = useState(
     /** @type {import("../utils/customAircraft").CustomAircraftErrors} */ ({})
@@ -35,7 +60,11 @@ export function CustomAircraftManager({ records, onSave, onRemove }) {
 
   const handleSubmit = (/** @type {import("react").FormEvent<HTMLFormElement>} */ e) => {
     e.preventDefault()
-    const result = onSave(form)
+    const result = onSave({
+      ...form,
+      emptyWeight: toImperial(form.emptyWeight, weightFromDisplay),
+      emptyArm: toImperial(form.emptyArm, armFromDisplay),
+    })
     setErrors(result.errors)
     if (result.id) setForm({ ...EMPTY_FORM, baseModelId: form.baseModelId })
   }
@@ -84,13 +113,18 @@ export function CustomAircraftManager({ records, onSave, onRemove }) {
           </div>
 
           <div className="space-y-1">
-            <Label htmlFor="custom-emptyWeight">{m.customAircraft.emptyWeightLabel}</Label>
+            <Label htmlFor="custom-emptyWeight">
+              {m.units.stationLabel(m.customAircraft.emptyWeightLabel, symbols.weight)}
+            </Label>
             <Input
               id="custom-emptyWeight"
               type="number"
               inputMode="decimal"
               value={form.emptyWeight}
-              placeholder={String(aircraftData[form.baseModelId]?.emptyWeight ?? "")}
+              placeholder={placeholderFor(
+                aircraftData[form.baseModelId]?.emptyWeight,
+                weightToDisplay
+              )}
               aria-invalid={Boolean(errors.emptyWeight)}
               onChange={(e) => update("emptyWeight", e.target.value)}
             />
@@ -98,14 +132,16 @@ export function CustomAircraftManager({ records, onSave, onRemove }) {
           </div>
 
           <div className="space-y-1">
-            <Label htmlFor="custom-emptyArm">{m.customAircraft.emptyArmLabel}</Label>
+            <Label htmlFor="custom-emptyArm">
+              {m.units.stationLabel(m.customAircraft.emptyArmLabel, symbols.arm)}
+            </Label>
             <Input
               id="custom-emptyArm"
               type="number"
               inputMode="decimal"
               step="any"
               value={form.emptyArm}
-              placeholder={String(aircraftData[form.baseModelId]?.emptyArm ?? "")}
+              placeholder={placeholderFor(aircraftData[form.baseModelId]?.emptyArm, armToDisplay)}
               aria-invalid={Boolean(errors.emptyArm)}
               onChange={(e) => update("emptyArm", e.target.value)}
             />
@@ -133,7 +169,10 @@ export function CustomAircraftManager({ records, onSave, onRemove }) {
                     <div className="font-medium">{record.registration}</div>
                     <div className="text-xs text-gray-600">
                       {aircraftData[record.baseModelId]?.name} ·{" "}
-                      {m.customAircraft.recordDetail(record.emptyWeight, record.emptyArm)}
+                      {m.customAircraft.recordDetail(
+                        formatWeight(Number(record.emptyWeight), units),
+                        formatArm(Number(record.emptyArm), units)
+                      )}
                     </div>
                   </div>
                   <button
