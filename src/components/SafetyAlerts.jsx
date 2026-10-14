@@ -1,12 +1,16 @@
 import { AlertTriangle, CheckCircle } from "lucide-react"
 import { messages as m } from "../i18n"
+import { formatCgMargin, localizeSafetyMessage } from "../utils/safetyDisplay"
 
 /**
  * Safety warnings, recommendations and margin summary for the current
  * calculation. Renders nothing when there is nothing to alert about.
- * @param {{ safetyChecks: import("../types").SafetyReport | null }} props
+ * @param {{
+ *   safetyChecks: import("../types").SafetyReport | null,
+ *   units?: import("../types").UnitSystem,
+ * }} props
  */
-export function SafetyAlerts({ safetyChecks }) {
+export function SafetyAlerts({ safetyChecks, units = "imperial" }) {
   if (
     !safetyChecks ||
     (safetyChecks.warnings.length === 0 && safetyChecks.recommendations.length === 0)
@@ -39,7 +43,7 @@ export function SafetyAlerts({ safetyChecks }) {
                     : "text-blue-600"
               }`}
             />
-            <p className="text-sm">{warning.message}</p>
+            <p className="text-sm">{localizeSafetyMessage(warning, safetyChecks, units)}</p>
           </div>
         </div>
       ))}
@@ -48,7 +52,9 @@ export function SafetyAlerts({ safetyChecks }) {
         <div key={index} className="p-3 rounded-lg border bg-gray-50 border-gray-200">
           <div className="flex items-start gap-2">
             <CheckCircle className="h-4 w-4 mt-0.5 flex-shrink-0 text-gray-600" />
-            <p className="text-sm text-gray-800">{rec.message}</p>
+            <p className="text-sm text-gray-800">
+              {localizeSafetyMessage(rec, safetyChecks, units)}
+            </p>
           </div>
         </div>
       ))}
@@ -61,7 +67,8 @@ export function SafetyAlerts({ safetyChecks }) {
         <div className="bg-gray-50 p-2 rounded">
           <span className="font-medium">{m.safety.cgMargin}</span>
           <span className="ml-1">
-            +{safetyChecks.cgMargins.forward}" / -{safetyChecks.cgMargins.aft}"
+            +{formatCgMargin(safetyChecks.cgMargins.forward, units)} / -
+            {formatCgMargin(safetyChecks.cgMargins.aft, units)}
           </span>
         </div>
       </div>
