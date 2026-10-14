@@ -10,6 +10,7 @@ import { SafetyAlerts } from "./components/SafetyAlerts"
 import { DataSources } from "./components/DataSources"
 import { FuelBurnInput } from "./components/FuelBurnInput"
 import { FlightPhasesPanel } from "./components/FlightPhasesPanel"
+import { CustomAircraftManager } from "./components/CustomAircraftManager"
 import { Plane, Calculator, RotateCcw } from "lucide-react"
 import { aircraftData, aircraftOptions, emptyWeightsFor } from "./data/aircraft"
 import {
@@ -19,15 +20,18 @@ import {
   buildLandingReport,
 } from "./utils/calculations"
 import { useLocalStorage } from "./hooks/useLocalStorage"
+import { useCustomAircraft } from "./hooks/useCustomAircraft"
+import { isCustomAircraftId } from "./utils/customAircraft"
 import { messages as m, getLocale, setLocale, localeOptions } from "./i18n"
 
 const DEFAULT_AIRCRAFT = "king-air-echo-90"
 
 export default function App() {
+  const custom = useCustomAircraft()
   const [selectedAircraft, setSelectedAircraft] = useLocalStorage(
     "wb-selected-aircraft",
     DEFAULT_AIRCRAFT,
-    (value) => typeof value === "string" && value in aircraftData
+    (value) => typeof value === "string" && (value in aircraftData || isCustomAircraftId(value))
   )
   const [weights, setWeights, resetWeights] = useLocalStorage(
     "wb-weights",
@@ -41,16 +45,19 @@ export default function App() {
     (value) => typeof value === "string"
   )
 
-  const aircraft = aircraftData[selectedAircraft]
+  /** @param {string} id */
+  const findAircraft = (id) =>
+    aircraftData[id] ?? custom.customAircraft[id] ?? aircraftData[DEFAULT_AIRCRAFT]
+  const aircraft = findAircraft(selectedAircraft)
 
   const handleWeightChange = (/** @type {string} */ field, /** @type {string} */ value) => {
     setWeights((prev) => ({ ...prev, [field]: value }))
   }
 
-  const handleAircraftChange = (/** @type {string} */ value) => {
+  const handleAircraftChange = (/** @type {string} */ value, next = findAircraft(value)) => {
     setSelectedAircraft(value)
     // las estaciones difieren entre aeronaves: empezar el cálculo de cero
-    setWeights(emptyWeightsFor(aircraftData[value]))
+    setWeights(emptyWeightsFor(next))
   }
 
   const results = calculateWeightBalance(aircraft, weights)
@@ -99,9 +106,22 @@ export default function App() {
                   value={selectedAircraft}
                   onValueChange={handleAircraftChange}
                   placeholder={m.app.aircraftSelectPlaceholder}
-                  options={aircraftOptions}
+                  options={[...aircraftOptions, ...custom.options]}
                 />
               </div>
+
+              <CustomAircraftManager
+                records={custom.records}
+                onSave={(input) => {
+                  const result = custom.save(input)
+                  if (result.id && result.aircraft) handleAircraftChange(result.id, result.aircraft)
+                  return result
+                }}
+                onRemove={(id) => {
+                  custom.remove(id)
+                  if (id === selectedAircraft) handleAircraftChange(DEFAULT_AIRCRAFT)
+                }}
+              />
 
               <Separator />
 

@@ -118,6 +118,35 @@ export const pt = {
     chartBurnPath: "Consumo de combustível",
   },
 
+  customAircraft: {
+    title: "Minhas aeronaves (por matrícula)",
+    description:
+      "Informe o peso vazio e o braço do Weight & Balance Report da sua aeronave. O envelope, as estações e os limites vêm do modelo base.",
+    baseModelLabel: "Modelo base",
+    registrationLabel: "Matrícula",
+    registrationPlaceholder: "PR-ABC",
+    emptyWeightLabel: "Peso vazio (lbs)",
+    emptyArmLabel: "Braço do peso vazio (in)",
+    save: "Salvar aeronave",
+    empty: "Você ainda não salvou nenhuma aeronave.",
+    listLabel: "Aeronaves salvas",
+    recordDetail: (/** @type {string|number} */ lbs, /** @type {string|number} */ arm) =>
+      `${lbs} lbs @ ${arm}"`,
+    remove: (/** @type {string} */ registration) => `Excluir ${registration}`,
+    sourceDocument: "Weight & Balance Report da aeronave (dados informados pelo usuário)",
+    specificWarning:
+      "Peso vazio e braço informados pelo usuário a partir do Weight & Balance Report desta aeronave. Envelope, estações e limites vêm do modelo base: verifique-os com o POH da sua aeronave.",
+    errors: {
+      registrationRequired: "Informe a matrícula.",
+      registrationInvalid:
+        "Matrícula inválida (apenas letras, números e hífens, 2 a 10 caracteres).",
+      baseModelUnknown: "Selecione um modelo base.",
+      emptyWeightInvalid: "Informe um peso vazio maior que 0.",
+      emptyWeightAboveMax: "O peso vazio deve ser menor que o peso máximo do modelo.",
+      emptyArmInvalid: "Informe um braço maior que 0.",
+    },
+  },
+
   errorBoundary: {
     title: "Algo deu errado",
     description:
