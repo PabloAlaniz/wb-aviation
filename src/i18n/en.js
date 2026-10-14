@@ -88,6 +88,35 @@ export const en = {
     yUnit: "pounds",
   },
 
+  customAircraft: {
+    title: "My aircraft (by registration)",
+    description:
+      "Enter the empty weight and arm from your aircraft's Weight & Balance Report. The envelope, stations and limits come from the base model.",
+    baseModelLabel: "Base model",
+    registrationLabel: "Registration",
+    registrationPlaceholder: "N12345",
+    emptyWeightLabel: "Empty weight (lbs)",
+    emptyArmLabel: "Empty weight arm (in)",
+    save: "Save aircraft",
+    empty: "You haven't saved any aircraft yet.",
+    listLabel: "Saved aircraft",
+    recordDetail: (/** @type {string|number} */ lbs, /** @type {string|number} */ arm) =>
+      `${lbs} lbs @ ${arm}"`,
+    remove: (/** @type {string} */ registration) => `Delete ${registration}`,
+    sourceDocument: "Aircraft Weight & Balance Report (user-entered data)",
+    specificWarning:
+      "Empty weight and arm entered by the user from this aircraft's Weight & Balance Report. Envelope, stations and limits come from the base model: verify them against your aircraft's POH.",
+    errors: {
+      registrationRequired: "Enter the registration.",
+      registrationInvalid:
+        "Invalid registration (letters, digits and dashes only, 2 to 10 characters).",
+      baseModelUnknown: "Select a base model.",
+      emptyWeightInvalid: "Enter an empty weight greater than 0.",
+      emptyWeightAboveMax: "Empty weight must be lower than the model's maximum weight.",
+      emptyArmInvalid: "Enter an arm greater than 0.",
+    },
+  },
+
   errorBoundary: {
     title: "Something went wrong",
     description:
