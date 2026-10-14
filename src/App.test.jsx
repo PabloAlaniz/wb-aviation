@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest"
-import { render, screen, fireEvent } from "@testing-library/react"
+import { render, screen, fireEvent, within } from "@testing-library/react"
 import App from "./App"
 
 describe("App (integración)", () => {
@@ -92,5 +92,44 @@ describe("App (integración)", () => {
 
     expect(screen.getByLabelText("Piloto (lbs)")).toHaveValue(null)
     expect(screen.getByText("6682.0 lbs")).toBeInTheDocument()
+  })
+})
+
+describe("App: fuel burn, landing and zero-fuel", () => {
+  beforeEach(() => {
+    window.localStorage.clear()
+  })
+
+  it("shows landing and zero-fuel weights for a planned burn", () => {
+    render(<App />)
+
+    fireEvent.change(screen.getByLabelText("Combustible (lbs)"), { target: { value: "1500" } })
+    fireEvent.change(screen.getByLabelText(/Combustible a consumir/), { target: { value: "800" } })
+
+    // 6682 + 1500 = 8182 al despegue; 7382 al aterrizar; 6682 sin combustible
+    expect(within(screen.getByTestId("phase-takeoff")).getByText("8182.0")).toBeInTheDocument()
+    expect(within(screen.getByTestId("phase-landing")).getByText("7382.0")).toBeInTheDocument()
+    expect(within(screen.getByTestId("phase-zeroFuel")).getByText("6682.0")).toBeInTheDocument()
+    expect(screen.getByText(/ATERRIZAJE DENTRO DE LÍMITES/)).toBeInTheDocument()
+  })
+
+  it("rejects landing when the burn exceeds the fuel loaded", () => {
+    render(<App />)
+
+    fireEvent.change(screen.getByLabelText("Combustible (lbs)"), { target: { value: "500" } })
+    fireEvent.change(screen.getByLabelText(/Combustible a consumir/), { target: { value: "800" } })
+
+    expect(screen.getByText(/ATERRIZAJE FUERA DE LÍMITES/)).toBeInTheDocument()
+    expect(screen.getByText(/supera el combustible cargado \(500 lbs\)/)).toBeInTheDocument()
+  })
+
+  it("persists the planned fuel burn across remounts", () => {
+    const { unmount } = render(<App />)
+    fireEvent.change(screen.getByLabelText(/Combustible a consumir/), { target: { value: "300" } })
+    unmount()
+
+    render(<App />)
+
+    expect(screen.getByLabelText(/Combustible a consumir/)).toHaveValue(300)
   })
 })

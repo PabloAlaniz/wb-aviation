@@ -244,3 +244,157 @@ export function buildSafetyReport(aircraft, totalWeight, centerOfGravity) {
     dataReliability,
   }
 }
+
+/**
+ * Keys of the fuel stations of an aircraft. Stations are flagged with
+ * `isFuel: true` in `loadStations`; when none is flagged, a numeric station
+ * named "fuel" is used as a fallback (keeps older/custom data working).
+ * @param {import('../types').Aircraft} aircraft
+ * @returns {string[]}
+ */
+export function getFuelStationKeys(aircraft) {
+  if (!aircraft) return []
+  const flagged = (aircraft.loadStations || [])
+    .filter((station) => station.isFuel && typeof aircraft.stations[station.key] === "number")
+    .map((station) => station.key)
+  if (flagged.length > 0) return flagged
+  return typeof aircraft.stations?.fuel === "number" ? ["fuel"] : []
+}
+
+/**
+ * Weight, moment, CG and envelope check for one flight phase.
+ * @param {import('../types').Aircraft} aircraft
+ * @param {number} totalWeight - lbs
+ * @param {number} totalMoment - lb-in
+ * @returns {import('../types').FlightPhase}
+ */
+function buildPhase(aircraft, totalWeight, totalMoment) {
+  const centerOfGravity = calculateCG(totalMoment, totalWeight)
+  return {
+    totalWeight,
+    totalMoment,
+    centerOfGravity,
+    inEnvelope: isPointInEnvelope(centerOfGravity, totalWeight, aircraft.cgEnvelope?.points || []),
+  }
+}
+
+/**
+ * Takeoff, landing and zero-fuel conditions for a planned fuel burn.
+ * - landing = takeoff minus the burned fuel, removed from the fuel stations
+ *   proportionally to the fuel loaded in each one (at each station's arm);
+ * - zero-fuel = takeoff minus all the loaded fuel.
+ * The burn is clamped to [0, loaded fuel]; `burnExceedsFuel` flags when the
+ * requested burn was larger than the fuel on board.
+ * @param {import('../types').Aircraft} aircraft
+ * @param {import('../types').StationWeights} weights - Station weights (raw strings)
+ * @param {number | string} fuelBurn - Planned fuel burn (lbs)
+ * @returns {import('../types').FlightPhasesResult | null}
+ */
+export function calculateFlightPhases(aircraft, weights, fuelBurn) {
+  const base = calculateWeightBalance(aircraft, weights)
+  if (!base) return null
+
+  const takeoff = buildPhase(aircraft, base.totalWeight, base.totalMoment)
+
+  const fuelKeys = getFuelStationKeys(aircraft)
+  const fuelByStation = fuelKeys.map((key) => ({
+    arm: /** @type {number} */ (aircraft.stations[key]),
+    weight: Math.max(0, Number.parseFloat(weights[key]) || 0),
+  }))
+  const fuelLoaded = fuelByStation.reduce((sum, s) => sum + s.weight, 0)
+  const fuelMoment = fuelByStation.reduce((sum, s) => sum + calculateMoment(s.weight, s.arm), 0)
+
+  const requestedBurn = Math.max(0, Number.parseFloat(String(fuelBurn)) || 0)
+  const burnExceedsFuel = requestedBurn > fuelLoaded
+  const effectiveBurn = Math.min(requestedBurn, fuelLoaded)
+
+  // Quema proporcional: el momento quemado sigue el brazo medio del combustible cargado
+  const burnFraction = fuelLoaded > 0 ? effectiveBurn / fuelLoaded : 0
+  const landing = buildPhase(
+    aircraft,
+    takeoff.totalWeight - effectiveBurn,
+    takeoff.totalMoment - fuelMoment * burnFraction
+  )
+  const zeroFuel = buildPhase(
+    aircraft,
+    takeoff.totalWeight - fuelLoaded,
+    takeoff.totalMoment - fuelMoment
+  )
+
+  return {
+    takeoff,
+    landing,
+    zeroFuel,
+    fuelLoaded,
+    fuelBurn: effectiveBurn,
+    requestedBurn,
+    burnExceedsFuel,
+    hasFuelStation: fuelKeys.length > 0,
+  }
+}
+
+/**
+ * Landing / zero-fuel safety checks: CG envelope plus max landing weight and
+ * max zero-fuel weight (only when the aircraft data declares them).
+ * @param {import('../types').Aircraft} aircraft
+ * @param {import('../types').FlightPhasesResult} phases
+ * @returns {import('../types').LandingReport}
+ */
+export function buildLandingReport(aircraft, phases) {
+  /** @type {import('../types').SafetyIssue[]} */
+  const errors = []
+  /** @type {import('../types').SafetyIssue[]} */
+  const warnings = []
+  const { landing, zeroFuel } = phases
+  const fp = m.flightPhases
+
+  if (aircraft.maxLandingWeight !== undefined && landing.totalWeight > aircraft.maxLandingWeight) {
+    errors.push({
+      type: "landing-weight",
+      message: fp.overMaxLandingWeight(aircraft.maxLandingWeight),
+      value: landing.totalWeight,
+      limit: aircraft.maxLandingWeight,
+      severity: "high",
+    })
+  }
+  if (!landing.inEnvelope) {
+    errors.push({
+      type: "landing-cg",
+      message: fp.landingOutOfEnvelope,
+      value: landing.centerOfGravity,
+      severity: "high",
+    })
+  }
+  if (
+    aircraft.maxZeroFuelWeight !== undefined &&
+    zeroFuel.totalWeight > aircraft.maxZeroFuelWeight
+  ) {
+    errors.push({
+      type: "zero-fuel-weight",
+      message: fp.overMaxZeroFuelWeight(aircraft.maxZeroFuelWeight),
+      value: zeroFuel.totalWeight,
+      limit: aircraft.maxZeroFuelWeight,
+      severity: "high",
+    })
+  }
+  if (phases.hasFuelStation && !zeroFuel.inEnvelope) {
+    warnings.push({
+      type: "zero-fuel-cg",
+      message: fp.zeroFuelOutOfEnvelope,
+      value: zeroFuel.centerOfGravity,
+      severity: "medium",
+    })
+  }
+  // Planificar quemar más combustible del cargado es un error de planificación
+  if (phases.burnExceedsFuel) {
+    errors.push({
+      type: "burn-exceeds-fuel",
+      message: fp.burnExceedsFuel(phases.requestedBurn, phases.fuelLoaded),
+      value: phases.requestedBurn,
+      limit: phases.fuelLoaded,
+      severity: "high",
+    })
+  }
+
+  return { isLandingOk: errors.length === 0, errors, warnings }
+}

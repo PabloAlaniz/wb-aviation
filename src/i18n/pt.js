@@ -87,6 +87,37 @@ export const pt = {
     yUnit: "pounds",
   },
 
+  flightPhases: {
+    title: "Pouso e peso zero combustível",
+    fuelBurnLabel: "Combustível a consumir em voo (lbs)",
+    fuelBurnPlaceholder: "800",
+    fuelLoaded: (/** @type {string|number} */ lbs) => `Combustível abastecido: ${lbs} lbs`,
+    noFuelStation: "Esta aeronave não tem estação de combustível definida",
+    phase: "Fase",
+    weight: "Peso",
+    cg: "CG",
+    status: "Estado",
+    takeoff: "Decolagem",
+    landing: "Pouso",
+    zeroFuel: "Zero combustível (ZFW)",
+    inEnvelope: "OK",
+    outOfEnvelope: "FORA",
+    readyForLanding: "✅ POUSO DENTRO DOS LIMITES",
+    landingOkDetail: "Peso e balanceamento no pouso dentro dos limites",
+    notFitForLanding: "⚠️ POUSO FORA DOS LIMITES",
+    overMaxLandingWeight: (/** @type {string|number} */ lbs) =>
+      `Peso de pouso excede o máximo (${lbs} lbs)`,
+    overMaxZeroFuelWeight: (/** @type {string|number} */ lbs) =>
+      `Peso zero combustível excede o máximo (${lbs} lbs)`,
+    landingOutOfEnvelope: "Centro de gravidade no pouso fora do envelope",
+    zeroFuelOutOfEnvelope: "Centro de gravidade sem combustível fora do envelope",
+    burnExceedsFuel: (/** @type {string|number} */ burn, /** @type {string|number} */ loaded) =>
+      `O consumo planejado (${burn} lbs) excede o combustível abastecido (${loaded} lbs)`,
+    chartLanding: "Pouso",
+    chartZeroFuel: "Zero combustível",
+    chartBurnPath: "Consumo de combustível",
+  },
+
   errorBoundary: {
     title: "Algo deu errado",
     description:

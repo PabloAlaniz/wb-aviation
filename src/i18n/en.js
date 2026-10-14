@@ -88,6 +88,37 @@ export const en = {
     yUnit: "pounds",
   },
 
+  flightPhases: {
+    title: "Landing and zero-fuel weight",
+    fuelBurnLabel: "Planned fuel burn (lbs)",
+    fuelBurnPlaceholder: "800",
+    fuelLoaded: (/** @type {string|number} */ lbs) => `Fuel loaded: ${lbs} lbs`,
+    noFuelStation: "This aircraft has no fuel station defined",
+    phase: "Phase",
+    weight: "Weight",
+    cg: "CG",
+    status: "Status",
+    takeoff: "Takeoff",
+    landing: "Landing",
+    zeroFuel: "Zero fuel (ZFW)",
+    inEnvelope: "OK",
+    outOfEnvelope: "OUT",
+    readyForLanding: "✅ LANDING WITHIN LIMITS",
+    landingOkDetail: "Landing weight and balance within limits",
+    notFitForLanding: "⚠️ LANDING OUT OF LIMITS",
+    overMaxLandingWeight: (/** @type {string|number} */ lbs) =>
+      `Landing weight exceeds the maximum (${lbs} lbs)`,
+    overMaxZeroFuelWeight: (/** @type {string|number} */ lbs) =>
+      `Zero-fuel weight exceeds the maximum (${lbs} lbs)`,
+    landingOutOfEnvelope: "Landing center of gravity outside the envelope",
+    zeroFuelOutOfEnvelope: "Zero-fuel center of gravity outside the envelope",
+    burnExceedsFuel: (/** @type {string|number} */ burn, /** @type {string|number} */ loaded) =>
+      `Planned burn (${burn} lbs) exceeds the fuel loaded (${loaded} lbs)`,
+    chartLanding: "Landing",
+    chartZeroFuel: "Zero fuel",
+    chartBurnPath: "Fuel burn",
+  },
+
   errorBoundary: {
     title: "Something went wrong",
     description:

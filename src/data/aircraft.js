@@ -95,7 +95,13 @@ export const aircraftData = {
       { key: "passenger4", label: "Pasajero 4 (lbs)", placeholder: "170" },
       { key: "baggage1", label: "Equipaje 1 (lbs)", placeholder: "100" },
       { key: "baggage2", label: "Equipaje 2 (lbs)", placeholder: "100" },
-      { key: "fuel", label: "Combustible (lbs)", placeholder: "1500", fullWidth: true },
+      {
+        key: "fuel",
+        label: "Combustible (lbs)",
+        placeholder: "1500",
+        fullWidth: true,
+        isFuel: true,
+      },
     ],
 
     // Envolvente de CG (requiere verificación con TCDS oficial)
@@ -129,6 +135,7 @@ export const aircraftData = {
       pendingVerification: [
         "Estaciones de carga específicas para otras aeronaves",
         "Verificación de número de serie específico para validación de peso vacío",
+        "Pesos máximos de aterrizaje y sin combustible (MLW/MZFW) según TCDS 3A20 (no cargados: no se validan)",
       ],
     },
   },
@@ -172,6 +179,7 @@ export const aircraftData = {
     emptyWeight: 1663,
     emptyArm: 41.0,
     maxWeight: 2550, // Peso máximo de despegue/aterrizaje, categoría normal
+    maxLandingWeight: 2550, // POH 172S Sección 2 (Limitaciones): máx. aterrizaje = máx. despegue, categoría normal
 
     operationalLimits: {
       maxAltitude: 14000, // feet (techo de servicio)
@@ -207,7 +215,13 @@ export const aircraftData = {
       { key: "passenger2", label: "Pasajero trasero 2 (lbs)", placeholder: "170" },
       { key: "baggage1", label: "Equipaje área 1 (lbs, máx 120)", placeholder: "50" },
       { key: "baggage2", label: "Equipaje área 2 (lbs, máx 50)", placeholder: "20" },
-      { key: "fuel", label: "Combustible (lbs, máx 318)", placeholder: "318", fullWidth: true },
+      {
+        key: "fuel",
+        label: "Combustible (lbs, máx 318)",
+        placeholder: "318",
+        fullWidth: true,
+        isFuel: true,
+      },
     ],
 
     // Envolvente categoría normal (lbs vs pulgadas aft of datum)
