@@ -70,7 +70,50 @@ describe("LandingVerdict", () => {
   })
 })
 
+describe("FlightPhasesPanel in metric units", () => {
+  it("converts the table and weight-based landing errors to kg/mm", () => {
+    const report = {
+      isLandingOk: false,
+      errors: [
+        {
+          type: "burn-exceeds-fuel",
+          message: "imperial",
+          value: 2000,
+          limit: 1500,
+          severity: "high",
+        },
+      ],
+      warnings: [],
+    }
+    render(
+      <FlightPhasesPanel
+        phases={{ ...phases, requestedBurn: 2000 }}
+        report={report}
+        units="metric"
+      />
+    )
+
+    const landing = screen.getByTestId("phase-landing")
+    expect(landing).toHaveTextContent("3439.1 kg")
+    expect(landing).toHaveTextContent("3837.9 mm")
+    expect(screen.getByText(/El consumo planificado \(907 kg\)/)).toBeInTheDocument()
+  })
+})
+
 describe("FuelBurnInput", () => {
+  it("takes the burn in kg and reports it in lbs", () => {
+    const onChange = vi.fn()
+    render(
+      <FuelBurnInput value="" onChange={onChange} fuelLoaded={1500} hasFuelStation units="metric" />
+    )
+
+    expect(screen.getByText("Combustible cargado: 680 kg")).toBeInTheDocument()
+    fireEvent.change(screen.getByLabelText(/Combustible a consumir en vuelo \(kg\)/), {
+      target: { value: "100" },
+    })
+    expect(Number(onChange.mock.calls[0][0])).toBeCloseTo(220.462, 2)
+  })
+
   it("shows the loaded fuel and reports changes", () => {
     const onChange = vi.fn()
     render(<FuelBurnInput value="" onChange={onChange} fuelLoaded={1500} hasFuelStation />)

@@ -70,12 +70,24 @@ export interface CgEnvelope {
 /** UI configuration for one row of the load form. */
 export interface LoadStation {
   key: string
-  label: string
+  /**
+   * i18n key in the `stations` namespace (e.g. "stations.pilot"). Takes
+   * precedence over `label` when it resolves to a message.
+   */
+  labelKey?: string
+  /** Raw, untranslated label: fallback for custom/unknown stations. Should not include units. */
+  label?: string
+  /** Optional maximum load for the station, in lbs (shown in the label). */
+  max?: number
+  /** Placeholder weight in lbs (converted for display). */
   placeholder?: string
   fullWidth?: boolean
   /** Marks a fuel station (burned in flight; removed for zero-fuel weight). */
   isFuel?: boolean
 }
+
+/** Display unit system. Calculations always stay in imperial units. */
+export type UnitSystem = "imperial" | "metric"
 
 /**
  * A supported aircraft. `stations` maps a station key to its arm (inches);
