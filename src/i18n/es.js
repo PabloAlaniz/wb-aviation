@@ -89,6 +89,37 @@ export const es = {
     yUnit: "pounds",
   },
 
+  flightPhases: {
+    title: "Aterrizaje y peso sin combustible",
+    fuelBurnLabel: "Combustible a consumir en vuelo (lbs)",
+    fuelBurnPlaceholder: "800",
+    fuelLoaded: (/** @type {string|number} */ lbs) => `Combustible cargado: ${lbs} lbs`,
+    noFuelStation: "Esta aeronave no tiene estación de combustible definida",
+    phase: "Fase",
+    weight: "Peso",
+    cg: "CG",
+    status: "Estado",
+    takeoff: "Despegue",
+    landing: "Aterrizaje",
+    zeroFuel: "Sin combustible (ZFW)",
+    inEnvelope: "OK",
+    outOfEnvelope: "FUERA",
+    readyForLanding: "✅ ATERRIZAJE DENTRO DE LÍMITES",
+    landingOkDetail: "Peso y centrado al aterrizar dentro de límites",
+    notFitForLanding: "⚠️ ATERRIZAJE FUERA DE LÍMITES",
+    overMaxLandingWeight: (/** @type {string|number} */ lbs) =>
+      `Peso de aterrizaje excede el máximo (${lbs} lbs)`,
+    overMaxZeroFuelWeight: (/** @type {string|number} */ lbs) =>
+      `Peso sin combustible excede el máximo (${lbs} lbs)`,
+    landingOutOfEnvelope: "Centro de gravedad al aterrizar fuera de la envolvente",
+    zeroFuelOutOfEnvelope: "Centro de gravedad sin combustible fuera de la envolvente",
+    burnExceedsFuel: (/** @type {string|number} */ burn, /** @type {string|number} */ loaded) =>
+      `El consumo planificado (${burn} lbs) supera el combustible cargado (${loaded} lbs)`,
+    chartLanding: "Aterrizaje",
+    chartZeroFuel: "Sin combustible",
+    chartBurnPath: "Consumo de combustible",
+  },
+
   errorBoundary: {
     title: "Algo salió mal",
     description:

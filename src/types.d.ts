@@ -73,6 +73,8 @@ export interface LoadStation {
   label: string
   placeholder?: string
   fullWidth?: boolean
+  /** Marks a fuel station (burned in flight; removed for zero-fuel weight). */
+  isFuel?: boolean
 }
 
 /**
@@ -85,6 +87,10 @@ export interface Aircraft {
   emptyWeight: number
   emptyArm: number
   maxWeight: number
+  /** Max landing weight (lbs). Optional: only checked when declared. */
+  maxLandingWeight?: number
+  /** Max zero-fuel weight (lbs). Optional: only checked when declared. */
+  maxZeroFuelWeight?: number
   cgLimits: CgLimits
   stations: Record<string, number | string>
   loadStations: LoadStation[]
@@ -140,4 +146,34 @@ export interface SafetyReport {
   weightPercentage: string
   cgMargins: { forward: string; aft: string }
   dataReliability: DataReliability
+}
+
+/** Weight and CG of the aircraft at one phase of the flight. */
+export interface FlightPhase {
+  totalWeight: number
+  totalMoment: number
+  centerOfGravity: number
+  inEnvelope: boolean
+}
+
+export interface FlightPhasesResult {
+  takeoff: FlightPhase
+  /** Takeoff minus the (clamped) planned fuel burn. */
+  landing: FlightPhase
+  /** Takeoff minus all the loaded fuel. */
+  zeroFuel: FlightPhase
+  /** Total fuel loaded across fuel stations (lbs). */
+  fuelLoaded: number
+  /** Effective burn used for landing, clamped to [0, fuelLoaded] (lbs). */
+  fuelBurn: number
+  /** Burn as requested by the user, before clamping (lbs, >= 0). */
+  requestedBurn: number
+  burnExceedsFuel: boolean
+  hasFuelStation: boolean
+}
+
+export interface LandingReport {
+  isLandingOk: boolean
+  errors: SafetyIssue[]
+  warnings: SafetyIssue[]
 }

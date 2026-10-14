@@ -15,9 +15,21 @@ import { messages as m } from "../i18n"
  *   aircraft: import("../types").Aircraft,
  *   currentCG: number,
  *   currentWeight: number,
+ *   landingCG?: number,
+ *   landingWeight?: number,
+ *   zeroFuelCG?: number,
+ *   zeroFuelWeight?: number,
  * }} props
  */
-export function CGEnvelopeChart({ aircraft, currentCG, currentWeight }) {
+export function CGEnvelopeChart({
+  aircraft,
+  currentCG,
+  currentWeight,
+  landingCG,
+  landingWeight,
+  zeroFuelCG,
+  zeroFuelWeight,
+}) {
   // Preparar datos del envolvente para formar un polígono cerrado
   const envelopePoints = aircraft.cgEnvelope.points
 
@@ -36,6 +48,16 @@ export function CGEnvelopeChart({ aircraft, currentCG, currentWeight }) {
 
   // Datos para el punto de operación actual
   const currentPointData = [{ x: currentCG, y: currentWeight, label: m.chart.operatingPoint }]
+
+  // Fases de vuelo opcionales (aterrizaje y peso sin combustible)
+  const hasLanding = landingCG !== undefined && landingWeight !== undefined
+  const hasZeroFuel = zeroFuelCG !== undefined && zeroFuelWeight !== undefined
+  const burnPathData = hasLanding
+    ? [
+        { x: currentCG, y: currentWeight },
+        { x: landingCG, y: landingWeight },
+      ]
+    : []
 
   // Tooltip personalizado
   /** @param {{ active?: boolean, payload?: Array<{ payload: { x: number, y: number } }> }} props */
@@ -133,6 +155,34 @@ export function CGEnvelopeChart({ aircraft, currentCG, currentWeight }) {
               fill="#ff0000"
               shape="circle"
             />
+
+            {/* Trayectoria de consumo: despegue -> aterrizaje */}
+            {hasLanding && (
+              <Scatter
+                name={m.flightPhases.chartBurnPath}
+                data={burnPathData}
+                line={{ stroke: "#f97316", strokeWidth: 2, strokeDasharray: "5 3" }}
+                fill="transparent"
+                shape={() => null}
+                legendType="none"
+              />
+            )}
+            {hasLanding && (
+              <Scatter
+                name={m.flightPhases.chartLanding}
+                data={[{ x: landingCG, y: landingWeight }]}
+                fill="#f97316"
+                shape="triangle"
+              />
+            )}
+            {hasZeroFuel && (
+              <Scatter
+                name={m.flightPhases.chartZeroFuel}
+                data={[{ x: zeroFuelCG, y: zeroFuelWeight }]}
+                fill="#6b7280"
+                shape="square"
+              />
+            )}
           </ScatterChart>
         </ResponsiveContainer>
       </div>

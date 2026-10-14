@@ -8,9 +8,16 @@ import { AircraftInfo } from "./components/AircraftInfo"
 import { ResultsPanel, TakeoffVerdict } from "./components/ResultsPanel"
 import { SafetyAlerts } from "./components/SafetyAlerts"
 import { DataSources } from "./components/DataSources"
+import { FuelBurnInput } from "./components/FuelBurnInput"
+import { FlightPhasesPanel } from "./components/FlightPhasesPanel"
 import { Plane, Calculator, RotateCcw } from "lucide-react"
 import { aircraftData, aircraftOptions, emptyWeightsFor } from "./data/aircraft"
-import { calculateWeightBalance, buildSafetyReport } from "./utils/calculations"
+import {
+  calculateWeightBalance,
+  buildSafetyReport,
+  calculateFlightPhases,
+  buildLandingReport,
+} from "./utils/calculations"
 import { useLocalStorage } from "./hooks/useLocalStorage"
 import { messages as m, getLocale, setLocale, localeOptions } from "./i18n"
 
@@ -26,6 +33,12 @@ export default function App() {
     "wb-weights",
     emptyWeightsFor(aircraftData[DEFAULT_AIRCRAFT]),
     (value) => value !== null && typeof value === "object" && !Array.isArray(value)
+  )
+
+  const [fuelBurn, setFuelBurn] = useLocalStorage(
+    "wb-fuel-burn",
+    "",
+    (value) => typeof value === "string"
   )
 
   const aircraft = aircraftData[selectedAircraft]
@@ -44,6 +57,8 @@ export default function App() {
   const safetyChecks = results
     ? buildSafetyReport(aircraft, results.totalWeight, results.centerOfGravity)
     : null
+  const phases = calculateFlightPhases(aircraft, weights, fuelBurn)
+  const landingReport = phases ? buildLandingReport(aircraft, phases) : null
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
@@ -96,6 +111,13 @@ export default function App() {
                 onWeightChange={handleWeightChange}
               />
 
+              <FuelBurnInput
+                value={fuelBurn}
+                onChange={setFuelBurn}
+                fuelLoaded={phases?.fuelLoaded ?? 0}
+                hasFuelStation={phases?.hasFuelStation ?? false}
+              />
+
               <button
                 type="button"
                 onClick={resetWeights}
@@ -136,12 +158,22 @@ export default function App() {
 
                   <Separator />
 
+                  {phases && landingReport && (
+                    <FlightPhasesPanel phases={phases} report={landingReport} />
+                  )}
+
+                  <Separator />
+
                   <div className="space-y-3">
                     <h3 className="font-semibold text-center">{m.app.envelopeSectionTitle}</h3>
                     <CGEnvelopeChart
                       aircraft={aircraft}
                       currentCG={results.centerOfGravity}
                       currentWeight={results.totalWeight}
+                      landingCG={phases?.fuelBurn ? phases.landing.centerOfGravity : undefined}
+                      landingWeight={phases?.fuelBurn ? phases.landing.totalWeight : undefined}
+                      zeroFuelCG={phases?.fuelLoaded ? phases.zeroFuel.centerOfGravity : undefined}
+                      zeroFuelWeight={phases?.fuelLoaded ? phases.zeroFuel.totalWeight : undefined}
                     />
                     <p className="text-xs text-gray-500 text-center">{m.app.envelopeCaption}</p>
                   </div>
