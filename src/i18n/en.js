@@ -313,4 +313,88 @@ export const en = {
     disclaimer:
       "Reference tool only. The aircraft's flight manual (POH/AFM) and weight and balance report take precedence over this sheet.",
   },
+
+  seo: {
+    siteName: "W&B Aviation",
+    ogLocale: "en_US",
+    languageLabel: "Language",
+    calculatorTitle: "Interactive calculator",
+    loading: "Loading the calculator…",
+    noscript:
+      "The calculator requires JavaScript. The reference data on this page is available without it.",
+    appDescription:
+      "Free aircraft weight and balance calculator: center of gravity, CG envelope and load sheet. Works offline, no sign-up.",
+    home: {
+      title: "Aircraft weight and balance calculator | W&B Aviation",
+      description:
+        "Calculate your aircraft's weight and balance and center of gravity with TCDS and POH data. Free, offline and no sign-up.",
+      h1: "Aircraft weight and balance calculator",
+      intro1:
+        "Weight and balance checks, before every flight, that the aircraft does not exceed its maximum weight and that its center of gravity (CG) stays inside the approved envelope. An out-of-limits CG affects stability and control even when the total weight is fine.",
+      intro2:
+        "W&B Aviation adds the empty weight and every loading station (crew, passengers, baggage and fuel), computes the resulting moment and CG and checks them against the manufacturer's envelope, including landing and zero-fuel conditions. It runs in your browser, with no sign-up and offline.",
+      aircraftListTitle: "Supported aircraft",
+      aircraftLink: (/** @type {string} */ name) => `${name} weight and balance`,
+    },
+    aircraft: {
+      title: (/** @type {string} */ name) =>
+        `${name} weight and balance: CG calculator | W&B Aviation`,
+      description: (/** @type {string} */ name, /** @type {string} */ maxWeight) =>
+        `${name} weight and balance calculator: ${maxWeight} max weight, station arms, CG limits and envelope. Free and offline.`,
+      h1: (/** @type {string} */ name) => `${name} weight and balance`,
+      intro: (/** @type {string} */ name, /** @type {string} */ tcds) =>
+        `Calculate the total weight and center of gravity of the ${name} using reference data from ${tcds}. Enter the weight at each station and the calculator checks maximum weight and the CG envelope for takeoff and landing.`,
+      specsTitle: "Weight and balance data",
+      tcds: "Type certificate data sheet (TCDS)",
+      manufacturer: "Manufacturer",
+      engines: "Engines",
+      maxWeight: "Maximum takeoff weight",
+      emptyWeight: "Reference empty weight",
+      emptyArm: "Empty weight arm",
+      cgLimits: "CG limits",
+      cgLimitsValue: (/** @type {string} */ forward, /** @type {string} */ aft) =>
+        `${forward} to ${aft} aft of datum`,
+      stationsTitle: "Loading stations and arms",
+      station: "Station",
+      arm: "Arm (in)",
+      maxLoad: "Maximum (lbs)",
+      envelopeTitle: "CG envelope points",
+      envelopeCaption: "Envelope polygon vertices (arm in inches aft of datum, weight in pounds).",
+      point: "Point",
+      envelopeArm: "Arm (in)",
+      envelopeWeight: "Weight (lbs)",
+      reliabilityTitle: "Data reliability and sources",
+      reliabilityLabel: "Reliability:",
+      reliabilityVerifiedComplete: "verified against official documentation",
+      reliabilityVerifiedPartial: "partially verified",
+      reliabilityEstimated: "estimated reference values",
+      lastVerified: "Last verified:",
+      sourcesLabel: "Sources:",
+      pendingLabel: "Pending verification:",
+      ownDataWarning:
+        "Empty weight and arm differ for every airframe: use the values from your aircraft's weight and balance report (you can add them as a custom aircraft in the calculator).",
+      faqTitle: "Frequently asked questions",
+      faqWhatQ: (/** @type {string} */ name) => `How is the ${name} weight and balance calculated?`,
+      faqWhatA: (/** @type {string} */ name) =>
+        `Multiply each station's weight by its arm to get its moment, add up weights and moments (including the empty weight) and divide the total moment by the total weight to get the CG. The ${name} is within limits when the weight does not exceed the maximum and the weight/CG point lies inside the envelope.`,
+      faqMaxWeightQ: (/** @type {string} */ name) => `What is the maximum weight of the ${name}?`,
+      faqMaxWeightA: (
+        /** @type {string} */ name,
+        /** @type {string} */ maxWeight,
+        /** @type {string} */ tcds
+      ) =>
+        `The reference maximum takeoff weight of the ${name} is ${maxWeight}, per ${tcds}. Always confirm it in your aircraft's POH/AFM.`,
+      faqCgQ: (/** @type {string} */ name) => `What are the CG limits of the ${name}?`,
+      faqCgA: (
+        /** @type {string} */ name,
+        /** @type {string} */ forward,
+        /** @type {string} */ aft
+      ) =>
+        `The ${name} CG must be between ${forward} (forward limit) and ${aft} (aft limit) aft of datum. The effective limit depends on weight: the envelope on this page shows its full shape.`,
+      faqOwnQ: (/** @type {string} */ name) => `Can I use this calculator for my ${name}?`,
+      faqOwnA: (/** @type {string} */ name) =>
+        `Yes, as a reference. Every ${name} has its own empty weight and arm depending on its equipment: enter them from its weight and balance report as a custom aircraft. The POH/AFM is always the official reference.`,
+      otherAircraftTitle: "Other aircraft",
+    },
+  },
 }

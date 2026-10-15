@@ -61,11 +61,13 @@ El sistema incluye:
 ## 🛠️ Tecnologías Utilizadas
 
 - **React 19.1.1** - Framework UI
-- **Vite 7.1.2** - Build tool y dev server
+- **Astro 7** - Sitio estático (páginas por idioma y aeronave para SEO) con la app React como isla
+- **Vite 8** - Build tool (vía Astro)
 - **Tailwind CSS 4.1.12** - Framework de estilos
 - **Recharts 3.1.2** - Librería de gráficos
 - **Lucide React 0.540.0** - Sistema de iconos
-- **vite-plugin-pwa 1.3.0** - Soporte PWA / offline
+- **@vite-pwa/astro + vite-plugin-pwa** - Soporte PWA / offline
+- **@astrojs/sitemap** - `sitemap-index.xml` con alternates hreflang
 - **Vitest 4.x + Testing Library** - Tests unitarios y de componentes
 - **ESLint 9.33.0 + Prettier** - Linter y formateo de código
 
@@ -129,9 +131,9 @@ npm run format:check  # Verifica formato (usado en CI)
 
 ### Variables de entorno
 
-Copiá `.env.example` a `.env.local` para habilitar integraciones opcionales (todas con prefijo `VITE_`):
+Copiá `.env.example` a `.env.local` para habilitar integraciones opcionales (prefijo `PUBLIC_`; también se acepta el prefijo heredado `VITE_`):
 
-- `VITE_PLAUSIBLE_DOMAIN` — dominio del sitio en [Plausible](https://plausible.io) para activar analytics sin cookies. Si queda vacío, no se carga ningún script de métricas.
+- `PUBLIC_PLAUSIBLE_DOMAIN` (o `VITE_PLAUSIBLE_DOMAIN`) — dominio del sitio en [Plausible](https://plausible.io) para activar analytics sin cookies. Si queda vacío, no se carga ningún script de métricas.
 
 ## 📂 Estructura del Proyecto
 
@@ -162,13 +164,16 @@ wb-aviation/
 │   ├── utils/
 │   │   ├── calculations.js      # Lógica de cálculo W&B
 │   │   └── calculations.test.js # Tests unitarios
+│   ├── layouts/Base.astro # <head> SEO (canonical, hreflang, OG, JSON-LD), PWA y analytics
+│   ├── pages/             # Rutas Astro: /, /{es,en,pt}/ y /{es,en,pt}/{aeronave}/
 │   ├── App.jsx            # Componente principal (composición)
-│   └── main.jsx           # Punto de entrada
+│   └── components/AppIsland.jsx # Isla React (client:only) montada por las páginas
 ├── docs/                  # Documentación (sprints, datos de aeronave)
 ├── public/                # Recursos estáticos
 ├── data/                  # Imágenes de referencia del TCDS
 ├── package.json           # Dependencias y scripts
-├── vite.config.js         # Configuración de Vite
+├── astro.config.mjs       # Configuración de Astro (i18n, sitemap, PWA, Tailwind)
+├── vitest.config.js       # Configuración de Vitest
 ├── eslint.config.js       # Configuración de ESLint
 └── README.md             # Este archivo
 ```
