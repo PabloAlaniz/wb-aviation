@@ -80,10 +80,12 @@ export const es = {
     passenger4: "Pasajero 4",
     rearPassenger1: "Pasajero trasero 1",
     rearPassenger2: "Pasajero trasero 2",
+    baggage: "Equipaje",
     baggage1: "Equipaje 1",
     baggage2: "Equipaje 2",
     baggageArea1: "Equipaje área 1",
     baggageArea2: "Equipaje área 2",
+    baggageExtension: "Extensión de equipaje",
     fuel: "Combustible",
   },
 
