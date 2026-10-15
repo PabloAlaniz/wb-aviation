@@ -12,6 +12,8 @@ import { FuelBurnInput } from "./components/FuelBurnInput"
 import { FlightPhasesPanel } from "./components/FlightPhasesPanel"
 import { CustomAircraftManager } from "./components/CustomAircraftManager"
 import { UnitToggle } from "./components/UnitToggle"
+import { ShareButton } from "./components/ShareButton"
+import { SharedCalculationNotice } from "./components/SharedCalculationNotice"
 import { Plane, Calculator, RotateCcw } from "lucide-react"
 import { aircraftData, aircraftOptions, emptyWeightsFor } from "./data/aircraft"
 import {
@@ -24,6 +26,8 @@ import { useLocalStorage } from "./hooks/useLocalStorage"
 import { useCustomAircraft } from "./hooks/useCustomAircraft"
 import { isCustomAircraftId } from "./utils/customAircraft"
 import { useUnits } from "./hooks/useUnits"
+import { useSharedCalculation } from "./hooks/useSharedCalculation"
+import { buildShareUrl } from "./utils/shareLink"
 import { messages as m, getLocale, setLocale, localeOptions } from "./i18n"
 
 const DEFAULT_AIRCRAFT = "king-air-echo-90"
@@ -48,6 +52,15 @@ export default function App() {
     "",
     (value) => typeof value === "string"
   )
+
+  const shared = useSharedCalculation({
+    records: custom.records,
+    saveCustomAircraft: custom.save,
+    setSelectedAircraft,
+    setWeights,
+    setFuelBurn,
+    setUnits,
+  })
 
   /** @param {string} id */
   const findAircraft = (id) =>
@@ -85,6 +98,8 @@ export default function App() {
             />
           </div>
         </div>
+
+        <SharedCalculationNotice status={shared.status} onDismiss={shared.dismiss} />
 
         <div className="text-center space-y-2">
           <div className="flex items-center justify-center gap-2">
@@ -159,7 +174,19 @@ export default function App() {
 
           <Card>
             <CardHeader>
-              <CardTitle>{m.app.resultsCardTitle}</CardTitle>
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <CardTitle>{m.app.resultsCardTitle}</CardTitle>
+                <ShareButton
+                  title={m.share.shareTitle(aircraft.name)}
+                  url={buildShareUrl(window.location.href, {
+                    aircraftId: selectedAircraft,
+                    weights,
+                    fuelBurn,
+                    units,
+                    customRecords: custom.records,
+                  })}
+                />
+              </div>
               <CardDescription>{m.app.resultsCardDescription}</CardDescription>
             </CardHeader>
             <CardContent>

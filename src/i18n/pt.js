@@ -195,6 +195,23 @@ export const pt = {
     },
   },
 
+  share: {
+    button: "Compartilhar",
+    buttonLabel: "Compartilhar um link para este cálculo",
+    copied: "Link copiado",
+    copyFailed: "Não foi possível copiar o link",
+    showQr: "Mostrar QR",
+    hideQr: "Ocultar QR",
+    qrAlt: "Código QR com o link para este cálculo",
+    qrFailed: "Não foi possível gerar o código QR",
+    shareTitle: (/** @type {string} */ aircraftName) => `Peso e balanceamento: ${aircraftName}`,
+    loaded: "Um cálculo compartilhado foi carregado.",
+    conflict:
+      "O link traz uma aeronave cuja matrícula você já salvou com outro peso vazio ou braço. Ele não foi carregado para não sobrescrever seus dados.",
+    invalid: "O link compartilhado é inválido ou está incompleto.",
+    dismiss: "Fechar aviso",
+  },
+
   errorBoundary: {
     title: "Algo deu errado",
     description:

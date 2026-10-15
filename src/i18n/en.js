@@ -195,6 +195,23 @@ export const en = {
     },
   },
 
+  share: {
+    button: "Share",
+    buttonLabel: "Share a link to this calculation",
+    copied: "Link copied",
+    copyFailed: "Couldn't copy the link",
+    showQr: "Show QR",
+    hideQr: "Hide QR",
+    qrAlt: "QR code with the link to this calculation",
+    qrFailed: "Couldn't generate the QR code",
+    shareTitle: (/** @type {string} */ aircraftName) => `Weight & balance: ${aircraftName}`,
+    loaded: "Loaded a shared calculation.",
+    conflict:
+      "The link includes an aircraft whose registration you already saved with a different empty weight or arm. It wasn't loaded so your data isn't overwritten.",
+    invalid: "The shared link is invalid or incomplete.",
+    dismiss: "Dismiss notice",
+  },
+
   errorBoundary: {
     title: "Something went wrong",
     description:
