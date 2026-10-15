@@ -14,7 +14,7 @@ fit → prerequisitos → canales automáticos → envíos manuales → medició
 - [x] Aeronave custom + CG de aterrizaje (Sprint 6).
 - [x] Hoja de carga PDF + link compartible (Sprint 7).
 - [x] Páginas por aeronave/idioma indexables (Sprint 8).
-- [ ] OG card real, screenshot/GIF actualizado en el README.
+- [x] OG card real, screenshot/GIF actualizado en el README (`docs/demo.gif`).
 - [x] Marca de autor visible (footer + README) y dominio definitivo (checkcg.com).
 - [x] Eventos de conversión propios en Cloudflare activos (ver §5).
 
@@ -22,7 +22,7 @@ fit → prerequisitos → canales automáticos → envíos manuales → medició
 
 | Canal                    | Acción                                                     | Estado |
 | ------------------------ | ---------------------------------------------------------- | ------ |
-| Google (SEO)             | Search Console + sitemap; una página por aeronave × idioma | ⬜     |
+| Google (SEO)             | Search Console + sitemap; una página por aeronave × idioma | ✅     |
 | Guías (content)          | 3 guías por idioma (cómo calcular W&B, momento/brazo, …)   | ✅     |
 | GitHub                   | Topics (`aviation`, `weight-and-balance`, `pwa`, `efb`)    | ⬜     |
 | Listas awesome           | PR a listas awesome-aviation / awesome-pwa                 | ⬜     |
