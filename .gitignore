@@ -28,3 +28,6 @@ coverage
 
 # Astro generated types
 .astro/
+
+# Intermediate HTML of npm run marketing
+marketing/.build/
