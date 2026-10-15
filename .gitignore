@@ -31,3 +31,5 @@ coverage
 
 # Wrangler local state (wrangler pages dev)
 .wrangler/
+# Intermediate HTML of npm run marketing
+marketing/.build/

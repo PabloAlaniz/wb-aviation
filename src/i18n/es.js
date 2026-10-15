@@ -323,6 +323,12 @@ export const es = {
   seo: {
     siteName: "CheckCG",
     ogLocale: "es_ES",
+    // Imágenes para redes sociales (src/pages/og/**), generadas en el build.
+    og: {
+      title: "Peso y balance",
+      tagline: "Calculadora gratis de centro de gravedad. Offline y sin registro.",
+      envelope: "Envolvente de CG",
+    },
     languageLabel: "Idioma",
     calculatorTitle: "Calculadora interactiva",
     loading: "Cargando la calculadora…",
