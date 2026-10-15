@@ -319,6 +319,12 @@ export const en = {
   seo: {
     siteName: "CheckCG",
     ogLocale: "en_US",
+    // Social preview images (src/pages/og/**), rendered at build time.
+    og: {
+      title: "Weight and balance",
+      tagline: "Free center of gravity calculator. Works offline, no sign-up.",
+      envelope: "CG envelope",
+    },
     languageLabel: "Language",
     calculatorTitle: "Interactive calculator",
     loading: "Loading the calculator…",
