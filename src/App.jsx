@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./components/Card"
 import { SimpleSelect } from "./components/Select"
 import { Label } from "./components/Input"
@@ -32,12 +33,23 @@ import { useCustomAircraft } from "./hooks/useCustomAircraft"
 import { isCustomAircraftId } from "./utils/customAircraft"
 import { useUnits } from "./hooks/useUnits"
 import { useSharedCalculation } from "./hooks/useSharedCalculation"
-import { buildShareUrl } from "./utils/shareLink"
+import { buildShareUrl, readShareParam } from "./utils/shareLink"
 import { messages as m, getLocale, setLocale, localeOptions } from "./i18n"
+import { isRouteLocale, localeSwitchPath } from "./utils/routes"
 
 const DEFAULT_AIRCRAFT = "king-air-echo-90"
 
-export default function App() {
+/**
+ * @param {{
+ *   initialAircraft?: string,
+ *   locale?: string,
+ * }} [props]
+ *   - initialAircraft: built-in aircraft of the page the app is embedded in
+ *     (selected on load unless a `?s=` shared link overrides it)
+ *   - locale: locale of the page; when set, the language selector navigates
+ *     to the same page in the chosen language instead of reloading
+ */
+export default function App({ initialAircraft, locale } = {}) {
   const custom = useCustomAircraft()
   const fleetImport = useFleetImport((records) => records.forEach((record) => custom.save(record)))
   const [selectedAircraft, setSelectedAircraft] = useLocalStorage(
@@ -58,6 +70,20 @@ export default function App() {
     "",
     (value) => typeof value === "string"
   )
+
+  // Aircraft pages preselect their aircraft once, unless a shared link wins.
+  // Read the param during the first render: useSharedCalculation removes it.
+  const [hasShareParam] = useState(
+    () => typeof window !== "undefined" && readShareParam(window.location.search) !== null
+  )
+  useEffect(() => {
+    if (hasShareParam || !initialAircraft || !(initialAircraft in aircraftData)) return
+    if (initialAircraft === selectedAircraft) return
+    setSelectedAircraft(initialAircraft)
+    setWeights(emptyWeightsFor(aircraftData[initialAircraft]))
+    // one-shot on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const shared = useSharedCalculation({
     records: custom.records,
@@ -91,7 +117,7 @@ export default function App() {
   const landingReport = phases ? buildLandingReport(aircraft, phases) : null
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 print:hidden">
+    <div className="p-4 print:hidden">
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="flex justify-end gap-2">
           <UnitToggle units={units} onUnitsChange={setUnits} />
@@ -99,7 +125,19 @@ export default function App() {
             <SimpleSelect
               id="locale"
               value={getLocale()}
-              onValueChange={setLocale}
+              onValueChange={(next) =>
+                locale && isRouteLocale(next)
+                  ? setLocale(
+                      next,
+                      localeSwitchPath(
+                        next,
+                        initialAircraft && selectedAircraft in aircraftData
+                          ? selectedAircraft
+                          : null
+                      )
+                    )
+                  : setLocale(next)
+              }
               options={localeOptions}
             />
           </div>
@@ -110,7 +148,7 @@ export default function App() {
         <div className="text-center space-y-2">
           <div className="flex items-center justify-center gap-2">
             <Plane className="h-8 w-8 text-blue-600" />
-            <h1 className="text-3xl font-bold text-gray-900">{m.app.title(aircraft.name)}</h1>
+            <h2 className="text-3xl font-bold text-gray-900">{m.app.title(aircraft.name)}</h2>
           </div>
           <p className="text-gray-600">{m.app.subtitle(aircraft.tcds)}</p>
         </div>

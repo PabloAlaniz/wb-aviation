@@ -1,0 +1,254 @@
+---
+/**
+ * One page per built-in aircraft and locale (/{lang}/{aircraft}/): static,
+ * indexable W&B reference data generated from src/data/aircraft.js, plus the
+ * calculator island preselecting that aircraft.
+ */
+import Base from "../../layouts/Base.astro"
+import LanguageNav from "../../components/LanguageNav.astro"
+import Calculator from "../../components/Calculator.astro"
+import { locales } from "../../i18n"
+import { aircraftData } from "../../data/aircraft"
+import {
+  ROUTE_LOCALES,
+  absoluteUrl,
+  aircraftPath,
+  alternateLinks,
+  localePath,
+  type RouteLocale,
+} from "../../utils/routes"
+import {
+  aircraftFaq,
+  envelopeRows,
+  faqPageJsonLd,
+  formatArm,
+  formatNumber,
+  formatWeight,
+  reliabilityLabel,
+  softwareApplicationJsonLd,
+  stationRows,
+} from "../../utils/seoContent"
+
+export function getStaticPaths() {
+  return ROUTE_LOCALES.flatMap((lang) =>
+    Object.keys(aircraftData).map((aircraft) => ({ params: { lang, aircraft } }))
+  )
+}
+
+const lang = Astro.params.lang as RouteLocale
+const id = Astro.params.aircraft as string
+const aircraft = aircraftData[id]
+const m = locales[lang]
+const s = m.seo.aircraft
+const name = aircraft.name
+const path = aircraftPath(lang, id)
+const pathFor = (locale: RouteLocale) => aircraftPath(locale, id)
+const maxWeight = formatWeight(aircraft.maxWeight, lang)
+const faq = aircraftFaq(aircraft, m, lang)
+const stations = stationRows(aircraft, m)
+const envelope = envelopeRows(aircraft)
+const meta = aircraft.metadata
+const otherAircraft = Object.entries(aircraftData).filter(([otherId]) => otherId !== id)
+
+const specs = [
+  [s.tcds, aircraft.tcds],
+  [s.manufacturer, meta.manufacturer],
+  [s.engines, meta.engines],
+  [s.maxWeight, maxWeight],
+  [s.emptyWeight, formatWeight(aircraft.emptyWeight, lang)],
+  [s.emptyArm, formatArm(aircraft.emptyArm, lang)],
+  [
+    s.cgLimits,
+    s.cgLimitsValue(formatArm(aircraft.cgLimits.forward, lang), formatArm(aircraft.cgLimits.aft, lang)),
+  ],
+]
+
+const jsonLd = [
+  softwareApplicationJsonLd({
+    name: `${m.seo.siteName}: ${s.h1(name)}`,
+    description: s.description(name, maxWeight),
+    url: absoluteUrl(path),
+    locale: lang,
+  }),
+  faqPageJsonLd(faq),
+]
+
+const th = "border-b border-gray-300 px-3 py-2 font-semibold"
+const td = "border-b border-gray-200 px-3 py-1.5"
+---
+
+<Base
+  lang={lang}
+  title={s.title(name)}
+  description={s.description(name, maxWeight)}
+  path={path}
+  alternates={alternateLinks(pathFor, aircraftPath("es", id))}
+  pinLocale
+  jsonLd={jsonLd}
+>
+  <header class="mx-auto max-w-4xl space-y-3 px-4 pt-4 print:hidden">
+    <LanguageNav current={lang} pathFor={pathFor} label={m.seo.languageLabel} />
+    <p class="text-sm">
+      <a href={localePath(lang)} class="text-blue-700 hover:underline">{m.seo.home.h1}</a>
+    </p>
+    <h1 class="text-3xl font-bold text-gray-900">{s.h1(name)}</h1>
+    <p class="text-gray-700">{s.intro(name, aircraft.tcds)}</p>
+  </header>
+
+  <main>
+    <Calculator
+      title={m.seo.calculatorTitle}
+      loading={m.seo.loading}
+      noscript={m.seo.noscript}
+      initialAircraft={id}
+      locale={lang}
+    />
+
+    <article class="mx-auto max-w-4xl space-y-8 px-4 pb-8 text-gray-800 print:hidden">
+      <section>
+        <h2 class="mb-3 text-xl font-semibold text-gray-900">{s.specsTitle}</h2>
+        <dl class="grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-[max-content_1fr]">
+          {
+            specs.map(([label, value]) => (
+              <>
+                <dt class="font-medium text-gray-600">{label}</dt>
+                <dd>{value}</dd>
+              </>
+            ))
+          }
+        </dl>
+      </section>
+
+      <section>
+        <h2 class="mb-3 text-xl font-semibold text-gray-900">{s.stationsTitle}</h2>
+        <div class="overflow-x-auto rounded-md bg-white/70">
+          <table class="w-full text-sm">
+            <thead>
+              <tr>
+                <th scope="col" class={`${th} text-left`}>{s.station}</th>
+                <th scope="col" class={`${th} text-right`}>{s.arm}</th>
+                <th scope="col" class={`${th} text-right`}>{s.maxLoad}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                stations.map((row) => (
+                  <tr>
+                    <th scope="row" class={`${td} text-left font-normal`}>
+                      {row.label}
+                    </th>
+                    <td class={`${td} text-right tabular-nums`}>
+                      {row.arm === null ? "—" : formatNumber(row.arm, lang, 2, 1)}
+                    </td>
+                    <td class={`${td} text-right tabular-nums`}>
+                      {row.max === null ? "—" : formatNumber(row.max, lang, 0)}
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="mb-1 text-xl font-semibold text-gray-900">{s.envelopeTitle}</h2>
+        <p class="mb-3 text-sm text-gray-600">{s.envelopeCaption}</p>
+        <div class="overflow-x-auto rounded-md bg-white/70">
+          <table class="w-full text-sm">
+            <thead>
+              <tr>
+                <th scope="col" class={`${th} text-left`}>{s.point}</th>
+                <th scope="col" class={`${th} text-right`}>{s.envelopeArm}</th>
+                <th scope="col" class={`${th} text-right`}>{s.envelopeWeight}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                envelope.map((point, index) => (
+                  <tr>
+                    <th scope="row" class={`${td} text-left font-normal`}>
+                      {index + 1}
+                    </th>
+                    <td class={`${td} text-right tabular-nums`}>
+                      {formatNumber(point.arm, lang, 2, 1)}
+                    </td>
+                    <td class={`${td} text-right tabular-nums`}>
+                      {formatNumber(point.weight, lang, 0)}
+                    </td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="space-y-2">
+        <h2 class="text-xl font-semibold text-gray-900">{s.reliabilityTitle}</h2>
+        <p>
+          <strong>{s.reliabilityLabel}</strong>
+          {reliabilityLabel(aircraft, m)}
+          {
+            aircraft.dataValidation.lastUpdated && (
+              <span class="text-gray-600">
+                {" "}
+                · {s.lastVerified} {aircraft.dataValidation.lastUpdated}
+              </span>
+            )
+          }
+        </p>
+        <p><strong>{s.sourcesLabel}</strong></p>
+        <ul class="list-disc pl-6">
+          {meta.sourceDocuments.map((source) => <li>{source}</li>)}
+        </ul>
+        {
+          aircraft.dataValidation.pendingVerification.length > 0 && (
+            <>
+              <p>
+                <strong>{s.pendingLabel}</strong>
+              </p>
+              <ul class="list-disc pl-6">
+                {aircraft.dataValidation.pendingVerification.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </>
+          )
+        }
+        <p class="rounded-md border border-amber-300 bg-amber-50 p-3 text-sm">{s.ownDataWarning}</p>
+      </section>
+
+      <section>
+        <h2 class="mb-3 text-xl font-semibold text-gray-900">{s.faqTitle}</h2>
+        <div class="space-y-4">
+          {
+            faq.map(({ question, answer }) => (
+              <div>
+                <h3 class="font-semibold text-gray-900">{question}</h3>
+                <p>{answer}</p>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+
+      {
+        otherAircraft.length > 0 && (
+          <nav aria-label={s.otherAircraftTitle}>
+            <h2 class="mb-2 text-xl font-semibold text-gray-900">{s.otherAircraftTitle}</h2>
+            <ul class="list-disc pl-6">
+              {otherAircraft.map(([otherId, other]) => (
+                <li>
+                  <a href={aircraftPath(lang, otherId)} class="text-blue-700 hover:underline">
+                    {s.h1(other.name)}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )
+      }
+    </article>
+  </main>
+</Base>

@@ -1,0 +1,49 @@
+---
+/**
+ * Root page (/). x-default of the localized homes.
+ * - Plain visits redirect (inline, before render) to the stored or browser
+ *   language: /es/, /en/ or /pt/.
+ * - Shared links (/?s=..., /?fleet=...) stay here and the calculator
+ *   consumes the params, so every link published before the Astro
+ *   migration keeps working. The UI keeps the visitor's own language.
+ */
+import Base from "../layouts/Base.astro"
+import LanguageNav from "../components/LanguageNav.astro"
+import Calculator from "../components/Calculator.astro"
+import { locales } from "../i18n"
+import {
+  DEFAULT_ROUTE_LOCALE,
+  ROUTE_LOCALES,
+  alternateLinks,
+  localePath,
+  rootRedirectTarget,
+} from "../utils/routes"
+
+const s = locales[DEFAULT_ROUTE_LOCALE].seo
+const redirectScript = `(function () {
+  try {
+    var stored = null
+    try { stored = localStorage.getItem("wb-locale") } catch (e) {}
+    var target = (${rootRedirectTarget.toString()})(location.search, stored, navigator.language, ${JSON.stringify(ROUTE_LOCALES)})
+    if (target) location.replace(target + location.hash)
+  } catch (e) {}
+})()`
+---
+
+<Base
+  lang={DEFAULT_ROUTE_LOCALE}
+  title={s.home.title}
+  description={s.home.description}
+  path="/"
+  alternates={alternateLinks(localePath, "/")}
+>
+  <script is:inline slot="head-start" set:html={redirectScript} />
+  <header class="mx-auto max-w-4xl space-y-3 px-4 pt-4 print:hidden">
+    <LanguageNav pathFor={localePath} label={s.languageLabel} />
+    <h1 class="text-3xl font-bold text-gray-900">{s.home.h1}</h1>
+  </header>
+
+  <main>
+    <Calculator title={s.calculatorTitle} loading={s.loading} noscript={s.noscript} />
+  </main>
+</Base>
