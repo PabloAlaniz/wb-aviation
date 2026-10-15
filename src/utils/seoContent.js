@@ -156,3 +156,78 @@ export function faqPageJsonLd(faq) {
 export function serializeJsonLd(data) {
   return JSON.stringify(data).replace(/</g, "\\u003c")
 }
+
+/** Author of the guides (schema.org). */
+const GUIDE_AUTHOR = {
+  "@type": "Person",
+  name: "Pablo Alaniz",
+  url: "https://github.com/PabloAlaniz",
+}
+
+/**
+ * schema.org Article (guides).
+ * @param {{ headline: string, description: string, url: string, locale: string,
+ *   dateModified: Date, siteName: string, siteUrl: string }} input
+ */
+export function articleJsonLd({
+  headline,
+  description,
+  url,
+  locale,
+  dateModified,
+  siteName,
+  siteUrl,
+}) {
+  const date = dateModified.toISOString().slice(0, 10)
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline,
+    description,
+    url,
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    inLanguage: locale,
+    dateModified: date,
+    author: GUIDE_AUTHOR,
+    publisher: { "@type": "Organization", name: siteName, url: siteUrl },
+  }
+}
+
+/**
+ * schema.org HowTo (procedural guides).
+ * @param {{ name: string, description: string, url: string, locale: string,
+ *   steps: { name: string, text: string }[] }} input
+ */
+export function howToJsonLd({ name, description, url, locale, steps }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name,
+    description,
+    url,
+    inLanguage: locale,
+    step: steps.map((step, index) => ({
+      "@type": "HowToStep",
+      position: index + 1,
+      name: step.name,
+      text: step.text,
+    })),
+  }
+}
+
+/**
+ * schema.org BreadcrumbList.
+ * @param {{ name: string, url: string }[]} items - from the home page down
+ */
+export function breadcrumbJsonLd(items) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  }
+}

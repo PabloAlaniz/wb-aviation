@@ -2,7 +2,10 @@ import { describe, it, expect } from "vitest"
 import {
   ROUTE_LOCALES,
   DEFAULT_ROUTE_LOCALE,
+  GUIDES_DIR,
   SITE_URL,
+  guidePath,
+  guidesIndexPath,
   absoluteUrl,
   aircraftPath,
   alternateLinks,
@@ -90,5 +93,15 @@ describe("rootRedirectTarget", () => {
     const inlined = new Function(`return (${rootRedirectTarget.toString()})`)()
     expect(inlined("", "pt", null, ["es", "en", "pt"])).toBe("/pt/")
     expect(inlined("?s=1", "pt", null, ["es", "en", "pt"])).toBeNull()
+  })
+})
+
+describe("guide paths", () => {
+  it("use the localized guides folder", () => {
+    expect(guidesIndexPath("es")).toBe("/es/guias/")
+    expect(guidesIndexPath("en")).toBe("/en/guides/")
+    expect(guidesIndexPath("pt")).toBe("/pt/guias/")
+    expect(guidePath("en", "weight-arm-and-moment")).toBe("/en/guides/weight-arm-and-moment/")
+    expect(Object.keys(GUIDES_DIR).sort()).toEqual([...ROUTE_LOCALES].sort())
   })
 })
