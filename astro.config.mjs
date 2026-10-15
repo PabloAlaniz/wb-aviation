@@ -56,8 +56,12 @@ export default defineConfig({
         globPatterns: ["**/*.{js,css,html,svg,ico,webmanifest}", "pwa-*.png"],
         // Offline navigations to an unknown URL fall back to the root
         // calculator (it redirects to the preferred language).
-        navigateFallback: "/",
+        navigateFallback: "/index.html",
       },
+      // Pages are built as /es/x/index.html and served as /es/x/: precache them
+      // under the trailing-slash URL, otherwise every navigation misses the
+      // precache and falls back to "/" (which redirects to the stored locale).
+      experimental: { directoryAndTrailingSlashHandler: true },
     }),
   ],
   vite: {
