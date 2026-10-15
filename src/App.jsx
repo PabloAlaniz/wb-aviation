@@ -12,6 +12,7 @@ import { FuelBurnInput } from "./components/FuelBurnInput"
 import { FlightPhasesPanel } from "./components/FlightPhasesPanel"
 import { CustomAircraftManager } from "./components/CustomAircraftManager"
 import { UnitToggle } from "./components/UnitToggle"
+import { LoadSheetPanel } from "./components/LoadSheetPanel"
 import { Plane, Calculator, RotateCcw } from "lucide-react"
 import { aircraftData, aircraftOptions, emptyWeightsFor } from "./data/aircraft"
 import {
@@ -72,7 +73,7 @@ export default function App() {
   const landingReport = phases ? buildLandingReport(aircraft, phases) : null
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 print:hidden">
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="flex justify-end gap-2">
           <UnitToggle units={units} onUnitsChange={setUnits} />
@@ -206,6 +207,16 @@ export default function App() {
                     />
                     <p className="text-xs text-gray-500 text-center">{m.app.envelopeCaption}</p>
                   </div>
+
+                  <LoadSheetPanel
+                    aircraft={aircraft}
+                    weights={weights}
+                    results={results}
+                    safetyChecks={safetyChecks}
+                    phases={phases}
+                    landingReport={landingReport}
+                    units={units}
+                  />
 
                   <DataSources aircraft={aircraft} />
                 </div>

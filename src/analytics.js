@@ -22,3 +22,17 @@ export function initAnalytics(domain, src = "https://plausible.io/js/script.js")
   document.head.appendChild(script)
   return true
 }
+
+/**
+ * Record a custom event (Plausible "goal"). No-ops when the analytics script
+ * isn't loaded, so it is safe to call unconditionally.
+ * @param {string} name - Event name, e.g. "pdf_export"
+ * @param {Record<string, string | number | boolean>} [props] - Custom properties
+ */
+export function trackEvent(name, props) {
+  if (typeof window === "undefined") return
+  const plausible = /** @type {{ plausible?: unknown }} */ (/** @type {unknown} */ (window))
+    .plausible
+  if (typeof plausible !== "function") return
+  plausible(name, props ? { props } : undefined)
+}
