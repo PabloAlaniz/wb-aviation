@@ -1,137 +1,207 @@
-# Plan de Sprints - wb-aviation
+# Plan de Sprints - CheckCG (ex wb-aviation)
 
-**Fecha de planificación:** 2026-06-14
-**Estado del proyecto:** En producción ([wb-aviation.pages.dev](https://wb-aviation.pages.dev/)), 2 aeronaves, PWA, tests + CI.
+**Fecha de replanificación:** 2026-10-14 (plan original: 2026-06-14)
+**Estado del proyecto:** En producción en [checkcg.com](https://checkcg.com/) (antes `wb-aviation.pages.dev`, redirige con 301). 9 aeronaves, Astro + PWA, ES/EN/PT, ~500 tests + CI.
 **Duración sugerida por sprint:** 1–2 semanas.
 
-> Este plan parte del estado **real** del repositorio (no del roadmap viejo de
-> febrero). Varios items del `roadmap.md` original ya están hechos: PWA,
-> persistencia, tests, CI/CD, deploy y una segunda aeronave (Cessna 172S).
+> Este replan incorpora un benchmark de herramientas W&B comerciales y open
+> source, y suma **distribución** como eje propio (aprendizaje del repo
+> `google-suite`). Los sprints 2, 4 y 5 originales quedan absorbidos en 6–8.
 
 ---
 
-## Snapshot del estado actual (2026-06-14)
+## Snapshot del estado actual (2026-10-15)
 
-| Área              | Estado | Detalle                                                      |
-| ----------------- | ------ | ------------------------------------------------------------ |
-| Aeronaves         | 🟡     | 2 implementadas (King Air E90, Cessna 172S)                  |
-| PWA / offline     | ✅     | `vite-plugin-pwa` configurado                                |
-| Persistencia      | ✅     | `useLocalStorage` (carga + aeronave seleccionada)            |
-| Tests             | ✅     | 98 tests, alta cobertura                                     |
-| CI/CD             | ✅     | lint + format + typecheck + test + build en cada push/PR     |
-| Deploy            | ✅     | Cloudflare Pages                                             |
-| i18n              | ✅     | Trilingüe ES/EN/PT con selector y detección de navegador     |
-| Accesibilidad     | ✅     | Mejoras + error boundary global                              |
-| Documentación     | ✅     | README/FODA al día, roadmap→sprints, CONTRIBUTING (Sprint 1) |
-| Export PDF        | 🔴     | No implementado                                              |
-| Unidades métricas | 🔴     | Solo imperiales (lbs/in)                                     |
-| TypeScript/Types  | ✅     | Type-check (checkJs) en todo `src` (lógica + componentes)    |
-| SEO / analytics   | 🟡     | OG/Twitter + sitemap/robots; analytics Plausible opt-in      |
-| Monetización      | 🔴     | Sin explorar                                                 |
+| Área               | Estado | Detalle                                                                                                        |
+| ------------------ | ------ | -------------------------------------------------------------------------------------------------------------- |
+| Aeronaves          | ✅     | 9 (E90, C172S, C152, PA-28-161, PA-38, P2008 JC, P2002 JF, DA20, DA40)                                         |
+| Aeronave custom    | ✅     | Por matrícula, varias, persistidas en localStorage                                                             |
+| CG de aterrizaje   | ✅     | Fuel burn → aterrizaje y zero-fuel, MLW/MZFW si están declarados                                               |
+| Unidades métricas  | ✅     | lbs/in ↔ kg/mm, combustible en gal/L                                                                           |
+| Export PDF / share | ✅     | Hoja de carga imprimible, link `?s=` + QR, flota `?fleet=`                                                     |
+| SEO                | 🟡     | Astro: página por aeronave × idioma, JSON-LD, hreflang, sitemap. Falta Search Console, guías y OG por aeronave |
+| Dominio / marca    | ✅     | checkcg.com, marca CheckCG                                                                                     |
+| Medición           | 🔴     | Sin analytics activo ni Search Console todavía                                                                 |
+| Distribución       | 🔴     | Playbook escrito, sin ejecutar                                                                                 |
+| Monetización       | ⏸️     | Diferida hasta tener tracción                                                                                  |
 
 ---
 
-## 🏁 Sprint 1 — Documentación al día (base limpia) — ✅ COMPLETADO
+## Benchmark (2026-10)
 
-**Objetivo:** Que la documentación refleje la realidad del proyecto. Es el
-prerrequisito para que cualquier colaborador (o el yo del futuro) entienda
-dónde está parado el proyecto.
+| Herramienta                 | Modelo                    | Notas relevantes                                               |
+| --------------------------- | ------------------------- | -------------------------------------------------------------- |
+| ForeFlight                  | US$130–390/año            | Perfiles custom, envelope, integrado al plan de vuelo          |
+| Garmin Pilot                | ~US$210/año (premium)     | Diagrama táctil del avión, CG de aterrizaje, export load sheet |
+| FltPlan Go                  | Gratis                    | 450–800+ perfiles, flota compartida, offline                   |
+| SkyDemon                    | Suscripción               | Múltiples tanques                                              |
+| AvareX                      | Gratis, OSS               | Envelope interactivo                                           |
+| Aviatize W&B calculator     | Gratis (web)              | 8 aviones de escuela; lead magnet para su software             |
+| TippingPoint                | Gratis, OSS (self-hosted) | Categorías Normal/Utility, lb/kg, gal/L                        |
+| Apps de un solo tipo (C152) | US$2–17                   | Alertas de sobrepeso, % MAC, performance                       |
 
-- [x] Actualizar `README.md`:
-  - Lista de aeronaves soportadas (King Air E90 **+ Cessna 172S**).
-  - Stack real: agregar Vitest, vite-plugin-pwa, i18n.
-  - Sección Roadmap: mover a "hecho" lo ya entregado, linkear a este doc.
-  - Datos del Cessna 172S y fecha de última actualización.
-- [x] Reemplazar `roadmap.md` por un puntero a `docs/sprints.md`.
-- [x] Actualizar `FODA.md`: mover de Debilidades lo resuelto (persistencia,
-      offline, tests, deploy, single-aircraft) y reflejar el estado nuevo.
-- [x] Verificar que `docs/aircraft-data.md` siga vigente (está OK).
-- [x] Añadir `CONTRIBUTING.md` (cómo correr, testear, agregar aeronave).
-- [ ] Capturas/GIF actualizados si la UI cambió. _(pendiente: requiere captura)_
+**Table stakes que nos faltan:** aeronave custom (pesaje real del avión),
+kg/L, fuel burn → CG de aterrizaje, múltiples matrículas.
 
-**Entregable:** docs coherentes con el código en `main`.
-**Esfuerzo:** ~1 semana (bajo riesgo).
+**Hueco de mercado:** no encontramos ninguna herramienta W&B en español o
+portugués ni con aeronaves LATAM (Aero Boero, Tecnam P2002/P2008, PA-38, DA20,
+Paulistinha). Tampoco planillas imprimibles al estilo de la autoridad local
+(DINACIA/ANAC) ni un "modo escuela".
 
----
+**Cómo se distribuyen:** app stores, una página SEO por modelo, escuelas (flota
+compartida que llega a cada alumno), reviews (AOPA, iPad Pilot News), foros y
+YouTube.
 
-## ✈️ Sprint 2 — Expansión del catálogo de aeronaves
+### Las 3 mejoras de mayor impacto
 
-**Objetivo:** Pasar de 2 a 4–5 aeronaves, que es el principal driver de valor
-y de tráfico. La arquitectura ya es data-driven (`docs/aircraft-data.md`).
-
-- [ ] Agregar **Piper PA-28 Cherokee** (muy común en escuelas).
-- [ ] Agregar **King Air 200** (familia ya conocida del proyecto).
-- [ ] Opcional: Beechcraft Baron 58 o Cessna 182.
-- [ ] Para cada una: TCDS citado, `dataReliability` honesto, `pendingVerification`.
-- [ ] Tests por aeronave: validar un cálculo del POH contra `calculateWeightBalance`.
-- [ ] Revisar UX del selector con 4+ aeronaves (agrupar por categoría si hace falta).
-
-**Entregable:** catálogo de 4–5 aeronaves verificadas + tests.
-**Esfuerzo:** ~1–2 semanas (depende de conseguir datos oficiales).
+1. **Paridad de producto:** aeronave custom + unidades métricas + CG de aterrizaje.
+2. **Hoja de carga PDF + link/QR compartible:** útil para el piloto y motor viral vía instructores.
+3. **Catálogo LATAM + una página SEO por aeronave e idioma:** moat de contenido y tráfico orgánico.
 
 ---
 
-## 🌍 Sprint 3 — Internacionalización real + alcance (SEO) — ✅ COMPLETADO
+## ✅ Completados
 
-**Objetivo:** Abrir el mercado angloparlante (el grande en aviación) y mejorar
-la presencia. El módulo i18n ya existe pero solo tiene español.
-
-- [x] Traducir todas las strings a **inglés** (`src/i18n/en.js`).
-- [x] Resolver locale por preferencia guardada + idioma del navegador, con
-      selector manual persistido (`resolveLocale`, `setLocale`, `<html lang>`).
-- [x] Test de paridad de claves (todos los locales) y de resolución de locale.
-- [x] **Portugués** (`src/i18n/pt.js`) para mercado brasileño.
-- [x] Open Graph + Twitter Card tags para previews en redes.
-- [x] Analytics privacy-friendly (Plausible, opt-in vía `VITE_PLAUSIBLE_DOMAIN`).
-- [x] `sitemap.xml` + `robots.txt` + meta description / canonical.
-
-**Entregable:** app trilingüe (ES/EN/PT) con SEO básico y métricas opt-in. ✅
-**Esfuerzo:** ~1–2 semanas.
+- **Sprint 1 — Documentación al día:** README, FODA, CONTRIBUTING, roadmap → sprints.
+- **Sprint 3 — i18n + SEO básico:** ES/EN/PT, detección de idioma, OG/Twitter, sitemap/robots, Plausible opt-in.
+- **Type-check (ex Sprint 5):** `checkJs` + JSDoc sobre todo `src`, `npm run typecheck` en CI.
+- **Sprint 6 — Paridad de producto** (PR #9): aeronave custom, unidades, CG de aterrizaje, labels traducidos.
+- **Sprint 7 — Motor viral** (PR #10): hoja de carga PDF, link + QR, modo escuela, footer de marca.
+- **Sprint 8 — Astro + catálogo LATAM** (PR #11): páginas por aeronave × idioma, 7 aeronaves nuevas, ticks/leyenda, fix del borde de la envolvente y del precache del SW. Aero Boero omitido (sin manual ni caso de carga verificable).
 
 ---
 
-## 🧰 Sprint 4 — Features que piden los pilotos
+## 🧮 Sprint 6 — Paridad de producto (custom + métricas + aterrizaje) — ✅
 
-**Objetivo:** Diferenciadores de UX que aparecen una y otra vez en feedback
-de pilotos.
+**Objetivo:** cerrar los table stakes que tiene toda la competencia.
 
-- [ ] **Export a PDF** del cálculo (hoja de W&B imprimible para el vuelo).
-- [ ] **Unidades métricas** (kg/cm) además de imperiales, con toggle persistido.
-- [ ] **Modo oscuro** (útil en cabina).
-- [ ] Validar export PDF y unidades con tests.
+- [x] **Aeronave custom por matrícula:** peso vacío, brazo y envelope base clonado de un modelo. Persistida en `useLocalStorage`, con varias matrículas.
+- [x] **Unidades:** toggle lbs/in ↔ kg/mm y combustible en gal/L (densidad AVGAS). La conversión vive en la UI y `calculations.js` sigue en imperial.
+- [x] **Fuel burn:** CG de aterrizaje y zero-fuel reutilizando `calculateWeightBalance`. `CGEnvelopeChart` dibuja el segmento entre despegue y aterrizaje.
+- [x] Traducir los labels de estaciones de `src/data/aircraft.js` con claves i18n.
+- [x] Tests de conversión de unidades y de CG de aterrizaje.
 
-**Entregable:** export PDF + unidades configurables + dark mode.
-**Esfuerzo:** ~2 semanas (el PDF es lo más pesado).
+**Entregable:** el piloto usa los datos de **su** avión, en sus unidades, y ve despegue y aterrizaje.
 
 ---
 
-## 🏗️ Sprint 5 — Robustez técnica + cimientos de monetización
+## 📄 Sprint 7 — Hoja de carga + compartir (motor viral) — ✅
 
-**Objetivo:** Bajar deuda técnica y dejar lista la base para el modelo
-freemium del roadmap.
+**Objetivo:** que cada cálculo pueda salir de la app y traer usuarios nuevos.
 
-- [x] Migración incremental a **TypeScript** (type-check vía `checkJs` + JSDoc
-      sobre todo `src` —lógica y componentes `.jsx`—, con `src/types.d.ts` del
-      dominio y `npm run typecheck` en CI). _Adelantado antes del Sprint 2._
-- [ ] Cobertura de tests > 90% en `calculations.js`.
-- [ ] **Aeronave custom por matrícula**: el usuario ingresa su peso vacío y
-      brazo, se guarda en localStorage (precursor del freemium).
-- [ ] Spike de monetización: evaluar LemonSqueezy/Stripe, definir qué es free
-      vs. premium (sin cobrar todavía, solo dejar la arquitectura).
+- [x] Estado de carga codificado en la URL (`?a=c172s&w=...`) + botón compartir (Web Share API + QR).
+- [x] **Hoja de carga imprimible/PDF:** primero `@media print` sin dependencias y jsPDF solo si hace falta. Incluye matrícula, piloto, aeródromos, tabla de estaciones, envelope y firma, con formato inspirado en la planilla de DINACIA.
+- [x] **Modo escuela v0:** un link de flota que importa varias matrículas custom de una vez.
+- [x] Footer de marca personal ("Hecho por Pablo Alaniz", GitHub/portfolio, contacto para escuelas).
 
-**Entregable:** base tipada + aeronave custom + decisión de modelo de negocio.
-**Esfuerzo:** ~2 semanas.
+**Entregable:** PDF de vuelo + links compartibles + import de flota.
+
+---
+
+## 🧱 Decisión de stack para SEO: Astro con React como isla
+
+Hoy la app es una SPA Vite sin router (`src/main.jsx` monta `<App/>` en `#root`),
+así que el crawler solo ve el `<head>`.
+
+| Opción                                | SEO                                      | Costo                        | Veredicto      |
+| ------------------------------------- | ---------------------------------------- | ---------------------------- | -------------- |
+| Vite SPA + pre-render casero          | Bien, pero hreflang/sitemap a mano       | Bajo al inicio, alto después | ❌             |
+| `vite-react-ssg` / `vite-plugin-ssg`  | Bien                                     | Bajo                         | Plan B         |
+| Next.js static export                 | Bien                                     | Medio-alto, más JS           | ❌             |
+| **Astro (static) + `@astrojs/react`** | HTML real por página, i18n, sitemap, MDX | Medio-bajo (~15 componentes) | ✅ Recomendado |
+
+- Astro corre sobre Vite: Tailwind 4, Vitest y los componentes React quedan sin cambios. El PWA sigue con `@vite-pwa/astro`.
+- La calculadora pasa a ser `<App client:only="react" />`, porque `useLocalStorage` lee `window`.
+- Alrededor de la isla va contenido estático indexable: descripción, tabla de estaciones/brazos, límites, fuentes TCDS y FAQ.
+- Habilita guías en `src/content/guides/{es,en,pt}/*.mdx` ("cómo calcular peso y balance", "momento y brazo explicado").
+
+**Pasos de migración** (PR propio, al inicio del Sprint 8):
+
+1. `astro.config.mjs`: `output: 'static'`, integraciones react + sitemap + vite-pwa, `i18n` con `es` (default), `en` y `pt`.
+2. `index.html` → `src/layouts/Base.astro` (meta, OG, hreflang, JSON-LD, `initAnalytics`).
+3. `src/pages/[lang]/[aircraft].astro` con `getStaticPaths()` sobre `aircraft.js` × locales, `src/pages/[lang]/index.astro`, y redirect desde `/` según el idioma.
+4. `App.jsx` recibe `initialAircraft` y `locale` por props.
+5. Scripts `dev/build/preview` → `astro …`; config de Vitest separada (`getViteConfig`); `astro check` + `tsc`.
+6. Cloudflare Pages: build `npm run build`, output `dist`.
+
+**Criterio de salida:** tests actuales en verde, la app funciona igual en
+`/es/cessna-172s`, y `curl` devuelve el H1 y la tabla de estaciones en el HTML.
+
+---
+
+## ✈️ Sprint 8 — Catálogo LATAM + SEO programático (sobre Astro) — ✅
+
+**Objetivo:** ser el resultado de búsqueda para "peso y balance {aeronave}" en ES/PT.
+
+- [x] Migración a Astro (ver sección anterior).
+- [x] Aeronaves: C152, PA-28, PA-38, Tecnam P2002/P2008 y DA20/DA40 (Aero Boero omitido), con TCDS citado y `dataReliability` honesto.
+- [x] Tests por aeronave contra un ejemplo del POH.
+- [x] Página por aeronave × idioma con title/description/H1 propios, JSON-LD (`SoftwareApplication`, `HowTo`, `FAQPage`), hreflang y canonical.
+- [ ] 3 guías iniciales por idioma.
+- [x] Sitemap con `@astrojs/sitemap` (reemplaza `public/sitemap.xml`).
+- [ ] OG card real por aeronave (1200×630) y manifest PWA multilenguaje.
+- [ ] Limpieza: comprimir el screenshot de `public/`, borrar `vite.svg` y las imágenes sin uso.
+- [ ] Search Console: dar de alta la propiedad y enviar el sitemap.
+
+**Entregable:** ~10 aeronaves × 3 idiomas indexables + guías.
+
+---
+
+## 🌐 Decisión de dominio y marca: checkcg.com / CheckCG (2026-10-15)
+
+Dos análisis en paralelo (SEO y marca) descartaron `wb-aviation.com`:
+
+- Google no da bonus por keywords en el dominio (EMD); manda el contenido por página.
+- "wb" no se entiende en ES/PT; guion; confundible con la app paga "Aviation W&B Calculator"; `wbaviation.com` es de otro dueño.
+- **CheckCG**: "CG" es igual en ES/PT/EN y "check" es vocabulario de piloto; `.com` sin guion; sin conflictos encontrados.
+- gTLD + subdirectorios `/es/ /pt/ /en/` con hreflang (un ccTLD como `.com.ar` geolocalizaría en Argentina).
+- `wb-aviation.pages.dev` y `www.checkcg.com` redirigen con 301 a `checkcg.com` (`functions/_middleware.js`); previews con `X-Robots-Tag: noindex`.
+- Claves de localStorage (`wb-*`) y formatos de link `?s=`/`?fleet=` sin cambios.
+
+---
+
+## 🛫 Próximo — Cierre del Sprint 8 + aeronaves de Flytec
+
+- [ ] Search Console (propiedad de dominio `checkcg.com`) + sitemap + cambio de dirección desde pages.dev.
+- [ ] Analytics: Cloudflare Web Analytics en el dominio.
+- [ ] **King Air B200** y **Beech 1900D** (flota de Flytec, Salta) desde el TCDS público; validar con el W&B Report real cuando llegue.
+- [ ] Confirmar MLW/MZFW del King Air E90 (LV-AYG).
+- [ ] 3 guías por idioma, OG card por aeronave, limpieza de `public/`.
+
+---
+
+## 📣 Sprint 9 — Distribución
+
+**Objetivo:** llevar usuarios de forma medible. Detalle en [DISTRIBUTION.md](DISTRIBUTION.md).
+
+- [x] Dominio propio: checkcg.com.
+- [ ] Lanzamientos: Product Hunt / Show HN, r/flying, Pilots of America.
+- [ ] LATAM: grupos de aeroclubes, contacto con 5 escuelas (AR/UY/BR) y YouTubers instructores.
+- [ ] Eventos de Plausible: `pdf_export`, `share_link`, `custom_aircraft_created`, `fleet_import`.
+- [ ] Reporte semanal de métricas por canal (portado de `google-suite`).
+- [ ] Opcional: `wb-aviation-core` en npm + MCP server / skill (en `google-suite`, el canal de agentes fue el que más instalaciones trajo).
+
+**Entregable:** playbook ejecutado + tablero semanal por canal.
+
+---
+
+## ⏸️ Diferido — Monetización
+
+Se evalúa cuando el modo escuela tenga tracción. Candidato natural a premium:
+flota sincronizada para escuelas (LemonSqueezy/Stripe).
 
 ---
 
 ## Resumen
 
-| Sprint | Tema                       | Driver principal             |
-| ------ | -------------------------- | ---------------------------- |
-| 1      | Documentación al día       | Base limpia / mantenibilidad |
-| 2      | Catálogo de aeronaves      | Valor de producto / tráfico  |
-| 3      | i18n (EN/PT) + SEO         | Expansión de mercado         |
-| 4      | PDF + métricas + dark mode | UX / retención               |
-| 5      | TypeScript + monetización  | Robustez / negocio           |
+| Sprint | Tema                           | Driver principal         |
+| ------ | ------------------------------ | ------------------------ |
+| 1 ✅   | Documentación al día           | Mantenibilidad           |
+| 3 ✅   | i18n (EN/PT) + SEO básico      | Expansión de mercado     |
+| 6 ✅   | Custom + métricas + aterrizaje | Paridad con competidores |
+| 7 ✅   | PDF + compartir + modo escuela | Retención / viralidad    |
+| 8 ✅   | Astro + catálogo LATAM + SEO   | Tráfico orgánico / moat  |
+| 8.5    | Medición + B200/1900D + guías  | Medir + caso real        |
+| 9      | Distribución + métricas        | Adquisición              |
 
 _Plan vivo: revisar al cierre de cada sprint y reordenar según feedback real de usuarios._
