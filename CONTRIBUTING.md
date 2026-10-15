@@ -1,4 +1,4 @@
-# Cómo contribuir a wb-aviation
+# Cómo contribuir a CheckCG
 
 ¡Gracias por tu interés! Esta guía cubre lo básico para correr el proyecto,
 mantener la calidad y, sobre todo, **agregar aeronaves de forma segura**.
@@ -14,7 +14,7 @@ mantener la calidad y, sobre todo, **agregar aeronaves de forma segura**.
 git clone https://github.com/PabloAlaniz/wb-aviation.git
 cd wb-aviation
 npm install
-npm run dev          # http://localhost:5173
+npm run dev          # http://localhost:4321
 ```
 
 ## Scripts útiles

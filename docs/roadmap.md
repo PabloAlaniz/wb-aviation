@@ -1,4 +1,4 @@
-# ROADMAP - wb-aviation
+# ROADMAP - CheckCG (ex wb-aviation)
 
 > **Este documento fue reemplazado por la planificación por sprints.**
 > Ver **[docs/sprints.md](./sprints.md)** para el plan vigente y el estado actual del proyecto.

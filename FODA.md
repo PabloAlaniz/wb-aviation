@@ -1,6 +1,7 @@
-# FODA - wb-aviation
+# FODA - CheckCG (ex wb-aviation)
 
-**Fecha de análisis:** 2026-06-14 (revisión)
+**Fecha de análisis:** 2026-10-15 (revisión: dominio checkcg.com, Astro, 9 aeronaves)
+**Revisión anterior:** 2026-06-14
 **Análisis original:** 2026-02-15
 
 ---
@@ -23,7 +24,7 @@
    - Márgenes de seguridad configurables
 
 4. **Stack moderno y rápido**
-   - Vite para desarrollo ágil
+   - Astro (HTML estático por aeronave e idioma) con React como isla
    - Tailwind CSS 4 para estilos
    - Recharts para visualización
 
@@ -41,9 +42,10 @@
 ## ✅ Debilidades ya resueltas (desde el análisis de febrero)
 
 - **Persistencia** → resuelto con `useLocalStorage` (carga + aeronave).
-- **Modo offline** → resuelto: PWA instalable con `vite-plugin-pwa`.
+- **Modo offline** → resuelto: PWA instalable con `@vite-pwa/astro`.
 - **Sin tests** → resuelto: ~79 tests, ~88% de cobertura.
 - **Deploy / CI/CD** → resuelto: Cloudflare Pages + workflow de CI.
+- **Dominio y marca** → resuelto: [checkcg.com](https://checkcg.com) con Search Console y Web Analytics.
 - **Single aircraft** → parcialmente: ya son 2 aeronaves (King Air E90 + Cessna 172S).
 
 ## 🚧 Debilidades vigentes
@@ -144,7 +146,7 @@
 | Oportunidades | ⭐⭐⭐⭐⭐ | Mercado desatendido con dolor real            |
 | Amenazas      | ⭐⭐       | Manejables con disclaimers claros             |
 
-**Veredicto:** El MVP público ya está entregado (PWA, persistencia, tests, CI/CD, deploy y 2 aeronaves). El foco se mueve de "terminar el core" a **crecer**: más aeronaves, internacionalización (inglés), features de UX (PDF, métricas) y validar monetización. Ver el plan en [docs/sprints.md](./docs/sprints.md).
+**Veredicto:** El MVP público ya está entregado (PWA, persistencia, tests, CI/CD, deploy, 9 aeronaves, dominio propio). El foco se mueve de "terminar el core" a **crecer**: más aeronaves, internacionalización (inglés), features de UX (PDF, métricas) y validar monetización. Ver el plan en [docs/sprints.md](./docs/sprints.md).
 
 ---
 

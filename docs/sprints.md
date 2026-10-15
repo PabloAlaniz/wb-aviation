@@ -21,7 +21,7 @@
 | Export PDF / share | ✅     | Hoja de carga imprimible, link `?s=` + QR, flota `?fleet=`                                                     |
 | SEO                | 🟡     | Astro: página por aeronave × idioma, JSON-LD, hreflang, sitemap. Falta Search Console, guías y OG por aeronave |
 | Dominio / marca    | ✅     | checkcg.com, marca CheckCG                                                                                     |
-| Medición           | 🔴     | Sin analytics activo ni Search Console todavía                                                                 |
+| Medición           | ✅     | Cloudflare Web Analytics + Search Console (desde 2026-10-15)                                                   |
 | Distribución       | 🔴     | Playbook escrito, sin ejecutar                                                                                 |
 | Monetización       | ⏸️     | Diferida hasta tener tracción                                                                                  |
 
@@ -162,11 +162,12 @@ Dos análisis en paralelo (SEO y marca) descartaron `wb-aviation.com`:
 
 ## 🛫 Próximo — Cierre del Sprint 8 + aeronaves de Flytec
 
-- [ ] Search Console (propiedad de dominio `checkcg.com`) + sitemap + cambio de dirección desde pages.dev.
-- [ ] Analytics: Cloudflare Web Analytics en el dominio.
+- [x] Search Console: propiedad de dominio `checkcg.com` verificada por DNS (TXT) y sitemap enviado (2026-10-15). El cambio de dirección no aplica: pages.dev redirige todo con 301 y no se puede verificar; Google sigue los 301.
+- [x] Analytics: Cloudflare Web Analytics activo (2026-10-15).
 - [ ] **King Air B200** y **Beech 1900D** (flota de Flytec, Salta) desde el TCDS público; validar con el W&B Report real cuando llegue.
 - [ ] Confirmar MLW/MZFW del King Air E90 (LV-AYG).
-- [ ] 3 guías por idioma, OG card por aeronave, limpieza de `public/`.
+- [ ] 3 guías por idioma, OG card por aeronave.
+- [x] Limpieza de `public/`: captura de 5 MB reemplazada por `docs/screenshot.jpg`.
 
 ---
 
