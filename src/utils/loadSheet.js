@@ -3,7 +3,7 @@
  */
 
 export const LOAD_SHEET_STORAGE_KEY = "wb-load-sheet"
-export const APP_URL = "https://wb-aviation.pages.dev"
+export const APP_URL = "https://checkcg.com"
 
 /**
  * Flight details typed by the pilot before printing. Everything but the date

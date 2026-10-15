@@ -36,8 +36,8 @@ export default defineConfig({
     AstroPWA({
       registerType: "autoUpdate",
       manifest: {
-        name: "W&B Aviation - Calculador de Peso y Balance",
-        short_name: "W&B Aviation",
+        name: "CheckCG - Peso y balance de aeronaves",
+        short_name: "CheckCG",
         description:
           "Calculador de peso y balance (Weight & Balance) de aeronaves basado en datos oficiales de la FAA",
         lang: "es",
