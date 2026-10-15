@@ -1,0 +1,27 @@
+---
+/**
+ * The React calculator as a client-only island (its state lives in
+ * localStorage, so it is never server-rendered), with a sized placeholder
+ * while it loads.
+ */
+import AppIsland from "./AppIsland.jsx"
+
+interface Props {
+  title: string
+  loading: string
+  noscript: string
+  initialAircraft?: string
+  locale?: string
+}
+
+const { title, loading, noscript, initialAircraft, locale } = Astro.props
+---
+
+<section aria-label={title}>
+  <AppIsland client:only="react" initialAircraft={initialAircraft} locale={locale}>
+    <p slot="fallback" class="min-h-[60vh] p-8 text-center text-gray-500">{loading}</p>
+  </AppIsland>
+  <noscript>
+    <p class="mx-auto max-w-4xl p-4 text-center text-sm text-gray-700">{noscript}</p>
+  </noscript>
+</section>

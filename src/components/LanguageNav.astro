@@ -1,0 +1,34 @@
+---
+/** Static links to this page in every language (crawlable hreflang targets). */
+import { localeNames } from "../i18n"
+import { ROUTE_LOCALES, type RouteLocale } from "../utils/routes"
+
+interface Props {
+  /** Current language, highlighted (omit on the root page). */
+  current?: RouteLocale
+  /** Path of this page in a given locale. */
+  pathFor: (locale: RouteLocale) => string
+  label: string
+}
+
+const { current, pathFor, label } = Astro.props
+---
+
+<nav aria-label={label} class="flex justify-end gap-3 text-sm">
+  {
+    ROUTE_LOCALES.map((locale) => (
+      <a
+        href={pathFor(locale)}
+        hreflang={locale}
+        lang={locale}
+        aria-current={locale === current ? "page" : undefined}
+        class:list={[
+          "hover:underline",
+          locale === current ? "font-semibold text-gray-900" : "text-blue-700",
+        ]}
+      >
+        {localeNames[locale]}
+      </a>
+    ))
+  }
+</nav>
