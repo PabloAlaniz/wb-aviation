@@ -94,6 +94,15 @@ describe("isPointInEnvelope", () => {
     expect(isPointInEnvelope(155, 12000, envelope)).toBe(false)
   })
 
+  it("treats points on the envelope edge as inside (limit loadings are legal)", () => {
+    const top = Math.max(...envelope.map((p) => p.weight))
+    const onTop = envelope.filter((p) => p.weight === top).map((p) => p.arm)
+    const midArm = (Math.min(...onTop) + Math.max(...onTop)) / 2
+    expect(isPointInEnvelope(midArm, top, envelope)).toBe(true)
+    expect(isPointInEnvelope(envelope[0].arm, envelope[0].weight, envelope)).toBe(true)
+    expect(isPointInEnvelope(midArm, top + 0.01, envelope)).toBe(false)
+  })
+
   it("should return false for point outside envelope (too light)", () => {
     expect(isPointInEnvelope(155, 5000, envelope)).toBe(false)
   })
