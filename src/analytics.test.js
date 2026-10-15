@@ -1,5 +1,5 @@
-import { describe, it, expect, afterEach } from "vitest"
-import { initAnalytics } from "./analytics"
+import { describe, it, expect, afterEach, vi } from "vitest"
+import { initAnalytics, trackEvent } from "./analytics"
 
 afterEach(() => {
   document.head.querySelectorAll("script[data-domain]").forEach((el) => el.remove())
@@ -32,5 +32,26 @@ describe("initAnalytics", () => {
     initAnalytics("wb-aviation.pages.dev")
     expect(initAnalytics("wb-aviation.pages.dev")).toBe(false)
     expect(document.head.querySelectorAll("script[data-domain]")).toHaveLength(1)
+  })
+})
+
+describe("trackEvent", () => {
+  afterEach(() => {
+    delete window.plausible
+  })
+
+  it("no-ops when Plausible is not loaded", () => {
+    expect(() => trackEvent("pdf_export")).not.toThrow()
+  })
+
+  it("forwards the event and its props to Plausible", () => {
+    const plausible = vi.fn()
+    window.plausible = plausible
+
+    trackEvent("pdf_export", { units: "metric" })
+    trackEvent("other")
+
+    expect(plausible).toHaveBeenCalledWith("pdf_export", { props: { units: "metric" } })
+    expect(plausible).toHaveBeenCalledWith("other", undefined)
   })
 })

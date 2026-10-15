@@ -21,7 +21,9 @@ import { armSuffix, armToDisplay, unitSymbols, weightToDisplay } from "../utils/
  *   zeroFuelCG?: number,
  *   zeroFuelWeight?: number,
  *   units?: import("../types").UnitSystem,
- * }} props
+ *   size?: { width: number, height: number },
+ * }} props - `size` renders at a fixed size without animation (e.g. for
+ *   printing, where ResponsiveContainer can't measure a hidden parent)
  */
 export function CGEnvelopeChart({
   aircraft,
@@ -32,7 +34,9 @@ export function CGEnvelopeChart({
   zeroFuelCG,
   zeroFuelWeight,
   units = "imperial",
+  size,
 }) {
+  const animate = !size
   // Datos en lbs/pulgadas; solo se convierten para mostrar (units)
   const x = (/** @type {number} */ inches) => armToDisplay(inches, units)
   const y = (/** @type {number} */ lbs) => weightToDisplay(lbs, units)
@@ -105,9 +109,11 @@ export function CGEnvelopeChart({
       </div>
 
       {/* Gráfico principal */}
-      <div className="h-80 bg-white">
-        <ResponsiveContainer width="100%" height="100%">
+      <div className={size ? "bg-white" : "h-80 bg-white"}>
+        <ChartFrame size={size}>
           <ScatterChart
+            width={size?.width}
+            height={size?.height}
             margin={{
               top: 20,
               right: 20,
@@ -163,6 +169,7 @@ export function CGEnvelopeChart({
 
             {/* Polígono del envolvente como línea conectada */}
             <Scatter
+              isAnimationActive={animate}
               name={m.chart.envelopeLimit}
               data={envelopeData}
               line={{ stroke: "#8884d8", strokeWidth: 2 }}
@@ -172,6 +179,7 @@ export function CGEnvelopeChart({
 
             {/* Punto de operación actual */}
             <Scatter
+              isAnimationActive={animate}
               name={m.chart.operatingPoint}
               data={currentPointData}
               fill="#ff0000"
@@ -181,6 +189,7 @@ export function CGEnvelopeChart({
             {/* Trayectoria de consumo: despegue -> aterrizaje */}
             {hasLanding && (
               <Scatter
+                isAnimationActive={animate}
                 name={m.flightPhases.chartBurnPath}
                 data={burnPathData}
                 line={{ stroke: "#f97316", strokeWidth: 2, strokeDasharray: "5 3" }}
@@ -191,6 +200,7 @@ export function CGEnvelopeChart({
             )}
             {hasLanding && (
               <Scatter
+                isAnimationActive={animate}
                 name={m.flightPhases.chartLanding}
                 data={[{ x: x(landingCG), y: y(landingWeight) }]}
                 fill="#f97316"
@@ -199,6 +209,7 @@ export function CGEnvelopeChart({
             )}
             {hasZeroFuel && (
               <Scatter
+                isAnimationActive={animate}
                 name={m.flightPhases.chartZeroFuel}
                 data={[{ x: x(zeroFuelCG), y: y(zeroFuelWeight) }]}
                 fill="#6b7280"
@@ -206,8 +217,21 @@ export function CGEnvelopeChart({
               />
             )}
           </ScatterChart>
-        </ResponsiveContainer>
+        </ChartFrame>
       </div>
     </div>
+  )
+}
+
+/**
+ * Responsive wrapper on screen; plain (fixed-size chart) when `size` is set.
+ * @param {{ size?: { width: number, height: number }, children: import("react").ReactElement }} props
+ */
+function ChartFrame({ size, children }) {
+  if (size) return children
+  return (
+    <ResponsiveContainer width="100%" height="100%">
+      {children}
+    </ResponsiveContainer>
   )
 }
