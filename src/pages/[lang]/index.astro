@@ -14,6 +14,7 @@ import {
   type RouteLocale,
 } from "../../utils/routes"
 import { softwareApplicationJsonLd } from "../../utils/seoContent"
+import { ogImagePath } from "../../utils/ogImage"
 
 export function getStaticPaths() {
   return ROUTE_LOCALES.map((lang) => ({ params: { lang } }))
@@ -41,6 +42,7 @@ const jsonLd = [
   alternates={alternateLinks(localePath, "/")}
   pinLocale
   jsonLd={jsonLd}
+  ogImage={ogImagePath(lang)}
 >
   <header class="mx-auto max-w-4xl space-y-3 px-4 pt-4 print:hidden">
     <LanguageNav current={lang} pathFor={localePath} label={s.languageLabel} />
