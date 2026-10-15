@@ -8,7 +8,7 @@ Aplicación web open source para el cálculo de peso y balance (Weight & Balance
 
 > Antes publicado como _wb-aviation_ en `wb-aviation.pages.dev` (redirige a checkcg.com).
 
-![CheckCG: peso y balance del Cessna 152](./docs/screenshot.jpg)
+![Demo de CheckCG: cargar pesos del Cessna 152, ver la envolvente de CG y completar la hoja de carga](./docs/demo.gif)
 
 **Aeronaves soportadas:** King Air E90 · Cessna 172S · Cessna 152 · Piper PA-28-161 Warrior · Piper PA-38 Tomahawk · Tecnam P2008 JC · Tecnam P2002 JF · Diamond DA20-C1 · Diamond DA40 _(próximamente: King Air B200 y Beech 1900D)_
 
