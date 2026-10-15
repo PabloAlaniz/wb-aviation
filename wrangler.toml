@@ -1,0 +1,13 @@
+# Cloudflare Pages configuration (source of truth for the project's Functions
+# settings and bindings once deployed; build command/output stay in the
+# dashboard: `npm run build` → dist, Node 22 via .nvmrc).
+# Docs: https://developers.cloudflare.com/pages/functions/wrangler-configuration/
+name = "wb-aviation"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-10-01"
+
+# First-party conversion events (functions/api/e.js). The dataset is created
+# on the first write. Applies to production and preview deployments.
+[[analytics_engine_datasets]]
+binding = "EVENTS"
+dataset = "checkcg_events"
