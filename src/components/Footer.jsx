@@ -1,6 +1,7 @@
 import { Github } from "lucide-react"
 import { version } from "../../package.json"
-import { messages as m } from "../i18n"
+import { activeLocale, messages as m } from "../i18n"
+import { guidesIndexPath } from "../utils/routes"
 import { FLEET_SHARE_ID } from "./FleetShare"
 
 export const AUTHOR_NAME = "Pablo Alaniz"
@@ -24,6 +25,11 @@ export function Footer() {
           className="font-medium text-blue-700 hover:underline"
         >
           {m.footer.fleetHint}
+        </a>
+      </p>
+      <p>
+        <a href={guidesIndexPath(activeLocale)} className="text-blue-700 hover:underline">
+          {m.guides.footerLink}
         </a>
       </p>
       <p className="mx-auto max-w-2xl">{m.footer.disclaimer}</p>

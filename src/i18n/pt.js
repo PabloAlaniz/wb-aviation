@@ -317,6 +317,31 @@ export const pt = {
       "Ferramenta de referência. O manual de voo (POH/AFM) e o relatório de peso e balanceamento da aeronave prevalecem sobre esta folha.",
   },
 
+  guides: {
+    navLabel: "Guias",
+    footerLink: "Guias de peso e balanceamento",
+    homeTitle: "Guias de peso e balanceamento",
+    homeIntro: "Aprenda a fazer o cálculo à mão e a entender os limites do seu avião.",
+    indexTitle: "Guias de peso e balanceamento para pilotos | CheckCG",
+    indexDescription:
+      "Guias gratuitos de peso e balanceamento: como calcular o centro de gravidade, peso, braço e momento com um exemplo resolvido e como ler o envelope de CG.",
+    indexH1: "Guias de peso e balanceamento",
+    indexIntro:
+      "Explicações claras para alunos, pilotos e instrutores. Cada guia termina com um link para a calculadora, para você praticar com o seu próprio avião.",
+    breadcrumbHome: "Início",
+    updated: "Atualizado:",
+    faqTitle: "Perguntas frequentes",
+    ctaTitle: "Teste na calculadora",
+    ctaText:
+      "Informe o peso vazio da ficha de peso e balanceamento e o peso de cada estação: o CheckCG calcula o CG na decolagem, no pouso e com zero combustível, e gera a planilha de carregamento. Grátis e offline.",
+    ctaButton: "Abrir a calculadora",
+    ctaAircraft: "Dados de referência por aeronave:",
+    otherGuides: "Outros guias",
+    readGuide: "Ler o guia",
+    disclaimer:
+      "Material de estudo. O POH/AFM e a ficha de peso e balanceamento da sua aeronave são a referência oficial.",
+  },
+
   seo: {
     siteName: "CheckCG",
     ogLocale: "pt_BR",
