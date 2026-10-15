@@ -48,17 +48,21 @@ export function getLocale() {
 }
 
 /**
- * Persist a language preference and reload so every string (including the
- * safety report built in pure functions) is regenerated in the new locale.
+ * Persist a language preference and load the page again so every string
+ * (including the safety report built in pure functions) is regenerated in
+ * the new locale.
  * @param {string} locale
+ * @param {string} [href] - Localized page to navigate to (e.g. "/en/");
+ *   reloads the current page when omitted
  */
-export function setLocale(locale) {
+export function setLocale(locale, href) {
   try {
     window.localStorage.setItem(STORAGE_KEY, locale)
   } catch {
-    // ignore: fall through to reload, which will re-resolve the locale
+    // ignore: localized pages pin their own locale; otherwise it re-resolves
   }
-  window.location.reload()
+  if (href) window.location.assign(href)
+  else window.location.reload()
 }
 
 const activeLocale = getLocale()

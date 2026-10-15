@@ -9,7 +9,11 @@ import {
   ResponsiveContainer,
 } from "recharts"
 import { messages as m } from "../i18n"
+import { niceScale } from "../utils/chartScale"
 import { armSuffix, armToDisplay, unitSymbols, weightToDisplay } from "../utils/units"
+
+/** Space reserved above the plot for the legend in fixed-size (print) mode. */
+const PRINT_LEGEND_HEIGHT = 24
 
 /**
  * @param {{
@@ -45,18 +49,6 @@ export function CGEnvelopeChart({
   // Preparar datos del envolvente para formar un polígono cerrado
   const envelopePoints = aircraft.cgEnvelope.points
 
-  // Dominios de los ejes derivados de la envolvente de cada aeronave
-  const arms = envelopePoints.map((point) => point.arm)
-  const envelopeWeights = envelopePoints.map((point) => point.weight)
-  const xDomain = [
-    Math.floor(x(Math.floor(Math.min(...arms)))),
-    Math.ceil(x(Math.ceil(Math.max(...arms)) + 2)),
-  ]
-  const yDomain = [
-    Math.floor(y(Math.min(...envelopeWeights))),
-    Math.ceil(y(Math.max(...envelopeWeights) + 100)),
-  ]
-
   // Crear el polígono del envolvente (cerrado)
   const envelopeData = [
     ...envelopePoints.map((point) => ({ x: x(point.arm), y: y(point.weight) })),
@@ -76,6 +68,20 @@ export function CGEnvelopeChart({
         { x: x(landingCG), y: y(landingWeight) },
       ]
     : []
+
+  // Escalas "lindas" (pasos 1/2/5 × 10^n) en la unidad mostrada, derivadas de
+  // la envolvente y de los puntos graficados para que todo quede visible
+  const plotted = [...envelopeData, ...currentPointData]
+  if (hasLanding) plotted.push({ x: x(landingCG), y: y(landingWeight) })
+  if (hasZeroFuel) plotted.push({ x: x(zeroFuelCG), y: y(zeroFuelWeight) })
+  const xScale = niceScale(
+    plotted.map((point) => point.x),
+    { count: 10 }
+  )
+  const yScale = niceScale(
+    plotted.map((point) => point.y),
+    { count: 6 }
+  )
 
   // Tooltip personalizado
   /** @param {{ active?: boolean, payload?: Array<{ payload: { x: number, y: number } }> }} props */
@@ -115,8 +121,10 @@ export function CGEnvelopeChart({
             width={size?.width}
             height={size?.height}
             margin={{
-              top: 20,
-              right: 20,
+              // Fixed size (print): the chart is rendered hidden, so Recharts
+              // measures the legend as 0 px tall; reserve its space explicitly
+              top: size ? 20 + PRINT_LEGEND_HEIGHT : 20,
+              right: 30,
               bottom: 40,
               left: 50,
             }}
@@ -130,8 +138,9 @@ export function CGEnvelopeChart({
               dataKey="x"
               name="Arm"
               unit={metric ? " mm" : " inches"}
-              domain={xDomain}
-              tickCount={10}
+              domain={xScale.domain}
+              ticks={xScale.ticks}
+              allowDataOverflow
               fontSize={10}
               stroke="#000"
               label={{
@@ -148,7 +157,9 @@ export function CGEnvelopeChart({
               dataKey="y"
               name="Weight"
               unit={metric ? " kg" : " lbs"}
-              domain={yDomain}
+              domain={yScale.domain}
+              ticks={yScale.ticks}
+              allowDataOverflow
               width={80}
               fontSize={10}
               stroke="#000"
@@ -164,8 +175,15 @@ export function CGEnvelopeChart({
             {/* Tooltip para mostrar datos al pasar el mouse */}
             <Tooltip content={<CustomTooltip />} />
 
-            {/* paddingTop deja lugar a la etiqueta del eje X */}
-            <Legend wrapperStyle={{ paddingTop: 24 }} />
+            {/* Leyenda arriba: no compite con los ticks ni el título del eje X */}
+            <Legend
+              verticalAlign="top"
+              wrapperStyle={
+                size
+                  ? { top: 8, fontSize: 11, lineHeight: "16px" }
+                  : { paddingBottom: 8, fontSize: 11 }
+              }
+            />
 
             {/* Polígono del envolvente como línea conectada */}
             <Scatter
@@ -173,8 +191,9 @@ export function CGEnvelopeChart({
               name={m.chart.envelopeLimit}
               data={envelopeData}
               line={{ stroke: "#8884d8", strokeWidth: 2 }}
-              fill="transparent"
+              fill="#8884d8"
               shape={() => null}
+              legendType="plainline"
             />
 
             {/* Punto de operación actual */}

@@ -78,10 +78,12 @@ export const pt = {
     passenger4: "Passageiro 4",
     rearPassenger1: "Passageiro traseiro 1",
     rearPassenger2: "Passageiro traseiro 2",
+    baggage: "Bagagem",
     baggage1: "Bagagem 1",
     baggage2: "Bagagem 2",
     baggageArea1: "Bagagem área 1",
     baggageArea2: "Bagagem área 2",
+    baggageExtension: "Extensão do bagageiro",
     fuel: "Combustível",
   },
 
@@ -313,5 +315,91 @@ export const pt = {
     generatedBy: "Gerado com W&B Aviation",
     disclaimer:
       "Ferramenta de referência. O manual de voo (POH/AFM) e o relatório de peso e balanceamento da aeronave prevalecem sobre esta folha.",
+  },
+
+  seo: {
+    siteName: "W&B Aviation",
+    ogLocale: "pt_BR",
+    languageLabel: "Idioma",
+    calculatorTitle: "Calculadora interativa",
+    loading: "Carregando a calculadora…",
+    noscript:
+      "A calculadora precisa de JavaScript. Os dados de referência desta página podem ser consultados sem ele.",
+    appDescription:
+      "Calculadora gratuita de peso e balanceamento (Weight & Balance) de aeronaves: centro de gravidade, envelope de CG e folha de carga. Funciona offline e sem cadastro.",
+    home: {
+      title: "Calculadora de peso e balanceamento de aeronaves | W&B Aviation",
+      description:
+        "Calcule o peso e balanceamento (Weight & Balance) e o centro de gravidade da sua aeronave com dados do TCDS e do POH. Grátis, offline e sem cadastro.",
+      h1: "Calculadora de peso e balanceamento de aeronaves",
+      intro1:
+        "O peso e balanceamento (Weight & Balance) verifica, antes de cada voo, que a aeronave não ultrapasse o peso máximo e que o centro de gravidade (CG) fique dentro do envelope aprovado. Um CG fora dos limites afeta a estabilidade e o controle, mesmo com o peso total correto.",
+      intro2:
+        "O W&B Aviation soma o peso vazio e cada estação de carga (tripulação, passageiros, bagagem e combustível), calcula o momento e o CG resultantes e os compara com o envelope do fabricante, inclusive no pouso e sem combustível. Funciona no navegador, sem cadastro e offline.",
+      aircraftListTitle: "Aeronaves disponíveis",
+      aircraftLink: (/** @type {string} */ name) => `Peso e balanceamento ${name}`,
+    },
+    aircraft: {
+      title: (/** @type {string} */ name) =>
+        `Peso e balanceamento ${name}: calculadora de CG | W&B Aviation`,
+      description: (/** @type {string} */ name, /** @type {string} */ maxWeight) =>
+        `Calculadora de peso e balanceamento do ${name}: peso máximo ${maxWeight}, braços das estações, limites e envelope de CG. Grátis e offline.`,
+      h1: (/** @type {string} */ name) => `Peso e balanceamento ${name}`,
+      intro: (/** @type {string} */ name, /** @type {string} */ tcds) =>
+        `Calcule o peso total e o centro de gravidade do ${name} com os dados de referência de ${tcds}. Informe o peso de cada estação e a calculadora verifica o peso máximo e o envelope de CG na decolagem e no pouso.`,
+      specsTitle: "Dados de peso e balanceamento",
+      tcds: "Folha de dados (TCDS)",
+      manufacturer: "Fabricante",
+      engines: "Motores",
+      maxWeight: "Peso máximo de decolagem",
+      emptyWeight: "Peso vazio de referência",
+      emptyArm: "Braço do peso vazio",
+      cgLimits: "Limites de CG",
+      cgLimitsValue: (/** @type {string} */ forward, /** @type {string} */ aft) =>
+        `${forward} a ${aft} atrás do datum`,
+      stationsTitle: "Estações de carga e braços",
+      station: "Estação",
+      arm: "Braço (in)",
+      maxLoad: "Máximo (lbs)",
+      envelopeTitle: "Pontos do envelope de CG",
+      envelopeCaption:
+        "Vértices do polígono do envelope (braço em polegadas atrás do datum, peso em libras).",
+      point: "Ponto",
+      envelopeArm: "Braço (in)",
+      envelopeWeight: "Peso (lbs)",
+      reliabilityTitle: "Confiabilidade dos dados e fontes",
+      reliabilityLabel: "Confiabilidade:",
+      reliabilityVerifiedComplete: "verificados com documentação oficial",
+      reliabilityVerifiedPartial: "parcialmente verificados",
+      reliabilityEstimated: "valores de referência estimados",
+      lastVerified: "Última verificação:",
+      sourcesLabel: "Fontes:",
+      pendingLabel: "Pendente de verificação:",
+      ownDataWarning:
+        "O peso vazio e o seu braço variam em cada aeronave: use os do relatório de peso e balanceamento da sua aeronave (você pode cadastrá-los como aeronave personalizada na calculadora).",
+      faqTitle: "Perguntas frequentes",
+      faqWhatQ: (/** @type {string} */ name) =>
+        `Como se calcula o peso e balanceamento do ${name}?`,
+      faqWhatA: (/** @type {string} */ name) =>
+        `Multiplica-se o peso de cada estação pelo seu braço para obter o momento, somam-se pesos e momentos (incluindo o peso vazio) e o CG é o momento total dividido pelo peso total. O ${name} está dentro dos limites quando o peso não excede o máximo e o ponto peso/CG fica dentro do envelope.`,
+      faqMaxWeightQ: (/** @type {string} */ name) => `Qual é o peso máximo do ${name}?`,
+      faqMaxWeightA: (
+        /** @type {string} */ name,
+        /** @type {string} */ maxWeight,
+        /** @type {string} */ tcds
+      ) =>
+        `O peso máximo de decolagem de referência do ${name} é ${maxWeight}, segundo ${tcds}. Confirme sempre no POH/AFM da sua aeronave.`,
+      faqCgQ: (/** @type {string} */ name) => `Quais são os limites de CG do ${name}?`,
+      faqCgA: (
+        /** @type {string} */ name,
+        /** @type {string} */ forward,
+        /** @type {string} */ aft
+      ) =>
+        `O CG do ${name} deve ficar entre ${forward} (limite dianteiro) e ${aft} (limite traseiro) atrás do datum. O limite efetivo depende do peso: o envelope desta página mostra a forma completa.`,
+      faqOwnQ: (/** @type {string} */ name) => `Posso usar esta calculadora para o meu ${name}?`,
+      faqOwnA: (/** @type {string} */ name) =>
+        `Sim, como referência. Cada ${name} tem o seu próprio peso vazio e braço conforme o equipamento: cadastre-os a partir do relatório de peso e balanceamento como aeronave personalizada. O POH/AFM é sempre a referência oficial.`,
+      otherAircraftTitle: "Outras aeronaves",
+    },
   },
 }

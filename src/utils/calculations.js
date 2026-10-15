@@ -17,6 +17,11 @@ export function isPointInEnvelope(cg, weight, envelopePoints) {
     return false
   }
 
+  // Un punto sobre el borde es legal (p. ej. carga exacta al peso máximo)
+  if (isPointOnEnvelopeEdge(cg, weight, envelopePoints)) {
+    return true
+  }
+
   let inside = false
   let j = envelopePoints.length - 1
 
@@ -33,6 +38,30 @@ export function isPointInEnvelope(cg, weight, envelopePoints) {
   }
 
   return inside
+}
+
+/**
+ * Whether a point lies on one of the envelope's edges, within a small
+ * tolerance so floating-point sums don't flip a limit loading to "outside".
+ * @param {number} cg
+ * @param {number} weight
+ * @param {import('../types').EnvelopePoint[]} envelopePoints
+ * @param {number} [tolerance] - in the envelope's units (in / lbs)
+ */
+export function isPointOnEnvelopeEdge(cg, weight, envelopePoints, tolerance = 1e-6) {
+  for (let i = 0, j = envelopePoints.length - 1; i < envelopePoints.length; j = i++) {
+    const a = envelopePoints[j]
+    const b = envelopePoints[i]
+    const dx = b.arm - a.arm
+    const dy = b.weight - a.weight
+    const lengthSq = dx * dx + dy * dy
+    if (lengthSq === 0) continue
+    // proyección del punto sobre el segmento, acotada a sus extremos
+    const t = Math.max(0, Math.min(1, ((cg - a.arm) * dx + (weight - a.weight) * dy) / lengthSq))
+    const distance = Math.hypot(cg - (a.arm + t * dx), weight - (a.weight + t * dy))
+    if (distance <= tolerance) return true
+  }
+  return false
 }
 
 /**
@@ -214,11 +243,11 @@ export function buildSafetyReport(aircraft, totalWeight, centerOfGravity) {
 
   // Recomendaciones de seguridad
   if (totalWeight > aircraft.maxWeight - safetyFactors.recommendedReserve.weight) {
+    const excessLbs = totalWeight - (aircraft.maxWeight - safetyFactors.recommendedReserve.weight)
     recommendations.push({
       type: "weight-reserve",
-      message: m.safety.reduceWeight(
-        (totalWeight - (aircraft.maxWeight - safetyFactors.recommendedReserve.weight)).toFixed(0)
-      ),
+      message: m.safety.reduceWeight(excessLbs.toFixed(0)),
+      excessLbs,
     })
   }
 
