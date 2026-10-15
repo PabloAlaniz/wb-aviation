@@ -218,4 +218,44 @@ export const en = {
       "An unexpected error occurred in the application. You can retry or reload the page. If the problem persists, try clearing the browser's saved data.",
     retry: "Retry",
   },
+
+  fleet: {
+    shareTitle: "Share fleet (instructors and schools)",
+    shareDescription:
+      "Create a link with your aircraft by registration so your students can import them on their device. Only base model, registration, empty weight and arm are shared.",
+    schoolNameLabel: "School or flying club (optional)",
+    schoolNamePlaceholder: "Flying club ...",
+    shareButton: "Share fleet",
+    shareEmpty: "Save at least one aircraft by registration to share your fleet.",
+    truncated: (/** @type {number} */ max) => `Only the first ${max} aircraft are included.`,
+    copied: "Fleet link copied to the clipboard.",
+    shared: "Fleet link shared.",
+    copyFailed: "Couldn't copy automatically. Copy the link:",
+    linkLabel: "Fleet link",
+    importTitle: "Import fleet",
+    importFrom: (/** @type {string} */ name) => `${name} shared their fleet with you.`,
+    importAnonymous: "Someone shared an aircraft fleet with you.",
+    importListLabel: "Aircraft to import",
+    overwriteNote:
+      "If you already saved any of these registrations, their data will be replaced with the link's.",
+    willOverwrite: "Replaces saved one",
+    verifyNote:
+      "Check empty weight and arm against each aircraft's Weight & Balance Report before flying.",
+    importButton: (/** @type {number} */ count) =>
+      count === 1 ? "Import 1 aircraft" : `Import ${count} aircraft`,
+    dismiss: "Dismiss",
+    imported: (/** @type {number} */ count) =>
+      count === 1 ? "Imported 1 aircraft." : `Imported ${count} aircraft.`,
+    invalidLink: "The fleet link is invalid or damaged.",
+    close: "Close",
+  },
+
+  footer: {
+    madeBy: "Made by",
+    sourceCode: "Source code on GitHub",
+    fleetHint: "Instructor or flight school? Share your fleet",
+    disclaimer:
+      "This is an aid: your aircraft's POH/AFM and Weight & Balance Report are the official reference. Always double-check the results.",
+    version: (/** @type {string} */ version) => `Version ${version}`,
+  },
 }
