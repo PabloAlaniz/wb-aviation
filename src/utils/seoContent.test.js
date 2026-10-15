@@ -4,6 +4,9 @@ import { es } from "../i18n/es"
 import { en } from "../i18n/en"
 import {
   aircraftFaq,
+  articleJsonLd,
+  breadcrumbJsonLd,
+  howToJsonLd,
   envelopeRows,
   faqPageJsonLd,
   formatArm,
@@ -117,5 +120,58 @@ describe("JSON-LD", () => {
     const json = serializeJsonLd({ text: "</script><script>alert(1)</script>" })
     expect(json).not.toContain("<")
     expect(JSON.parse(json).text).toBe("</script><script>alert(1)</script>")
+  })
+})
+
+describe("guide JSON-LD", () => {
+  it("describes an Article with author, publisher and dateModified", () => {
+    const data = articleJsonLd({
+      headline: "H",
+      description: "D",
+      url: "https://checkcg.com/en/guides/x/",
+      locale: "en",
+      dateModified: new Date("2026-10-15"),
+      siteName: "CheckCG",
+      siteUrl: "https://checkcg.com/",
+    })
+    expect(data["@type"]).toBe("Article")
+    expect(data.inLanguage).toBe("en")
+    expect(data.dateModified).toBe("2026-10-15")
+    expect(data.author.name).toBe("Pablo Alaniz")
+    expect(data.publisher).toEqual({
+      "@type": "Organization",
+      name: "CheckCG",
+      url: "https://checkcg.com/",
+    })
+    expect(data.mainEntityOfPage["@id"]).toBe("https://checkcg.com/en/guides/x/")
+  })
+
+  it("numbers the HowTo steps", () => {
+    const data = howToJsonLd({
+      name: "N",
+      description: "D",
+      url: "u",
+      locale: "es",
+      steps: [
+        { name: "a", text: "A" },
+        { name: "b", text: "B" },
+      ],
+    })
+    expect(data["@type"]).toBe("HowTo")
+    expect(data.step).toEqual([
+      { "@type": "HowToStep", position: 1, name: "a", text: "A" },
+      { "@type": "HowToStep", position: 2, name: "b", text: "B" },
+    ])
+  })
+
+  it("builds a BreadcrumbList in order", () => {
+    const data = breadcrumbJsonLd([
+      { name: "Home", url: "https://checkcg.com/en/" },
+      { name: "Guides", url: "https://checkcg.com/en/guides/" },
+    ])
+    expect(data.itemListElement.map((i) => [i.position, i.name, i.item])).toEqual([
+      [1, "Home", "https://checkcg.com/en/"],
+      [2, "Guides", "https://checkcg.com/en/guides/"],
+    ])
   })
 })

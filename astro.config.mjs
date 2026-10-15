@@ -5,6 +5,7 @@ import sitemap from "@astrojs/sitemap"
 import AstroPWA from "@vite-pwa/astro"
 import tailwindcss from "@tailwindcss/vite"
 import { SITE_URL, ROUTE_LOCALES, DEFAULT_ROUTE_LOCALE } from "./src/utils/routes.js"
+import { guideTranslationGroups } from "./src/content/guides/registry.js"
 
 // https://docs.astro.build/en/reference/configuration-reference/
 export default defineConfig({
@@ -31,6 +32,21 @@ export default defineConfig({
       i18n: {
         defaultLocale: DEFAULT_ROUTE_LOCALE,
         locales: Object.fromEntries(ROUTE_LOCALES.map((locale) => [locale, locale])),
+      },
+      // Guides have localized paths (/es/guias/x/ vs /en/guides/y/), which the
+      // automatic i18n matching can't pair: set their alternates explicitly.
+      serialize: (item) => {
+        const group = guideTranslationGroups().find((paths) =>
+          Object.values(paths).some((path) => `${SITE_URL}${path}` === item.url)
+        )
+        if (!group) return item
+        return {
+          ...item,
+          links: ROUTE_LOCALES.map((locale) => ({
+            lang: locale,
+            url: `${SITE_URL}${group[locale]}`,
+          })),
+        }
       },
     }),
     AstroPWA({

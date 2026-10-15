@@ -10,10 +10,13 @@ import {
   absoluteUrl,
   aircraftPath,
   alternateLinks,
+  guidePath,
+  guidesIndexPath,
   localePath,
   type RouteLocale,
 } from "../../utils/routes"
 import { softwareApplicationJsonLd } from "../../utils/seoContent"
+import { guidesFor } from "../../components/guides/collection"
 
 export function getStaticPaths() {
   return ROUTE_LOCALES.map((lang) => ({ params: { lang } }))
@@ -23,6 +26,7 @@ const lang = Astro.params.lang as RouteLocale
 const m = locales[lang]
 const s = m.seo
 const path = localePath(lang)
+const { entries: guides } = await guidesFor(lang)
 const jsonLd = [
   softwareApplicationJsonLd({
     name: s.siteName,
@@ -67,6 +71,24 @@ const jsonLd = [
                 {s.home.aircraftLink(aircraft.name)}
               </a>{" "}
               <span class="text-sm text-gray-600">({aircraft.tcds})</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="mx-auto max-w-4xl px-4 pb-8 print:hidden">
+      <h2 class="mb-1 text-xl font-semibold text-gray-900">
+        <a href={guidesIndexPath(lang)} class="hover:underline">{m.guides.homeTitle}</a>
+      </h2>
+      <p class="mb-2 text-gray-700">{m.guides.homeIntro}</p>
+      <ul class="list-disc space-y-1 pl-6">
+        {
+          guides.map((entry) => (
+            <li>
+              <a href={guidePath(lang, entry.data.slug)} class="text-blue-700 hover:underline">
+                {entry.data.title}
+              </a>
             </li>
           ))
         }

@@ -1,0 +1,102 @@
+---
+/** Guides index of one language (/es/guias/, /en/guides/, /pt/guias/). */
+import Base from "../../layouts/Base.astro"
+import LanguageNav from "../LanguageNav.astro"
+import GuidesFooter from "./GuidesFooter.astro"
+import { guidesFor } from "./collection"
+import { locales } from "../../i18n"
+import {
+  absoluteUrl,
+  alternateLinks,
+  guidePath,
+  guidesIndexPath,
+  localePath,
+  type RouteLocale,
+} from "../../utils/routes"
+import { breadcrumbJsonLd } from "../../utils/seoContent"
+
+interface Props {
+  lang: RouteLocale
+}
+
+const { lang } = Astro.props
+const m = locales[lang]
+const g = m.guides
+const path = guidesIndexPath(lang)
+const { entries } = await guidesFor(lang)
+
+const jsonLd = [
+  breadcrumbJsonLd([
+    { name: g.breadcrumbHome, url: absoluteUrl(localePath(lang)) },
+    { name: g.navLabel, url: absoluteUrl(path) },
+  ]),
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: entries.map((entry, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      url: absoluteUrl(guidePath(lang, entry.data.slug)),
+      name: entry.data.title,
+    })),
+  },
+]
+---
+
+<Base
+  lang={lang}
+  title={g.indexTitle}
+  description={g.indexDescription}
+  path={path}
+  alternates={alternateLinks(guidesIndexPath, guidesIndexPath("es"))}
+  pinLocale
+  jsonLd={jsonLd}
+>
+  <div class="mx-auto max-w-3xl space-y-6 px-4 py-4">
+    <LanguageNav current={lang} pathFor={guidesIndexPath} label={m.seo.languageLabel} />
+    <p class="text-sm">
+      <a href={localePath(lang)} class="text-blue-700 hover:underline">{g.breadcrumbHome}</a>
+    </p>
+
+    <main class="space-y-6">
+      <header class="space-y-2">
+        <h1 class="text-3xl font-bold text-gray-900">{g.indexH1}</h1>
+        <p class="text-gray-700">{g.indexIntro}</p>
+      </header>
+
+      <ul class="space-y-4">
+        {
+          entries.map((entry) => (
+            <li class="rounded-xl bg-white/80 p-5 shadow-sm">
+              <h2 class="text-xl font-semibold text-gray-900">
+                <a href={guidePath(lang, entry.data.slug)} class="hover:underline">
+                  {entry.data.title}
+                </a>
+              </h2>
+              <p class="mt-1 text-gray-700">{entry.data.description}</p>
+              <a
+                href={guidePath(lang, entry.data.slug)}
+                class="mt-2 inline-block text-sm font-medium text-blue-700 hover:underline"
+                aria-hidden="true"
+                tabindex="-1"
+              >
+                {g.readGuide} →
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p>
+        <a
+          href={localePath(lang)}
+          class="inline-block rounded-md bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700"
+        >
+          {g.ctaButton}
+        </a>
+      </p>
+    </main>
+
+    <GuidesFooter lang={lang} />
+  </div>
+</Base>

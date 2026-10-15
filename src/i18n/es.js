@@ -318,6 +318,32 @@ export const es = {
       "Herramienta de referencia. El manual de vuelo (POH/AFM) y el informe de peso y balance de la aeronave prevalecen sobre esta hoja.",
   },
 
+  // Guías (src/content/guides): índice, enlaces y textos de la página.
+  guides: {
+    navLabel: "Guías",
+    footerLink: "Guías de peso y balance",
+    homeTitle: "Guías de peso y balance",
+    homeIntro: "Aprendé a hacer el cálculo a mano y a entender los límites de tu avión.",
+    indexTitle: "Guías de peso y balance para pilotos | CheckCG",
+    indexDescription:
+      "Guías gratuitas de peso y balance: cómo calcular el centro de gravedad, peso, brazo y momento con un ejemplo resuelto, y cómo leer la envolvente de CG.",
+    indexH1: "Guías de peso y balance",
+    indexIntro:
+      "Explicaciones claras para alumnos, pilotos e instructores. Cada guía termina con un enlace a la calculadora para practicar con tu propio avión.",
+    breadcrumbHome: "Inicio",
+    updated: "Actualizado:",
+    faqTitle: "Preguntas frecuentes",
+    ctaTitle: "Probalo con la calculadora",
+    ctaText:
+      "Cargá el peso vacío de tu Weight & Balance Report y los pesos de cada estación: CheckCG calcula el CG al despegue, al aterrizaje y sin combustible, y genera la hoja de carga. Gratis y offline.",
+    ctaButton: "Abrir la calculadora",
+    ctaAircraft: "Datos de referencia por aeronave:",
+    otherGuides: "Otras guías",
+    readGuide: "Leer la guía",
+    disclaimer:
+      "Material de estudio. El POH/AFM y el Weight & Balance Report de tu aeronave son la referencia oficial.",
+  },
+
   // Contenido estático de las páginas indexables (Astro). Solo datos: lo
   // renderizan src/pages/**/*.astro, no componentes React.
   seo: {
