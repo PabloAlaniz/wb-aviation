@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { aircraftData, emptyWeightsFor } from "../data/aircraft"
 import { createCustomAircraft } from "../utils/customAircraft"
+import { trackEvent } from "../analytics"
 import { decodeSharedCalculation, readShareParam, withoutShareParam } from "../utils/shareLink"
 
 /** @typedef {import("../utils/customAircraft").CustomAircraftRecord} CustomAircraftRecord */
@@ -36,7 +37,7 @@ function sameWeighingData(a, b) {
  *
  * @param {{
  *   records: CustomAircraftRecord[],
- *   saveCustomAircraft: (record: CustomAircraftRecord) => unknown,
+ *   saveCustomAircraft: (record: CustomAircraftRecord, options?: { track?: boolean }) => unknown,
  *   setSelectedAircraft: (id: string) => void,
  *   setWeights: (weights: import("../types").StationWeights) => void,
  *   setFuelBurn: (fuelBurn: string) => void,
@@ -74,6 +75,7 @@ export function useSharedCalculation(actions) {
     }
 
     if (!shared) {
+      trackEvent("shared_link_opened", { status: "invalid" })
       setStatus("invalid")
       clearParam()
       return
@@ -84,11 +86,12 @@ export function useSharedCalculation(actions) {
       const record = shared.customRecord
       const existing = records.find((r) => r.registration === record.registration)
       if (existing && !sameWeighingData(existing, record)) {
+        trackEvent("shared_link_opened", { status: "conflict" })
         setStatus("conflict")
         clearParam()
         return
       }
-      if (!existing) saveCustomAircraft(record)
+      if (!existing) saveCustomAircraft(record, { track: false })
       aircraft = createCustomAircraft(record)
     }
 
@@ -96,6 +99,7 @@ export function useSharedCalculation(actions) {
     setWeights({ ...emptyWeightsFor(aircraft), ...shared.weights })
     setFuelBurn(shared.fuelBurn)
     if (shared.units) setUnits(shared.units)
+    trackEvent("shared_link_opened", { status: "loaded" })
     setStatus("loaded")
     clearParam()
   }, [])

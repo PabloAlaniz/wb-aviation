@@ -119,3 +119,26 @@ export function rootRedirectTarget(search, stored, navigatorLang, locales) {
     stored && locales.includes(stored) ? stored : locales.includes(browser) ? browser : locales[0]
   return `/${locale}/${search}`
 }
+
+/**
+ * Localized folder of the guides section, e.g. /es/guias/, /en/guides/.
+ * @type {Record<RouteLocale, string>}
+ */
+export const GUIDES_DIR = { es: "guias", en: "guides", pt: "guias" }
+
+/**
+ * @param {RouteLocale} locale
+ * @returns {string} e.g. "/en/guides/"
+ */
+export function guidesIndexPath(locale) {
+  return `/${locale}/${GUIDES_DIR[locale]}/`
+}
+
+/**
+ * @param {RouteLocale} locale
+ * @param {string} slug - localized guide slug
+ * @returns {string} e.g. "/en/guides/weight-arm-and-moment/"
+ */
+export function guidePath(locale, slug) {
+  return `${guidesIndexPath(locale)}${encodeURIComponent(slug)}/`
+}

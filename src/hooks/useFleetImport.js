@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { decodeFleet, readFleetParam, withoutFleetParam } from "../utils/fleetLink"
 import { trackEvent } from "../analytics"
 
@@ -38,6 +38,16 @@ function clearFleetParam() {
  */
 export function useFleetImport(importRecords) {
   const [state, setState] = useState(initialState)
+
+  // one-shot: a `?fleet=` link was opened (valid or not)
+  useEffect(() => {
+    if (state.status === "pending") {
+      trackEvent("fleet_link_opened", { count: state.fleet.records.length })
+    } else if (state.status === "invalid") {
+      trackEvent("fleet_link_opened", { count: 0, invalid: true })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const accept = () => {
     if (state.status !== "pending") return

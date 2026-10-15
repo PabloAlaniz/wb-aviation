@@ -316,9 +316,40 @@ export const en = {
       "Reference tool only. The aircraft's flight manual (POH/AFM) and weight and balance report take precedence over this sheet.",
   },
 
+  guides: {
+    navLabel: "Guides",
+    footerLink: "Weight and balance guides",
+    homeTitle: "Weight and balance guides",
+    homeIntro: "Learn to do the calculation by hand and understand your airplane's limits.",
+    indexTitle: "Weight and balance guides for pilots | CheckCG",
+    indexDescription:
+      "Free weight and balance guides: how to calculate the center of gravity, weight, arm and moment with a worked example, and how to read the CG envelope.",
+    indexH1: "Weight and balance guides",
+    indexIntro:
+      "Clear explanations for student pilots, pilots and instructors. Each guide ends with a link to the calculator so you can practice with your own airplane.",
+    breadcrumbHome: "Home",
+    updated: "Updated:",
+    faqTitle: "Frequently asked questions",
+    ctaTitle: "Try it in the calculator",
+    ctaText:
+      "Enter the empty weight from your weight and balance report and each station weight: CheckCG computes the CG at takeoff, landing and zero fuel, and prints the load sheet. Free and offline.",
+    ctaButton: "Open the calculator",
+    ctaAircraft: "Reference data by aircraft:",
+    otherGuides: "More guides",
+    readGuide: "Read the guide",
+    disclaimer:
+      "Study material. Your aircraft's POH/AFM and weight and balance report are the authoritative references.",
+  },
+
   seo: {
     siteName: "CheckCG",
     ogLocale: "en_US",
+    // Social preview images (src/pages/og/**), rendered at build time.
+    og: {
+      title: "Weight and balance",
+      tagline: "Free center of gravity calculator. Works offline, no sign-up.",
+      envelope: "CG envelope",
+    },
     languageLabel: "Language",
     calculatorTitle: "Interactive calculator",
     loading: "Loading the calculator…",

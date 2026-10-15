@@ -9,6 +9,7 @@ import { pwaInfo } from "virtual:pwa-info"
 import { locales } from "../i18n"
 import { absoluteUrl, ROUTE_LOCALES } from "../utils/routes"
 import { serializeJsonLd } from "../utils/seoContent"
+import { OG_IMAGE_HEIGHT, OG_IMAGE_WIDTH, ogImagePath } from "../utils/ogImage"
 
 interface Props {
   /** Page language (html lang, og:locale). */
@@ -27,6 +28,11 @@ interface Props {
   pinLocale?: boolean
   /** JSON-LD objects rendered as application/ld+json scripts. */
   jsonLd?: unknown[]
+  /**
+   * Site path of the 1200x630 social preview image (src/pages/og/**), e.g.
+   * "/og/es/cessna-152.png". Defaults to the generic image of `lang`.
+   */
+  ogImage?: string
 }
 
 const {
@@ -37,9 +43,10 @@ const {
   alternates = [],
   pinLocale = false,
   jsonLd = [],
+  ogImage = ogImagePath(lang),
 } = Astro.props
 const canonical = absoluteUrl(path)
-const image = absoluteUrl("/pwa-512.png")
+const image = absoluteUrl(ogImage)
 const ogLocale = locales[lang].seo.ogLocale
 const ogAlternates = ROUTE_LOCALES.filter((l) => l !== lang).map((l) => locales[l].seo.ogLocale)
 const siteName = locales[lang].seo.siteName
@@ -76,11 +83,15 @@ const siteName = locales[lang].seo.siteName
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={image} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content={String(OG_IMAGE_WIDTH)} />
+    <meta property="og:image:height" content={String(OG_IMAGE_HEIGHT)} />
+    <meta property="og:image:alt" content={title} />
     <meta property="og:locale" content={ogLocale} />
     {ogAlternates.map((l) => <meta property="og:locale:alternate" content={l} />)}
 
     <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={image} />

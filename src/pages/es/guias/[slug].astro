@@ -1,0 +1,10 @@
+---
+import GuideArticle from "../../../components/guides/GuideArticle.astro"
+import { guideStaticPaths } from "../../../components/guides/collection"
+
+export const getStaticPaths = () => guideStaticPaths("es")
+
+const { entry, titles } = Astro.props
+---
+
+<GuideArticle entry={entry} titles={titles} />

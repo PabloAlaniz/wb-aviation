@@ -19,6 +19,15 @@ describe("Footer", () => {
     expect(screen.getByText(/Hecho por/)).toBeInTheDocument()
   })
 
+  it("links to the guides in the active language", () => {
+    render(<Footer />)
+
+    expect(screen.getByRole("link", { name: "Guías de peso y balance" })).toHaveAttribute(
+      "href",
+      "/es/guias/"
+    )
+  })
+
   it("shows the disclaimer and the app version", () => {
     render(<Footer />)
 

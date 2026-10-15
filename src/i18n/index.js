@@ -65,7 +65,8 @@ export function setLocale(locale, href) {
   else window.location.reload()
 }
 
-const activeLocale = getLocale()
+/** The locale active in this session (resolved once at load time). */
+export const activeLocale = getLocale()
 
 if (typeof document !== "undefined") {
   document.documentElement.lang = activeLocale
