@@ -1,7 +1,8 @@
 import { AlertTriangle, CheckCircle } from "lucide-react"
 import { Badge } from "./Badge"
 import { messages as m } from "../i18n"
-import { armSuffix, armToDisplay, trimNumber, unitSymbols, weightToDisplay } from "../utils/units"
+import { armSuffix, armToDisplay, unitSymbols, weightToDisplay } from "../utils/units"
+import { localizeLandingIssue as issueText } from "../utils/safetyDisplay"
 
 /**
  * Takeoff / landing / zero-fuel table plus the landing verdict.
@@ -60,36 +61,6 @@ export function FlightPhasesPanel({ phases, report, units = "imperial" }) {
       <LandingVerdict report={report} units={units} phases={phases} />
     </div>
   )
-}
-
-/**
- * Re-render weight-based landing messages in the selected units; the report
- * itself is built in lbs by calculations.js.
- * @param {import("../types").SafetyIssue} issue
- * @param {import("../types").UnitSystem} units
- * @param {import("../types").FlightPhasesResult} [phases]
- */
-function issueText(issue, units, phases) {
-  if (units === "imperial") return issue.message
-  const fp = m.flightPhases
-  const kg = (/** @type {number} */ lbs) => trimNumber(weightToDisplay(lbs, units), 0)
-  const unit = unitSymbols(units).weight
-  switch (issue.type) {
-    case "landing-weight":
-      return issue.limit === undefined
-        ? issue.message
-        : fp.overMaxLandingWeight(kg(issue.limit), unit)
-    case "zero-fuel-weight":
-      return issue.limit === undefined
-        ? issue.message
-        : fp.overMaxZeroFuelWeight(kg(issue.limit), unit)
-    case "burn-exceeds-fuel":
-      return phases
-        ? fp.burnExceedsFuel(kg(phases.requestedBurn), kg(phases.fuelLoaded), unit)
-        : issue.message
-    default:
-      return issue.message
-  }
 }
 
 /**
