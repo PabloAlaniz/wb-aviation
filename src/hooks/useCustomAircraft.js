@@ -1,5 +1,6 @@
 import { useMemo } from "react"
 import { useLocalStorage } from "./useLocalStorage"
+import { trackEvent } from "../analytics"
 import {
   CUSTOM_AIRCRAFT_STORAGE_KEY,
   createCustomAircraft,
@@ -20,7 +21,10 @@ import {
  *   records: import("../utils/customAircraft").CustomAircraftRecord[],
  *   customAircraft: Record<string, import("../types").Aircraft>,
  *   options: import("../types").SelectOption[],
- *   save: (input: import("../utils/customAircraft").CustomAircraftInput) => {
+ *   save: (
+ *     input: import("../utils/customAircraft").CustomAircraftInput,
+ *     options?: { track?: boolean },
+ *   ) => {
  *     id: string | null,
  *     errors: import("../utils/customAircraft").CustomAircraftErrors,
  *     aircraft: import("../types").Aircraft | null,
@@ -40,11 +44,17 @@ export function useCustomAircraft() {
   const customAircraft = useMemo(() => hydrateCustomAircraft(records), [records])
   const options = useMemo(() => customAircraftOptions(customAircraft), [customAircraft])
 
-  /** @param {import("../utils/customAircraft").CustomAircraftInput} input */
-  const save = (input) => {
+  /**
+   * @param {import("../utils/customAircraft").CustomAircraftInput} input
+   * @param {{ track?: boolean }} [options] - track: false for records saved by
+   *   a shared/fleet link (those have their own events)
+   */
+  const save = (input, { track = true } = {}) => {
     const errors = validateCustomAircraft(input)
     const record = toCustomAircraftRecord(input)
     if (!record) return { id: null, errors, aircraft: null }
+    const isNew = !records.some((r) => r.registration === record.registration)
+    if (track && isNew) trackEvent("custom_aircraft_created", { baseModelId: record.baseModelId })
     setStored((prev) => upsertCustomAircraftRecord(sanitizeCustomAircraftRecords(prev), record))
     return {
       id: customAircraftId(record.registration),

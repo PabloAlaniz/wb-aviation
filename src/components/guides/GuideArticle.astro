@@ -1,0 +1,191 @@
+---
+/**
+ * One guide page (/{lang}/{guias|guides}/{slug}/): rendered Markdown with
+ * breadcrumb, calculator CTA, FAQ and Article / FAQPage / HowTo /
+ * BreadcrumbList JSON-LD. Used by the per-language pages in src/pages.
+ */
+import { render, type CollectionEntry } from "astro:content"
+import Base from "../../layouts/Base.astro"
+import LanguageNav from "../LanguageNav.astro"
+import GuidesFooter from "./GuidesFooter.astro"
+import "./guide-prose.css"
+import { locales } from "../../i18n"
+import { aircraftData } from "../../data/aircraft"
+import { GUIDES, findGuide } from "../../content/guides/registry"
+import {
+  absoluteUrl,
+  aircraftPath,
+  alternateLinks,
+  guidePath,
+  guidesIndexPath,
+  localePath,
+  type RouteLocale,
+} from "../../utils/routes"
+import {
+  articleJsonLd,
+  breadcrumbJsonLd,
+  faqPageJsonLd,
+  howToJsonLd,
+} from "../../utils/seoContent"
+
+interface Props {
+  entry: CollectionEntry<"guides">
+  /** Titles of every guide in this language, by translationKey. */
+  titles: Record<string, string>
+}
+
+const { entry, titles } = Astro.props
+const { data } = entry
+const lang = data.lang as RouteLocale
+const m = locales[lang]
+const g = m.guides
+const { Content } = await render(entry)
+
+const guide = findGuide(data.translationKey)
+if (!guide) throw new Error(`Guide ${entry.id}: unknown translationKey ${data.translationKey}`)
+const path = guidePath(lang, data.slug)
+const url = absoluteUrl(path)
+const pathFor = (locale: RouteLocale) => guidePath(locale, guide.slugs[locale])
+const faq = (data.faq ?? []).map(({ q, a }) => ({ question: q, answer: a }))
+const updated = new Intl.DateTimeFormat(lang, { dateStyle: "long", timeZone: "UTC" }).format(
+  data.updated
+)
+
+const breadcrumb = [
+  { name: g.breadcrumbHome, path: localePath(lang) },
+  { name: g.navLabel, path: guidesIndexPath(lang) },
+  { name: data.title, path },
+]
+
+const jsonLd = [
+  articleJsonLd({
+    headline: data.title,
+    description: data.description,
+    url,
+    locale: lang,
+    dateModified: data.updated,
+    siteName: m.seo.siteName,
+    siteUrl: absoluteUrl("/"),
+  }),
+  breadcrumbJsonLd(breadcrumb.map(({ name, path }) => ({ name, url: absoluteUrl(path) }))),
+  ...(faq.length > 0 ? [faqPageJsonLd(faq)] : []),
+  ...(data.steps?.length
+    ? [
+        howToJsonLd({
+          name: data.title,
+          description: data.description,
+          url,
+          locale: lang,
+          steps: data.steps,
+        }),
+      ]
+    : []),
+]
+
+const otherGuides = GUIDES.filter((other) => other.key !== guide.key)
+---
+
+<Base
+  lang={lang}
+  title={`${data.title} | ${m.seo.siteName}`}
+  description={data.description}
+  path={path}
+  alternates={alternateLinks(pathFor, pathFor("es"))}
+  pinLocale
+  jsonLd={jsonLd}
+>
+  <div class="mx-auto max-w-3xl space-y-6 px-4 py-4">
+    <LanguageNav current={lang} pathFor={pathFor} label={m.seo.languageLabel} />
+
+    <nav aria-label="Breadcrumb" class="text-sm text-gray-600">
+      <ol class="flex flex-wrap items-center gap-x-2">
+        {
+          breadcrumb.map((crumb, index) => (
+            <li class="flex items-center gap-x-2">
+              {index > 0 && <span aria-hidden="true">›</span>}
+              {index < breadcrumb.length - 1 ? (
+                <a href={crumb.path} class="text-blue-700 hover:underline">
+                  {crumb.name}
+                </a>
+              ) : (
+                <span aria-current="page">{crumb.name}</span>
+              )}
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+
+    <main>
+      <article class="rounded-xl bg-white/80 p-5 shadow-sm sm:p-8">
+        <header class="mb-6 space-y-2">
+          <h1 class="text-3xl font-bold leading-tight text-gray-900">{data.title}</h1>
+          <p class="text-sm text-gray-600">
+            {g.updated} <time datetime={data.updated.toISOString().slice(0, 10)}>{updated}</time> ·
+            Pablo Alaniz
+          </p>
+        </header>
+
+        <div class="guide-prose">
+          <Content />
+        </div>
+
+        {
+          faq.length > 0 && (
+            <section class="mt-8 border-t border-gray-200 pt-6">
+              <h2 class="mb-3 text-xl font-semibold text-gray-900">{g.faqTitle}</h2>
+              <div class="space-y-4">
+                {faq.map(({ question, answer }) => (
+                  <div>
+                    <h3 class="font-semibold text-gray-900">{question}</h3>
+                    <p class="text-gray-800">{answer}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )
+        }
+      </article>
+
+      <aside class="mt-6 rounded-xl border border-blue-200 bg-blue-50 p-5">
+        <h2 class="text-lg font-semibold text-gray-900">{g.ctaTitle}</h2>
+        <p class="mt-1 text-gray-800">{g.ctaText}</p>
+        <a
+          href={localePath(lang)}
+          class="mt-3 inline-block rounded-md bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700"
+        >
+          {g.ctaButton}
+        </a>
+        <p class="mt-4 text-sm text-gray-700">{g.ctaAircraft}</p>
+        <ul class="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+          {
+            Object.entries(aircraftData).map(([id, aircraft]) => (
+              <li>
+                <a href={aircraftPath(lang, id)} class="text-blue-700 hover:underline">
+                  {aircraft.name}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </aside>
+
+      <nav aria-label={g.otherGuides} class="mt-6">
+        <h2 class="mb-2 text-lg font-semibold text-gray-900">{g.otherGuides}</h2>
+        <ul class="list-disc space-y-1 pl-6">
+          {
+            otherGuides.map((other) => (
+              <li>
+                <a href={guidePath(lang, other.slugs[lang])} class="text-blue-700 hover:underline">
+                  {titles[other.key]}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </main>
+
+    <GuidesFooter lang={lang} />
+  </div>
+</Base>

@@ -51,7 +51,9 @@ const DEFAULT_AIRCRAFT = "king-air-echo-90"
  */
 export default function App({ initialAircraft, locale } = {}) {
   const custom = useCustomAircraft()
-  const fleetImport = useFleetImport((records) => records.forEach((record) => custom.save(record)))
+  const fleetImport = useFleetImport((records) =>
+    records.forEach((record) => custom.save(record, { track: false }))
+  )
   const [selectedAircraft, setSelectedAircraft] = useLocalStorage(
     "wb-selected-aircraft",
     DEFAULT_AIRCRAFT,

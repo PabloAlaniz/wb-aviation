@@ -28,6 +28,7 @@ import {
   softwareApplicationJsonLd,
   stationRows,
 } from "../../utils/seoContent"
+import { ogImagePath } from "../../utils/ogImage"
 
 export function getStaticPaths() {
   return ROUTE_LOCALES.flatMap((lang) =>
@@ -85,6 +86,7 @@ const td = "border-b border-gray-200 px-3 py-1.5"
   alternates={alternateLinks(pathFor, aircraftPath("es", id))}
   pinLocale
   jsonLd={jsonLd}
+  ogImage={ogImagePath(lang, id)}
 >
   <header class="mx-auto max-w-4xl space-y-3 px-4 pt-4 print:hidden">
     <LanguageNav current={lang} pathFor={pathFor} label={m.seo.languageLabel} />
