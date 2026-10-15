@@ -1,5 +1,33 @@
-import { describe, it, expect, afterEach } from "vitest"
-import { initAnalytics } from "./analytics"
+import { describe, it, expect, afterEach, vi } from "vitest"
+import { initAnalytics, trackEvent } from "./analytics"
+
+describe("trackEvent", () => {
+  afterEach(() => {
+    delete window.plausible
+  })
+
+  it("no-ops when Plausible is not loaded", () => {
+    expect(() => trackEvent("share_link")).not.toThrow()
+  })
+
+  it("forwards the event and props to Plausible", () => {
+    window.plausible = vi.fn()
+
+    trackEvent("share_link", { method: "clipboard" })
+    trackEvent("other")
+
+    expect(window.plausible).toHaveBeenCalledWith("share_link", { props: { method: "clipboard" } })
+    expect(window.plausible).toHaveBeenCalledWith("other", undefined)
+  })
+
+  it("swallows errors thrown by the analytics script", () => {
+    window.plausible = () => {
+      throw new Error("boom")
+    }
+
+    expect(() => trackEvent("share_link")).not.toThrow()
+  })
+})
 
 afterEach(() => {
   document.head.querySelectorAll("script[data-domain]").forEach((el) => el.remove())

@@ -195,10 +195,122 @@ export const en = {
     },
   },
 
+  share: {
+    button: "Share",
+    buttonLabel: "Share a link to this calculation",
+    copied: "Link copied",
+    copyFailed: "Couldn't copy the link",
+    showQr: "Show QR",
+    hideQr: "Hide QR",
+    qrAlt: "QR code with the link to this calculation",
+    qrFailed: "Couldn't generate the QR code",
+    shareTitle: (/** @type {string} */ aircraftName) => `Weight & balance: ${aircraftName}`,
+    loaded: "Loaded a shared calculation.",
+    conflict:
+      "The link includes an aircraft whose registration you already saved with a different empty weight or arm. It wasn't loaded so your data isn't overwritten.",
+    invalid: "The shared link is invalid or incomplete.",
+    dismiss: "Dismiss notice",
+  },
+
   errorBoundary: {
     title: "Something went wrong",
     description:
       "An unexpected error occurred in the application. You can retry or reload the page. If the problem persists, try clearing the browser's saved data.",
     retry: "Retry",
+  },
+
+  fleet: {
+    shareTitle: "Share fleet (instructors and schools)",
+    shareDescription:
+      "Create a link with your aircraft by registration so your students can import them on their device. Only base model, registration, empty weight and arm are shared.",
+    schoolNameLabel: "School or flying club (optional)",
+    schoolNamePlaceholder: "Flying club ...",
+    shareButton: "Share fleet",
+    shareEmpty: "Save at least one aircraft by registration to share your fleet.",
+    truncated: (/** @type {number} */ max) => `Only the first ${max} aircraft are included.`,
+    copied: "Fleet link copied to the clipboard.",
+    shared: "Fleet link shared.",
+    copyFailed: "Couldn't copy automatically. Copy the link:",
+    linkLabel: "Fleet link",
+    importTitle: "Import fleet",
+    importFrom: (/** @type {string} */ name) => `${name} shared their fleet with you.`,
+    importAnonymous: "Someone shared an aircraft fleet with you.",
+    importListLabel: "Aircraft to import",
+    overwriteNote:
+      "If you already saved any of these registrations, their data will be replaced with the link's.",
+    willOverwrite: "Replaces saved one",
+    verifyNote:
+      "Check empty weight and arm against each aircraft's Weight & Balance Report before flying.",
+    importButton: (/** @type {number} */ count) =>
+      count === 1 ? "Import 1 aircraft" : `Import ${count} aircraft`,
+    dismiss: "Dismiss",
+    imported: (/** @type {number} */ count) =>
+      count === 1 ? "Imported 1 aircraft." : `Imported ${count} aircraft.`,
+    invalidLink: "The fleet link is invalid or damaged.",
+    close: "Close",
+  },
+
+  footer: {
+    madeBy: "Made by",
+    sourceCode: "Source code on GitHub",
+    fleetHint: "Instructor or flight school? Share your fleet",
+    disclaimer:
+      "This is an aid: your aircraft's POH/AFM and Weight & Balance Report are the official reference. Always double-check the results.",
+    version: (/** @type {string} */ version) => `Version ${version}`,
+  },
+
+  loadSheet: {
+    formTitle: "Load sheet (print / PDF)",
+    formDescription:
+      "Fill in the flight details to print the weight and balance sheet or save it as a PDF.",
+    pilot: "Pilot in command",
+    registration: "Aircraft registration",
+    date: "Date",
+    departure: "Departure (ICAO)",
+    destination: "Destination (ICAO)",
+    icaoPlaceholder: "KJFK",
+    remarks: "Remarks",
+    printButton: "Print load sheet / Save PDF",
+    sheetTitle: "Load sheet — Weight and balance",
+    aircraft: "Aircraft",
+    tcds: "TCDS",
+    route: "Route",
+    units: (
+      /** @type {string} */ weight,
+      /** @type {string} */ arm,
+      /** @type {string} */ moment
+    ) => `Units: weight ${weight}, arm ${arm}, moment ${moment}`,
+    stationsTitle: "Load distribution",
+    station: "Station",
+    weight: "Weight",
+    arm: "Arm",
+    moment: "Moment",
+    emptyWeight: "Empty weight (basic)",
+    total: "Takeoff total",
+    phasesTitle: "Flight phases",
+    phase: "Condition",
+    cg: "CG",
+    status: "Envelope",
+    inEnvelope: "WITHIN",
+    outOfEnvelope: "OUT",
+    plannedBurn: "Planned fuel burn",
+    limitsTitle: "Limits",
+    maxTakeoffWeight: "Max takeoff weight",
+    maxLandingWeight: "Max landing weight",
+    maxZeroFuelWeight: "Max zero-fuel weight",
+    cgLimits: "CG limits (fwd / aft)",
+    takeoffOk: "Takeoff within limits",
+    takeoffNotOk: "TAKEOFF OUT OF LIMITS",
+    warningsTitle: "Safety warnings",
+    noWarnings: "No warnings.",
+    envelopeTitle: "CG envelope",
+    dataTitle: "Data reliability and sources",
+    reliability: "Reliability:",
+    pending: "Pending verification:",
+    remarksTitle: "Remarks",
+    signature: "Pilot in command signature",
+    generatedBy: "Generated with W&B Aviation",
+    disclaimer:
+      "Reference tool only. The aircraft's flight manual (POH/AFM) and weight and balance report take precedence over this sheet.",
   },
 }
