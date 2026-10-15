@@ -79,10 +79,12 @@ export const en = {
     passenger4: "Passenger 4",
     rearPassenger1: "Rear passenger 1",
     rearPassenger2: "Rear passenger 2",
+    baggage: "Baggage",
     baggage1: "Baggage 1",
     baggage2: "Baggage 2",
     baggageArea1: "Baggage area 1",
     baggageArea2: "Baggage area 2",
+    baggageExtension: "Baggage extension",
     fuel: "Fuel",
   },
 
