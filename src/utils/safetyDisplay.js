@@ -36,10 +36,9 @@ export function localizeSafetyMessage(item, report, units) {
     case "cg-aft-warning":
       return m.safety.cgNearAft(toMetricArm(report.cgMargins.aft), suffix)
     case "weight-reserve": {
-      // the excess weight (lbs) is only carried inside the message text
-      const match = item.message.match(/-?\d+(?:\.\d+)?/)
-      if (!match) return item.message
-      const kg = trimNumber(weightToDisplay(Number(match[0]), units), 0)
+      const excessLbs = "excessLbs" in item ? item.excessLbs : undefined
+      if (excessLbs === undefined || !Number.isFinite(excessLbs)) return item.message
+      const kg = trimNumber(weightToDisplay(excessLbs, units), 0)
       return m.safety.reduceWeight(kg, unitSymbols(units).weight)
     }
     default:

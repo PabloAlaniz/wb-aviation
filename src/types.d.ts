@@ -150,6 +150,8 @@ export interface SafetyValidation {
 export interface SafetyRecommendation {
   type: string
   message: string
+  /** Weight (lbs) to remove to restore the recommended reserve ("weight-reserve"). */
+  excessLbs?: number
 }
 
 export interface SafetyReport {

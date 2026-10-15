@@ -92,6 +92,7 @@ describe("SafetyAlerts (metric)", () => {
         {
           type: "weight-reserve",
           message: "Considerar reducir peso en 100 lbs para mayor margen de seguridad",
+          excessLbs: 100,
         },
       ],
     }
@@ -99,6 +100,42 @@ describe("SafetyAlerts (metric)", () => {
 
     expect(
       screen.getByText("Considerar reducir peso en 45 kg para mayor margen de seguridad")
+    ).toBeInTheDocument()
+  })
+
+  it("converts the numeric excess, not the number embedded in the message", () => {
+    const report = {
+      ...emptyReport,
+      recommendations: [
+        {
+          // message rounded to 30 lbs; the exact excess drives the kg value
+          type: "weight-reserve",
+          message: "Considerar reducir peso en 30 lbs para mayor margen de seguridad",
+          excessLbs: 31.2,
+        },
+      ],
+    }
+    render(<SafetyAlerts safetyChecks={report} units="metric" />)
+
+    expect(
+      screen.getByText("Considerar reducir peso en 14 kg para mayor margen de seguridad")
+    ).toBeInTheDocument()
+  })
+
+  it("falls back to the original message when no numeric excess is present", () => {
+    const report = {
+      ...emptyReport,
+      recommendations: [
+        {
+          type: "weight-reserve",
+          message: "Considerar reducir peso en 100 lbs para mayor margen de seguridad",
+        },
+      ],
+    }
+    render(<SafetyAlerts safetyChecks={report} units="metric" />)
+
+    expect(
+      screen.getByText("Considerar reducir peso en 100 lbs para mayor margen de seguridad")
     ).toBeInTheDocument()
   })
 
