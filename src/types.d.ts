@@ -70,10 +70,24 @@ export interface CgEnvelope {
 /** UI configuration for one row of the load form. */
 export interface LoadStation {
   key: string
-  label: string
+  /**
+   * i18n key in the `stations` namespace (e.g. "stations.pilot"). Takes
+   * precedence over `label` when it resolves to a message.
+   */
+  labelKey?: string
+  /** Raw, untranslated label: fallback for custom/unknown stations. Should not include units. */
+  label?: string
+  /** Optional maximum load for the station, in lbs (shown in the label). */
+  max?: number
+  /** Placeholder weight in lbs (converted for display). */
   placeholder?: string
   fullWidth?: boolean
+  /** Marks a fuel station (burned in flight; removed for zero-fuel weight). */
+  isFuel?: boolean
 }
+
+/** Display unit system. Calculations always stay in imperial units. */
+export type UnitSystem = "imperial" | "metric"
 
 /**
  * A supported aircraft. `stations` maps a station key to its arm (inches);
@@ -85,6 +99,10 @@ export interface Aircraft {
   emptyWeight: number
   emptyArm: number
   maxWeight: number
+  /** Max landing weight (lbs). Optional: only checked when declared. */
+  maxLandingWeight?: number
+  /** Max zero-fuel weight (lbs). Optional: only checked when declared. */
+  maxZeroFuelWeight?: number
   cgLimits: CgLimits
   stations: Record<string, number | string>
   loadStations: LoadStation[]
@@ -140,4 +158,34 @@ export interface SafetyReport {
   weightPercentage: string
   cgMargins: { forward: string; aft: string }
   dataReliability: DataReliability
+}
+
+/** Weight and CG of the aircraft at one phase of the flight. */
+export interface FlightPhase {
+  totalWeight: number
+  totalMoment: number
+  centerOfGravity: number
+  inEnvelope: boolean
+}
+
+export interface FlightPhasesResult {
+  takeoff: FlightPhase
+  /** Takeoff minus the (clamped) planned fuel burn. */
+  landing: FlightPhase
+  /** Takeoff minus all the loaded fuel. */
+  zeroFuel: FlightPhase
+  /** Total fuel loaded across fuel stations (lbs). */
+  fuelLoaded: number
+  /** Effective burn used for landing, clamped to [0, fuelLoaded] (lbs). */
+  fuelBurn: number
+  /** Burn as requested by the user, before clamping (lbs, >= 0). */
+  requestedBurn: number
+  burnExceedsFuel: boolean
+  hasFuelStation: boolean
+}
+
+export interface LandingReport {
+  isLandingOk: boolean
+  errors: SafetyIssue[]
+  warnings: SafetyIssue[]
 }

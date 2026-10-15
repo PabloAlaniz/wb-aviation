@@ -38,21 +38,26 @@ export const en = {
     cgMargin: "CG margin:",
     weightNearLimit: (/** @type {string|number} */ pct) =>
       `Weight at ${pct}% of the maximum allowed`,
-    cgNearForward: (/** @type {string|number} */ margin) =>
-      `Center of gravity very close to the forward limit (${margin}" margin)`,
-    cgNearAft: (/** @type {string|number} */ margin) =>
-      `Center of gravity very close to the aft limit (${margin}" margin)`,
-    reduceWeight: (/** @type {string|number} */ lbs) =>
-      `Consider reducing weight by ${lbs} lbs for a greater safety margin`,
+    cgNearForward: (/** @type {string|number} */ margin, /** @type {string} */ unit = '"') =>
+      `Center of gravity very close to the forward limit (${margin}${unit} margin)`,
+    cgNearAft: (/** @type {string|number} */ margin, /** @type {string} */ unit = '"') =>
+      `Center of gravity very close to the aft limit (${margin}${unit} margin)`,
+    reduceWeight: (/** @type {string|number} */ value, /** @type {string} */ unit = "lbs") =>
+      `Consider reducing weight by ${value} ${unit} for a greater safety margin`,
     dataPartial: "Partially verified data - confirm with official documentation",
     dataEstimated: "Estimated data - confirm with official documentation",
   },
 
   aircraftInfo: {
-    emptyWeight: (/** @type {string|number} */ lbs) => `Empty weight: ${lbs} lbs`,
-    maxWeight: (/** @type {string|number} */ lbs) => `Max weight: ${lbs} lbs`,
-    cgLimits: (/** @type {string|number} */ forward, /** @type {string|number} */ aft) =>
-      `CG limits: ${forward}" - ${aft}"`,
+    emptyWeight: (/** @type {string|number} */ value, /** @type {string} */ unit = "lbs") =>
+      `Empty weight: ${value} ${unit}`,
+    maxWeight: (/** @type {string|number} */ value, /** @type {string} */ unit = "lbs") =>
+      `Max weight: ${value} ${unit}`,
+    cgLimits: (
+      /** @type {string|number} */ forward,
+      /** @type {string|number} */ aft,
+      /** @type {string} */ unit = '"'
+    ) => `CG limits: ${forward}${unit} - ${aft}${unit}`,
     production: "Production:",
     productionDetail: (/** @type {string|number} */ years, /** @type {string|number} */ total) =>
       `${years} (${total} built)`,
@@ -62,6 +67,43 @@ export const en = {
     reliabilityVerified: "Verified",
     reliabilityPartial: "Partial",
     reliabilityEstimated: "Estimated",
+  },
+
+  stations: {
+    pilot: "Pilot",
+    copilot: "Copilot",
+    frontPassenger: "Front passenger",
+    passenger1: "Passenger 1",
+    passenger2: "Passenger 2",
+    passenger3: "Passenger 3",
+    passenger4: "Passenger 4",
+    rearPassenger1: "Rear passenger 1",
+    rearPassenger2: "Rear passenger 2",
+    baggage1: "Baggage 1",
+    baggage2: "Baggage 2",
+    baggageArea1: "Baggage area 1",
+    baggageArea2: "Baggage area 2",
+    fuel: "Fuel",
+  },
+
+  units: {
+    label: "Units",
+    imperial: "Imperial (lbs, in, gal)",
+    metric: "Metric (kg, mm, L)",
+    stationLabel: (/** @type {string} */ label, /** @type {string} */ unit) => `${label} (${unit})`,
+    stationLabelMax: (
+      /** @type {string} */ label,
+      /** @type {string} */ unit,
+      /** @type {string|number} */ max
+    ) => `${label} (${unit}, max ${max})`,
+    fuelInputMode: "Enter fuel by",
+    byWeight: "Weight",
+    byVolume: "Volume",
+    fuelEquivalent: (/** @type {string} */ value) => `Equivalent to ${value}`,
+    fuelDensityNote: (/** @type {string} */ density) => `AVGAS density: ${density}`,
+    millimeters: "millimeters",
+    kilograms: "kilograms",
+    axisNoteMetric: "C.G. Arm - mm aft of Datum STA 0.0",
   },
 
   dataSources: {
@@ -80,12 +122,77 @@ export const en = {
     title: (/** @type {string} */ tcds) => `CG Envelope — ${tcds}`,
     axisNote: "C.G. Arm - Inches aft of Datum STA 0.0",
     tooltipTitle: "Point Information",
-    tooltipCg: (/** @type {string|number} */ value) => `CG: ${value}" Arm`,
-    tooltipWeight: (/** @type {string|number} */ value) => `Weight: ${value} lbs`,
+    tooltipCg: (/** @type {string|number} */ value, /** @type {string} */ unit = '"') =>
+      `CG: ${value}${unit} Arm`,
+    tooltipWeight: (/** @type {string|number} */ value, /** @type {string} */ unit = "lbs") =>
+      `Weight: ${value} ${unit}`,
     envelopeLimit: "Envelope Limit",
     operatingPoint: "Operating Point",
     xUnit: "inches",
     yUnit: "pounds",
+  },
+
+  flightPhases: {
+    title: "Landing and zero-fuel weight",
+    fuelBurnLabel: "Planned fuel burn",
+    fuelBurnPlaceholder: "800",
+    fuelLoaded: (/** @type {string|number} */ value, unit = "lbs") =>
+      `Fuel loaded: ${value} ${unit}`,
+    noFuelStation: "This aircraft has no fuel station defined",
+    phase: "Phase",
+    weight: "Weight",
+    cg: "CG",
+    status: "Status",
+    takeoff: "Takeoff",
+    landing: "Landing",
+    zeroFuel: "Zero fuel (ZFW)",
+    inEnvelope: "OK",
+    outOfEnvelope: "OUT",
+    readyForLanding: "✅ LANDING WITHIN LIMITS",
+    landingOkDetail: "Landing weight and balance within limits",
+    notFitForLanding: "⚠️ LANDING OUT OF LIMITS",
+    overMaxLandingWeight: (/** @type {string|number} */ value, unit = "lbs") =>
+      `Landing weight exceeds the maximum (${value} ${unit})`,
+    overMaxZeroFuelWeight: (/** @type {string|number} */ value, unit = "lbs") =>
+      `Zero-fuel weight exceeds the maximum (${value} ${unit})`,
+    landingOutOfEnvelope: "Landing center of gravity outside the envelope",
+    zeroFuelOutOfEnvelope: "Zero-fuel center of gravity outside the envelope",
+    burnExceedsFuel: (
+      /** @type {string|number} */ burn,
+      /** @type {string|number} */ loaded,
+      unit = "lbs"
+    ) => `Planned burn (${burn} ${unit}) exceeds the fuel loaded (${loaded} ${unit})`,
+    chartLanding: "Landing",
+    chartZeroFuel: "Zero fuel",
+    chartBurnPath: "Fuel burn",
+  },
+
+  customAircraft: {
+    title: "My aircraft (by registration)",
+    description:
+      "Enter the empty weight and arm from your aircraft's Weight & Balance Report. The envelope, stations and limits come from the base model.",
+    baseModelLabel: "Base model",
+    registrationLabel: "Registration",
+    registrationPlaceholder: "N12345",
+    emptyWeightLabel: "Empty weight",
+    emptyArmLabel: "Empty weight arm",
+    save: "Save aircraft",
+    empty: "You haven't saved any aircraft yet.",
+    listLabel: "Saved aircraft",
+    recordDetail: (/** @type {string} */ weight, /** @type {string} */ arm) => `${weight} @ ${arm}`,
+    remove: (/** @type {string} */ registration) => `Delete ${registration}`,
+    sourceDocument: "Aircraft Weight & Balance Report (user-entered data)",
+    specificWarning:
+      "Empty weight and arm entered by the user from this aircraft's Weight & Balance Report. Envelope, stations and limits come from the base model: verify them against your aircraft's POH.",
+    errors: {
+      registrationRequired: "Enter the registration.",
+      registrationInvalid:
+        "Invalid registration (letters, digits and dashes only, 2 to 10 characters).",
+      baseModelUnknown: "Select a base model.",
+      emptyWeightInvalid: "Enter an empty weight greater than 0.",
+      emptyWeightAboveMax: "Empty weight must be lower than the model's maximum weight.",
+      emptyArmInvalid: "Enter an arm greater than 0.",
+    },
   },
 
   errorBoundary: {
