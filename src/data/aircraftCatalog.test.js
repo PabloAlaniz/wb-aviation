@@ -120,10 +120,9 @@ describe("Cessna 152 (TCDS 3A19 / POH 152)", () => {
     expect(result.totalWeight).toBe(1670)
     expect(result.centerOfGravity).toBeCloseTo(33.89, 1)
     expect(result.isWeightOk).toBe(true)
-    // The POH loading sits exactly on the 1670 lbs top edge, which the current
-    // ray-casting in isPointInEnvelope treats as outside (conservative). Check the
-    // CG position against the envelope just below the edge instead.
-    expect(isPointInEnvelope(result.centerOfGravity, 1669.9, c152.cgEnvelope.points)).toBe(true)
+    // The POH loading sits exactly on the 1670 lbs top edge: a limit loading is legal
+    expect(result.isCgOk).toBe(true)
+    expect(isPointInEnvelope(result.centerOfGravity, 1670, c152.cgEnvelope.points)).toBe(true)
   })
 
   it("forward limit varies with weight (31.0 at 1350 lbs, 32.65 at 1670 lbs)", () => {
@@ -193,8 +192,8 @@ describe("Piper PA-38-112 Tomahawk (TCDS A18SO / POH VB-2126)", () => {
     expect(result.totalWeight).toBe(1670)
     expect(result.centerOfGravity).toBeCloseTo(78.3, 1)
     expect(result.isWeightOk).toBe(true)
-    // on the 1670 lbs top edge (see the Cessna 152 note): check just below it
-    expect(isPointInEnvelope(result.centerOfGravity, 1669.9, tomahawk.cgEnvelope.points)).toBe(true)
+    // exactly on the 1670 lbs top edge (see the Cessna 152 note)
+    expect(result.isCgOk).toBe(true)
   })
 
   it("forward limit varies with weight (72.4 at 1277 lbs, 73.5 at 1670 lbs)", () => {
