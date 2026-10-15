@@ -10,7 +10,7 @@
  */
 
 /** Production origin (no trailing slash). Keep in sync with astro.config.mjs `site`. */
-export const SITE_URL = "https://wb-aviation.pages.dev"
+export const SITE_URL = "https://checkcg.com"
 
 /** Route locales, default first. Must match the i18n catalogs in src/i18n. */
 export const ROUTE_LOCALES = /** @type {const} */ (["es", "en", "pt"])

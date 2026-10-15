@@ -191,11 +191,11 @@ describe("decodeFleet with malicious or malformed input", () => {
 describe("URL helpers", () => {
   it("builds a fleet URL on top of the base URL, dropping query and hash", () => {
     const url = /** @type {string} */ (
-      buildFleetUrl([c172], "Club", "https://wb-aviation.pages.dev/app/?ref=abc#x")
+      buildFleetUrl([c172], "Club", "https://checkcg.com/app/?ref=abc#x")
     )
     const parsed = new URL(url)
 
-    expect(parsed.origin + parsed.pathname).toBe("https://wb-aviation.pages.dev/app/")
+    expect(parsed.origin + parsed.pathname).toBe("https://checkcg.com/app/")
     expect([...parsed.searchParams.keys()]).toEqual([FLEET_PARAM])
     expect(parsed.hash).toBe("")
     expect(decodeFleet(readFleetParam(parsed.search))?.records).toEqual([c172])

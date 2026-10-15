@@ -313,7 +313,7 @@ export const es = {
     pending: "Pendiente de verificación:",
     remarksTitle: "Observaciones",
     signature: "Firma del piloto al mando",
-    generatedBy: "Generado con W&B Aviation",
+    generatedBy: "Generado con CheckCG",
     disclaimer:
       "Herramienta de referencia. El manual de vuelo (POH/AFM) y el informe de peso y balance de la aeronave prevalecen sobre esta hoja.",
   },
@@ -321,7 +321,7 @@ export const es = {
   // Contenido estático de las páginas indexables (Astro). Solo datos: lo
   // renderizan src/pages/**/*.astro, no componentes React.
   seo: {
-    siteName: "W&B Aviation",
+    siteName: "CheckCG",
     ogLocale: "es_ES",
     languageLabel: "Idioma",
     calculatorTitle: "Calculadora interactiva",
@@ -331,20 +331,19 @@ export const es = {
     appDescription:
       "Calculadora gratuita de peso y balance (Weight & Balance) de aeronaves: centro de gravedad, envolvente de CG y hoja de carga. Funciona offline y sin registro.",
     home: {
-      title: "Calculadora de peso y balance de aeronaves | W&B Aviation",
+      title: "Calculadora de peso y balance de aeronaves | CheckCG",
       description:
         "Calculá peso y balance (Weight & Balance) y centro de gravedad de tu aeronave con datos del TCDS y el POH. Gratis, offline y sin registro.",
       h1: "Calculadora de peso y balance de aeronaves",
       intro1:
         "El peso y balance (Weight & Balance) verifica antes de cada vuelo que la aeronave no supere su peso máximo y que su centro de gravedad (CG) quede dentro de la envolvente aprobada. Un CG fuera de límites afecta la estabilidad y el control, aunque el peso total sea correcto.",
       intro2:
-        "W&B Aviation suma el peso vacío y cada estación de carga (tripulación, pasajeros, equipaje y combustible), calcula el momento y el CG resultantes y los compara con la envolvente del fabricante, también para el aterrizaje y el peso sin combustible. Funciona en el navegador, sin registro y sin conexión.",
+        "CheckCG suma el peso vacío y cada estación de carga (tripulación, pasajeros, equipaje y combustible), calcula el momento y el CG resultantes y los compara con la envolvente del fabricante, también para el aterrizaje y el peso sin combustible. Funciona en el navegador, sin registro y sin conexión.",
       aircraftListTitle: "Aeronaves disponibles",
       aircraftLink: (/** @type {string} */ name) => `Peso y balance ${name}`,
     },
     aircraft: {
-      title: (/** @type {string} */ name) =>
-        `Peso y balance ${name}: calculadora de CG | W&B Aviation`,
+      title: (/** @type {string} */ name) => `Peso y balance ${name}: calculadora de CG | CheckCG`,
       description: (/** @type {string} */ name, /** @type {string} */ maxWeight) =>
         `Calculadora de peso y balance del ${name}: peso máximo ${maxWeight}, brazos de las estaciones, límites y envolvente de CG. Gratis y offline.`,
       h1: (/** @type {string} */ name) => `Peso y balance ${name}`,
