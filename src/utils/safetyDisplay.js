@@ -46,3 +46,34 @@ export function localizeSafetyMessage(item, report, units) {
       return item.message
   }
 }
+
+/**
+ * Re-render weight-based landing messages in the selected units; the report
+ * itself is built in lbs by calculations.js.
+ * @param {import("../types").SafetyIssue} issue
+ * @param {import("../types").UnitSystem} units
+ * @param {import("../types").FlightPhasesResult} [phases]
+ * @returns {string}
+ */
+export function localizeLandingIssue(issue, units, phases) {
+  if (units === "imperial") return issue.message
+  const fp = m.flightPhases
+  const kg = (/** @type {number} */ lbs) => trimNumber(weightToDisplay(lbs, units), 0)
+  const unit = unitSymbols(units).weight
+  switch (issue.type) {
+    case "landing-weight":
+      return issue.limit === undefined
+        ? issue.message
+        : fp.overMaxLandingWeight(kg(issue.limit), unit)
+    case "zero-fuel-weight":
+      return issue.limit === undefined
+        ? issue.message
+        : fp.overMaxZeroFuelWeight(kg(issue.limit), unit)
+    case "burn-exceeds-fuel":
+      return phases
+        ? fp.burnExceedsFuel(kg(phases.requestedBurn), kg(phases.fuelLoaded), unit)
+        : issue.message
+    default:
+      return issue.message
+  }
+}

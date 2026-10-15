@@ -12,6 +12,13 @@ import { FuelBurnInput } from "./components/FuelBurnInput"
 import { FlightPhasesPanel } from "./components/FlightPhasesPanel"
 import { CustomAircraftManager } from "./components/CustomAircraftManager"
 import { UnitToggle } from "./components/UnitToggle"
+import { ShareButton } from "./components/ShareButton"
+import { SharedCalculationNotice } from "./components/SharedCalculationNotice"
+import { FleetShare } from "./components/FleetShare"
+import { FleetImportDialog } from "./components/FleetImportDialog"
+import { Footer } from "./components/Footer"
+import { useFleetImport } from "./hooks/useFleetImport"
+import { LoadSheetPanel } from "./components/LoadSheetPanel"
 import { Plane, Calculator, RotateCcw } from "lucide-react"
 import { aircraftData, aircraftOptions, emptyWeightsFor } from "./data/aircraft"
 import {
@@ -24,12 +31,15 @@ import { useLocalStorage } from "./hooks/useLocalStorage"
 import { useCustomAircraft } from "./hooks/useCustomAircraft"
 import { isCustomAircraftId } from "./utils/customAircraft"
 import { useUnits } from "./hooks/useUnits"
+import { useSharedCalculation } from "./hooks/useSharedCalculation"
+import { buildShareUrl } from "./utils/shareLink"
 import { messages as m, getLocale, setLocale, localeOptions } from "./i18n"
 
 const DEFAULT_AIRCRAFT = "king-air-echo-90"
 
 export default function App() {
   const custom = useCustomAircraft()
+  const fleetImport = useFleetImport((records) => records.forEach((record) => custom.save(record)))
   const [selectedAircraft, setSelectedAircraft] = useLocalStorage(
     "wb-selected-aircraft",
     DEFAULT_AIRCRAFT,
@@ -48,6 +58,15 @@ export default function App() {
     "",
     (value) => typeof value === "string"
   )
+
+  const shared = useSharedCalculation({
+    records: custom.records,
+    saveCustomAircraft: custom.save,
+    setSelectedAircraft,
+    setWeights,
+    setFuelBurn,
+    setUnits,
+  })
 
   /** @param {string} id */
   const findAircraft = (id) =>
@@ -72,7 +91,7 @@ export default function App() {
   const landingReport = phases ? buildLandingReport(aircraft, phases) : null
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 print:hidden">
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="flex justify-end gap-2">
           <UnitToggle units={units} onUnitsChange={setUnits} />
@@ -86,6 +105,8 @@ export default function App() {
           </div>
         </div>
 
+        <SharedCalculationNotice status={shared.status} onDismiss={shared.dismiss} />
+
         <div className="text-center space-y-2">
           <div className="flex items-center justify-center gap-2">
             <Plane className="h-8 w-8 text-blue-600" />
@@ -93,6 +114,14 @@ export default function App() {
           </div>
           <p className="text-gray-600">{m.app.subtitle(aircraft.tcds)}</p>
         </div>
+
+        <FleetImportDialog
+          state={fleetImport}
+          existingRegistrations={custom.records.map((r) => r.registration)}
+          units={units}
+          onImport={fleetImport.accept}
+          onDismiss={fleetImport.dismiss}
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card>
@@ -129,6 +158,8 @@ export default function App() {
                 }}
               />
 
+              <FleetShare records={custom.records} />
+
               <Separator />
 
               <StationForm
@@ -159,7 +190,19 @@ export default function App() {
 
           <Card>
             <CardHeader>
-              <CardTitle>{m.app.resultsCardTitle}</CardTitle>
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <CardTitle>{m.app.resultsCardTitle}</CardTitle>
+                <ShareButton
+                  title={m.share.shareTitle(aircraft.name)}
+                  url={buildShareUrl(window.location.href, {
+                    aircraftId: selectedAircraft,
+                    weights,
+                    fuelBurn,
+                    units,
+                    customRecords: custom.records,
+                  })}
+                />
+              </div>
               <CardDescription>{m.app.resultsCardDescription}</CardDescription>
             </CardHeader>
             <CardContent>
@@ -207,12 +250,24 @@ export default function App() {
                     <p className="text-xs text-gray-500 text-center">{m.app.envelopeCaption}</p>
                   </div>
 
+                  <LoadSheetPanel
+                    aircraft={aircraft}
+                    weights={weights}
+                    results={results}
+                    safetyChecks={safetyChecks}
+                    phases={phases}
+                    landingReport={landingReport}
+                    units={units}
+                  />
+
                   <DataSources aircraft={aircraft} />
                 </div>
               ) : null}
             </CardContent>
           </Card>
         </div>
+
+        <Footer />
       </div>
     </div>
   )

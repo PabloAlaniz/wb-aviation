@@ -195,10 +195,123 @@ export const pt = {
     },
   },
 
+  share: {
+    button: "Compartilhar",
+    buttonLabel: "Compartilhar um link para este cálculo",
+    copied: "Link copiado",
+    copyFailed: "Não foi possível copiar o link",
+    showQr: "Mostrar QR",
+    hideQr: "Ocultar QR",
+    qrAlt: "Código QR com o link para este cálculo",
+    qrFailed: "Não foi possível gerar o código QR",
+    shareTitle: (/** @type {string} */ aircraftName) => `Peso e balanceamento: ${aircraftName}`,
+    loaded: "Um cálculo compartilhado foi carregado.",
+    conflict:
+      "O link traz uma aeronave cuja matrícula você já salvou com outro peso vazio ou braço. Ele não foi carregado para não sobrescrever seus dados.",
+    invalid: "O link compartilhado é inválido ou está incompleto.",
+    dismiss: "Fechar aviso",
+  },
+
   errorBoundary: {
     title: "Algo deu errado",
     description:
       "Ocorreu um erro inesperado no aplicativo. Você pode tentar novamente ou recarregar a página. Se o problema persistir, tente limpar os dados salvos do navegador.",
     retry: "Tentar novamente",
+  },
+
+  fleet: {
+    shareTitle: "Compartilhar frota (instrutores e escolas)",
+    shareDescription:
+      "Gere um link com suas aeronaves por matrícula para que seus alunos as importem no dispositivo deles. Apenas modelo base, matrícula, peso vazio e braço são compartilhados.",
+    schoolNameLabel: "Escola ou aeroclube (opcional)",
+    schoolNamePlaceholder: "Aeroclube ...",
+    shareButton: "Compartilhar frota",
+    shareEmpty: "Salve pelo menos uma aeronave por matrícula para compartilhar sua frota.",
+    truncated: (/** @type {number} */ max) =>
+      `Somente as primeiras ${max} aeronaves são incluídas.`,
+    copied: "Link da frota copiado para a área de transferência.",
+    shared: "Link da frota compartilhado.",
+    copyFailed: "Não foi possível copiar automaticamente. Copie o link:",
+    linkLabel: "Link da frota",
+    importTitle: "Importar frota",
+    importFrom: (/** @type {string} */ name) => `${name} compartilhou a frota com você.`,
+    importAnonymous: "Compartilharam uma frota de aeronaves com você.",
+    importListLabel: "Aeronaves a importar",
+    overwriteNote:
+      "Se você já salvou alguma dessas matrículas, os dados dela serão substituídos pelos do link.",
+    willOverwrite: "Substitui a salva",
+    verifyNote:
+      "Confira peso vazio e braço com o Weight & Balance Report de cada aeronave antes de voar.",
+    importButton: (/** @type {number} */ count) =>
+      count === 1 ? "Importar 1 aeronave" : `Importar ${count} aeronaves`,
+    dismiss: "Descartar",
+    imported: (/** @type {number} */ count) =>
+      count === 1 ? "1 aeronave importada." : `${count} aeronaves importadas.`,
+    invalidLink: "O link da frota é inválido ou está corrompido.",
+    close: "Fechar",
+  },
+
+  footer: {
+    madeBy: "Feito por",
+    sourceCode: "Código-fonte no GitHub",
+    fleetHint: "É instrutor ou escola? Compartilhe sua frota",
+    disclaimer:
+      "Ferramenta de apoio: o POH/AFM e o Weight & Balance Report da sua aeronave são a referência oficial. Sempre confira os resultados.",
+    version: (/** @type {string} */ version) => `Versão ${version}`,
+  },
+
+  loadSheet: {
+    formTitle: "Folha de carga (imprimir / PDF)",
+    formDescription:
+      "Preencha os dados do voo para imprimir a folha de peso e balanceamento ou salvá-la como PDF.",
+    pilot: "Piloto em comando",
+    registration: "Matrícula da aeronave",
+    date: "Data",
+    departure: "Origem (ICAO)",
+    destination: "Destino (ICAO)",
+    icaoPlaceholder: "SBSP",
+    remarks: "Observações",
+    printButton: "Imprimir folha de carga / Salvar PDF",
+    sheetTitle: "Folha de carga — Peso e balanceamento",
+    aircraft: "Aeronave",
+    tcds: "TCDS",
+    route: "Rota",
+    units: (
+      /** @type {string} */ weight,
+      /** @type {string} */ arm,
+      /** @type {string} */ moment
+    ) => `Unidades: peso ${weight}, braço ${arm}, momento ${moment}`,
+    stationsTitle: "Distribuição da carga",
+    station: "Estação",
+    weight: "Peso",
+    arm: "Braço",
+    moment: "Momento",
+    emptyWeight: "Peso vazio (básico)",
+    total: "Total na decolagem",
+    phasesTitle: "Fases do voo",
+    phase: "Condição",
+    cg: "CG",
+    status: "Envelope",
+    inEnvelope: "DENTRO",
+    outOfEnvelope: "FORA",
+    plannedBurn: "Consumo previsto",
+    limitsTitle: "Limites",
+    maxTakeoffWeight: "Peso máximo de decolagem",
+    maxLandingWeight: "Peso máximo de pouso",
+    maxZeroFuelWeight: "Peso máximo sem combustível",
+    cgLimits: "Limites de CG (diant. / tras.)",
+    takeoffOk: "Decolagem dentro dos limites",
+    takeoffNotOk: "DECOLAGEM FORA DOS LIMITES",
+    warningsTitle: "Alertas de segurança",
+    noWarnings: "Sem alertas.",
+    envelopeTitle: "Envelope de CG",
+    dataTitle: "Confiabilidade dos dados e fontes",
+    reliability: "Confiabilidade:",
+    pending: "Pendente de verificação:",
+    remarksTitle: "Observações",
+    signature: "Assinatura do piloto em comando",
+    generatedBy: "Gerado com W&B Aviation",
+    disclaimer:
+      "Ferramenta de referência. O manual de voo (POH/AFM) e o relatório de peso e balanceamento da aeronave prevalecem sobre esta folha.",
   },
 }

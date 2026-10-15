@@ -22,3 +22,21 @@ export function initAnalytics(domain, src = "https://plausible.io/js/script.js")
   document.head.appendChild(script)
   return true
 }
+
+/**
+ * Send a custom event to Plausible. No-ops when the script is not loaded
+ * (analytics disabled, blocked or still loading), so callers never need to
+ * guard it.
+ * @param {string} name - Event name (e.g. "share_link")
+ * @param {Record<string, string | number | boolean>} [props] - Custom properties
+ */
+export function trackEvent(name, props) {
+  if (typeof window === "undefined") return
+  const plausible = /** @type {any} */ (window).plausible
+  if (typeof plausible !== "function") return
+  try {
+    plausible(name, props ? { props } : undefined)
+  } catch {
+    // analytics must never break the app
+  }
+}
