@@ -45,7 +45,8 @@ export interface AircraftSpecific {
 export interface AircraftMetadata {
   manufacturer: string
   productionYears: string
-  totalProduced: number
+  /** Units built; a short string (e.g. "s/d") when no reliable public count exists. */
+  totalProduced: number | string
   engines: string
   dataReliability: DataReliability
   sourceDocuments: string[]
@@ -150,6 +151,8 @@ export interface SafetyValidation {
 export interface SafetyRecommendation {
   type: string
   message: string
+  /** Weight (lbs) to remove to restore the recommended reserve ("weight-reserve"). */
+  excessLbs?: number
 }
 
 export interface SafetyReport {

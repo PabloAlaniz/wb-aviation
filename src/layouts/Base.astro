@@ -1,0 +1,112 @@
+---
+/**
+ * Base document: SEO head (title, description, canonical, hreflang, OG /
+ * Twitter, JSON-LD), PWA manifest + service worker, analytics and the page
+ * locale pin for the React island.
+ */
+import "../index.css"
+import { pwaInfo } from "virtual:pwa-info"
+import { locales } from "../i18n"
+import { absoluteUrl, ROUTE_LOCALES } from "../utils/routes"
+import { serializeJsonLd } from "../utils/seoContent"
+
+interface Props {
+  /** Page language (html lang, og:locale). */
+  lang: "es" | "en" | "pt"
+  title: string
+  description: string
+  /** Path of this page, e.g. "/en/cessna-172s/" (canonical + og:url). */
+  path: string
+  /** hreflang alternates (absolute URLs), including x-default. */
+  alternates?: { hreflang: string; href: string }[]
+  /**
+   * Persist `lang` as the UI language before the island loads, so the app
+   * renders in the page's language. Off for the root page, which keeps the
+   * visitor's own preference (shared links).
+   */
+  pinLocale?: boolean
+  /** JSON-LD objects rendered as application/ld+json scripts. */
+  jsonLd?: unknown[]
+}
+
+const {
+  lang,
+  title,
+  description,
+  path,
+  alternates = [],
+  pinLocale = false,
+  jsonLd = [],
+} = Astro.props
+const canonical = absoluteUrl(path)
+const image = absoluteUrl("/pwa-512.png")
+const ogLocale = locales[lang].seo.ogLocale
+const ogAlternates = ROUTE_LOCALES.filter((l) => l !== lang).map((l) => locales[l].seo.ogLocale)
+const siteName = locales[lang].seo.siteName
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    {
+      pinLocale && (
+        <script is:inline define:vars={{ pinnedLocale: lang }}>
+          try {
+            localStorage.setItem("wb-locale", pinnedLocale)
+          } catch (e) {}
+        </script>
+      )
+    }
+    <slot name="head-start" />
+    <link rel="icon" type="image/png" href="/pwa-192.png" />
+    <link rel="apple-touch-icon" href="/pwa-192.png" />
+    <meta name="theme-color" content="#2563eb" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content="Pablo Alaniz" />
+    <link rel="canonical" href={canonical} />
+    {alternates.map((alt) => <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />)}
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta property="og:locale" content={ogLocale} />
+    {ogAlternates.map((l) => <meta property="og:locale:alternate" content={l} />)}
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+
+    {pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
+    {
+      jsonLd.map((data) => (
+        <script is:inline type="application/ld+json" set:html={serializeJsonLd(data)} />
+      ))
+    }
+    <slot name="head" />
+  </head>
+  <body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 text-gray-900">
+    <slot />
+    <script>
+      import { registerSW } from "virtual:pwa-register"
+      import { initAnalytics } from "../analytics"
+
+      // registerType "autoUpdate": activate new service workers right away.
+      registerSW({ immediate: true })
+
+      // Opt-in, cookieless analytics. No-ops unless a Plausible domain is set
+      // at build time (PUBLIC_PLAUSIBLE_DOMAIN, or legacy VITE_PLAUSIBLE_DOMAIN).
+      initAnalytics(
+        import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN || import.meta.env.VITE_PLAUSIBLE_DOMAIN
+      )
+    </script>
+  </body>
+</html>

@@ -5,7 +5,9 @@ import {
   calculateCG,
   calculateWeightBalance,
   validateSafetyConditions,
+  buildSafetyReport,
 } from "./calculations"
+import { aircraftData } from "../data/aircraft"
 
 // Sample aircraft data for testing (King Air E90)
 const sampleAircraft = {
@@ -90,6 +92,15 @@ describe("isPointInEnvelope", () => {
 
   it("should return false for point outside envelope (too heavy)", () => {
     expect(isPointInEnvelope(155, 12000, envelope)).toBe(false)
+  })
+
+  it("treats points on the envelope edge as inside (limit loadings are legal)", () => {
+    const top = Math.max(...envelope.map((p) => p.weight))
+    const onTop = envelope.filter((p) => p.weight === top).map((p) => p.arm)
+    const midArm = (Math.min(...onTop) + Math.max(...onTop)) / 2
+    expect(isPointInEnvelope(midArm, top, envelope)).toBe(true)
+    expect(isPointInEnvelope(envelope[0].arm, envelope[0].weight, envelope)).toBe(true)
+    expect(isPointInEnvelope(midArm, top + 0.01, envelope)).toBe(false)
   })
 
   it("should return false for point outside envelope (too light)", () => {
@@ -246,5 +257,26 @@ describe("validateSafetyConditions", () => {
 
     expect(result.isValid).toBe(true)
     expect(result.warnings.some((w) => w.type === "cg")).toBe(true)
+  })
+})
+
+describe("buildSafetyReport weight reserve", () => {
+  const c172 = aircraftData["cessna-172s"]
+
+  it("carries the numeric excess (lbs) next to the imperial message", () => {
+    // max 2550 lbs, recommended reserve 50 lbs -> threshold 2500 lbs
+    const report = buildSafetyReport(c172, 2530.4, 42)
+    const reserve = report.recommendations.find((r) => r.type === "weight-reserve")
+
+    expect(reserve?.excessLbs).toBeCloseTo(30.4, 6)
+    expect(reserve?.message).toBe(
+      "Considerar reducir peso en 30 lbs para mayor margen de seguridad"
+    )
+  })
+
+  it("omits the recommendation below the reserve threshold", () => {
+    const report = buildSafetyReport(c172, 2400, 42)
+
+    expect(report.recommendations.some((r) => r.type === "weight-reserve")).toBe(false)
   })
 })

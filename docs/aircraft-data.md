@@ -102,6 +102,33 @@ Las estaciones de combustible se identifican con `isFuel: true` en `loadStations
 6. Agregar tests en `src/utils/` que validen un cálculo de ejemplo del POH contra el resultado de `calculateWeightBalance` (ver `calculations.test.js`).
 7. Probar en la UI: formulario, alertas y envolvente (`npm run dev`).
 
+## Catálogo actual
+
+| Clave                      | Aeronave                       | TCDS                   | Confiabilidad     |
+| -------------------------- | ------------------------------ | ---------------------- | ----------------- |
+| `king-air-echo-90`         | King Air Echo 90               | FAA 3A20               | verified-complete |
+| `cessna-172s`              | Cessna 172S                    | FAA 3A12               | estimated         |
+| `cessna-152`               | Cessna 152                     | FAA 3A19 Rev. 50       | estimated         |
+| `piper-pa-28-161-warrior`  | Piper PA-28-161 Warrior II/III | FAA 2A13 Rev. 48       | verified-partial  |
+| `piper-pa-38-112-tomahawk` | Piper PA-38-112 Tomahawk       | FAA A18SO Rev. 5       | verified-partial  |
+| `tecnam-p2008-jc`          | Tecnam P2008 JC (630 kg)       | EASA.A.583 Issue 14    | estimated         |
+| `tecnam-p2002-jf`          | Tecnam P2002 JF (580 kg)       | EASA.A.006 Issue 13    | estimated         |
+| `diamond-da20-c1`          | Diamond DA20-C1 (750 kg)       | EASA.IM.A.223 Issue 06 | estimated         |
+| `diamond-da40-180`         | Diamond DA40 IO-360 (1150 kg)  | EASA.IM.A.022 Issue 24 | estimated         |
+
+Criterios usados en el catálogo:
+
+- `verified-partial` solo cuando pesos, envolvente **y** brazos de estaciones coinciden entre el TCDS y el POH/AFM. Si algún brazo sale de una sola fuente, `estimated`.
+- El peso vacío y su brazo son siempre los del ejemplo del POH/AFM (o un ejemplo publicado) y se avisa en `aircraftSpecific.warning`.
+- Cada entrada modela **una** configuración (p. ej. MTOW básico, tanques estándar); las demás se listan en `pendingVerification`.
+- Si el límite de CG vale "para todos los pesos", el borde inferior de la envolvente es un piso de graficación (se indica en un comentario), no un límite.
+- Fuentes métricas (Tecnam, Diamond): 1 kg = 2.20462 lbs, 1 m = 39.3701 in; los límites de CG se redondean a 0.01" hacia adentro del rango. Los valores originales y la conversión quedan en comentarios.
+- `totalProduced` admite un texto corto (`"s/d"`) cuando no hay un dato público confiable.
+
+Aero Boero AB-115/AB-180: no se cargaron. El AB-115 tiene límites en la especificación de tipo brasileña EA-8905 (ANAC Brasil), pero no se encontró manual de vuelo ni ejemplo de peso vacío/brazo; del AB-180 solo hay una transcripción no oficial del manual con un MTOW que difiere de otras fuentes.
+
+> Nota: `isPointInEnvelope` (ray casting) considera fuera de la envolvente un punto exactamente sobre el borde superior (peso = máximo). Los tests de ejemplos del POH que cargan justo al peso máximo verifican el CG apenas por debajo de ese borde.
+
 ## Dónde se usa cada campo
 
 | Campo                                   | Consumidor                                                |
