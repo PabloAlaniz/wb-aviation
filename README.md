@@ -8,7 +8,7 @@ Aplicación web open source para el cálculo de peso y balance (Weight & Balance
 
 > Antes publicado como _wb-aviation_ en `wb-aviation.pages.dev` (redirige a checkcg.com).
 
-![CheckCG](<./public/Captura%20de%20pantalla%202025-08-20%20a%20la(s)%2000.06.41.png>)
+![CheckCG: peso y balance del Cessna 152](./docs/screenshot.jpg)
 
 **Aeronaves soportadas:** King Air E90 · Cessna 172S · Cessna 152 · Piper PA-28-161 Warrior · Piper PA-38 Tomahawk · Tecnam P2008 JC · Tecnam P2002 JF · Diamond DA20-C1 · Diamond DA40 _(próximamente: King Air B200 y Beech 1900D)_
 
@@ -98,7 +98,7 @@ npm install
 npm run dev
 ```
 
-Inicia el servidor de desarrollo en `http://localhost:5173`
+Inicia el servidor de desarrollo en `http://localhost:4321`
 
 ### Build de Producción
 
@@ -182,38 +182,24 @@ wb-aviation/
 └── README.md             # Este archivo
 ```
 
-## ✈️ Datos de la Aeronave
+## ✈️ Aeronaves
 
-### King Air Echo 90 (Beechcraft)
+Cada aeronave tiene su página con estaciones, envolvente, fuentes y FAQ en [checkcg.com](https://checkcg.com/es/).
 
-- **TCDS**: 3A20 Revision 82 (2024)
-- **Fabricante**: Textron Aviation Inc. (anteriormente Beechcraft Corporation)
-- **Producción**: 1972-1981 (347 unidades fabricadas)
-- **Motores**: 2x Pratt & Whitney PT6A-28 (550 SHP cada uno)
-- **Peso vacío**: 6,682 lbs (específico LV-AYG)
-- **Peso máximo**: 10,100 lbs
-- **Límites de CG**: 144.7" - 160.0" (aft of datum STA 0.0)
-- **Altitud máxima**: 28,000 pies
-- **Capacidad de combustible**: 474 galones
+| Aeronave                 | TCDS          | Peso máx. (lbs) | Confiabilidad | Página                                                 |
+| ------------------------ | ------------- | --------------- | ------------- | ------------------------------------------------------ |
+| King Air E90             | FAA 3A20      | 10,100          | verificado    | [es](https://checkcg.com/es/king-air-echo-90/)         |
+| Cessna 172S Skyhawk      | FAA 3A12      | 2,550           | estimado      | [es](https://checkcg.com/es/cessna-172s/)              |
+| Cessna 152               | FAA 3A19      | 1,670           | estimado      | [es](https://checkcg.com/es/cessna-152/)               |
+| Piper PA-28-161 Warrior  | FAA 2A13      | 2,440           | parcial       | [es](https://checkcg.com/es/piper-pa-28-161-warrior/)  |
+| Piper PA-38-112 Tomahawk | FAA A18SO     | 1,670           | parcial       | [es](https://checkcg.com/es/piper-pa-38-112-tomahawk/) |
+| Tecnam P2008 JC          | EASA.A.583    | 1,388           | estimado      | [es](https://checkcg.com/es/tecnam-p2008-jc/)          |
+| Tecnam P2002 JF          | EASA.A.006    | 1,278           | estimado      | [es](https://checkcg.com/es/tecnam-p2002-jf/)          |
+| Diamond DA20-C1          | EASA.IM.A.223 | 1,653           | estimado      | [es](https://checkcg.com/es/diamond-da20-c1/)          |
+| Diamond DA40 (IO-360)    | EASA.IM.A.022 | 2,535           | estimado      | [es](https://checkcg.com/es/diamond-da40-180/)         |
 
-### Fuentes de Datos
-
-- Manual oficial Beechcraft E90 (LV-AYG)
-- FAA TCDS 3A20 Rev 81 (11 mayo 2018)
-- Weight & Balance Report específico
-- Última verificación: 21 agosto 2024
-
-### Cessna 172S Skyhawk
-
-- **TCDS**: 3A12 (FAA)
-- **Fabricante**: Cessna Aircraft Company (Textron Aviation)
-- **Producción**: 1998-presente
-- **Motor**: 1x Lycoming IO-360-L2A (180 HP)
-- **Peso máximo**: 2,550 lbs (categoría normal)
-- **Límites de CG**: 35.0" - 47.3" (límite frontal variable con el peso)
-- **Capacidad de combustible**: 56 galones (53 usables)
-
-> ⚠️ Los datos del 172S son **valores típicos de fábrica** (`dataReliability: estimated`). El peso vacío y su brazo deben tomarse del Weight & Balance Report de la aeronave individual.
+> ⚠️ El peso vacío y su brazo son valores de ejemplo: usá siempre el Weight & Balance Report de tu aeronave (función "Mis aeronaves").
+> Fuentes, supuestos y puntos pendientes de cada modelo: `metadata` en [`src/data/aircraft.js`](src/data/aircraft.js) y [docs/aircraft-data.md](docs/aircraft-data.md).
 
 ## ⚠️ Advertencias Importantes
 
