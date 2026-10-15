@@ -214,11 +214,11 @@ export function buildSafetyReport(aircraft, totalWeight, centerOfGravity) {
 
   // Recomendaciones de seguridad
   if (totalWeight > aircraft.maxWeight - safetyFactors.recommendedReserve.weight) {
+    const excessLbs = totalWeight - (aircraft.maxWeight - safetyFactors.recommendedReserve.weight)
     recommendations.push({
       type: "weight-reserve",
-      message: m.safety.reduceWeight(
-        (totalWeight - (aircraft.maxWeight - safetyFactors.recommendedReserve.weight)).toFixed(0)
-      ),
+      message: m.safety.reduceWeight(excessLbs.toFixed(0)),
+      excessLbs,
     })
   }
 
