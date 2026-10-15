@@ -1,14 +1,16 @@
-# ✈️ wb-aviation - Calculador de Peso y Balance
+# ✈️ CheckCG - Calculador de Peso y Balance
 
 Aplicación web open source para el cálculo de peso y balance (Weight & Balance) de aeronaves, basada en datos oficiales de la FAA.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-### 🚀 [Demo en vivo](https://wb-aviation.pages.dev/)
+### 🚀 [checkcg.com](https://checkcg.com/)
 
-![wb-aviation](<./public/Captura%20de%20pantalla%202025-08-20%20a%20la(s)%2000.06.41.png>)
+> Antes publicado como _wb-aviation_ en `wb-aviation.pages.dev` (redirige a checkcg.com).
 
-**Aeronaves soportadas:** King Air E90 (Beechcraft) · Cessna 172S Skyhawk _(más próximamente)_
+![CheckCG](<./public/Captura%20de%20pantalla%202025-08-20%20a%20la(s)%2000.06.41.png>)
+
+**Aeronaves soportadas:** King Air E90 · Cessna 172S · Cessna 152 · Piper PA-28-161 Warrior · Piper PA-38 Tomahawk · Tecnam P2008 JC · Tecnam P2002 JF · Diamond DA20-C1 · Diamond DA40 _(próximamente: King Air B200 y Beech 1900D)_
 
 ## 📋 Descripción
 
@@ -17,7 +19,9 @@ Esta herramienta permite calcular el peso total y el centro de gravedad (CG) de 
 El sistema incluye:
 
 - ✅ Cálculo automático de peso total y centro de gravedad
-- ✅ Selector de aeronaves (King Air E90, Cessna 172S)
+- ✅ Catálogo de 9 aeronaves con una página por aeronave e idioma
+- ✅ Aeronave propia por matrícula, kg/lbs y CG de aterrizaje y sin combustible
+- ✅ Hoja de carga imprimible / PDF, link y QR para compartir, modo escuela
 - ✅ Validación contra envolvente de CG oficial
 - ✅ Sistema de alertas de seguridad y advertencias
 - ✅ Visualización gráfica del envolvente de CG
@@ -306,9 +310,13 @@ La planificación detallada vive en [docs/sprints.md](docs/sprints.md).
 
 ### Próximo
 
-- [ ] Más aeronaves (Piper PA-28, King Air 200, Baron 58)
-- [ ] Exportar PDF del cálculo
-- [ ] Unidades métricas (kg / cm)
+- [x] Aeronave custom por matrícula, unidades métricas y CG de aterrizaje
+- [x] Hoja de carga PDF + link/QR compartible + modo escuela
+- [x] Catálogo LATAM (C152, PA-28, PA-38, Tecnam, Diamond) con páginas SEO por idioma
+- [x] Dominio propio: [checkcg.com](https://checkcg.com/)
+- [ ] King Air B200 y Beech 1900D
+- [ ] Guías ES/EN/PT, OG por aeronave, Search Console
+- [ ] Distribución: ver [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md)
 
 ---
 

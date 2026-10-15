@@ -90,7 +90,7 @@ describe("LoadSheet", () => {
     expect(screen.getByText("2026-10-14")).toBeInTheDocument()
     expect(screen.getByText("Vuelo de instrucción")).toBeInTheDocument()
     expect(screen.getByText("Firma del piloto al mando")).toBeInTheDocument()
-    expect(screen.getByText(/wb-aviation\.pages\.dev/)).toBeInTheDocument()
+    expect(screen.getByText(/checkcg\.com/)).toBeInTheDocument()
     expect(screen.getByText(/POH\/AFM/)).toBeInTheDocument()
   })
 

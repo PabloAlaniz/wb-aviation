@@ -97,7 +97,7 @@ describe("aircraftFaq", () => {
 describe("JSON-LD", () => {
   it("describes a free SoftwareApplication", () => {
     const data = softwareApplicationJsonLd({
-      name: "W&B Aviation",
+      name: "CheckCG",
       description: "d",
       url: "https://example.com/en/",
       locale: "en",

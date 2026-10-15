@@ -311,13 +311,13 @@ export const en = {
     pending: "Pending verification:",
     remarksTitle: "Remarks",
     signature: "Pilot in command signature",
-    generatedBy: "Generated with W&B Aviation",
+    generatedBy: "Generated with CheckCG",
     disclaimer:
       "Reference tool only. The aircraft's flight manual (POH/AFM) and weight and balance report take precedence over this sheet.",
   },
 
   seo: {
-    siteName: "W&B Aviation",
+    siteName: "CheckCG",
     ogLocale: "en_US",
     languageLabel: "Language",
     calculatorTitle: "Interactive calculator",
@@ -327,20 +327,19 @@ export const en = {
     appDescription:
       "Free aircraft weight and balance calculator: center of gravity, CG envelope and load sheet. Works offline, no sign-up.",
     home: {
-      title: "Aircraft weight and balance calculator | W&B Aviation",
+      title: "Aircraft weight and balance calculator | CheckCG",
       description:
         "Calculate your aircraft's weight and balance and center of gravity with TCDS and POH data. Free, offline and no sign-up.",
       h1: "Aircraft weight and balance calculator",
       intro1:
         "Weight and balance checks, before every flight, that the aircraft does not exceed its maximum weight and that its center of gravity (CG) stays inside the approved envelope. An out-of-limits CG affects stability and control even when the total weight is fine.",
       intro2:
-        "W&B Aviation adds the empty weight and every loading station (crew, passengers, baggage and fuel), computes the resulting moment and CG and checks them against the manufacturer's envelope, including landing and zero-fuel conditions. It runs in your browser, with no sign-up and offline.",
+        "CheckCG adds the empty weight and every loading station (crew, passengers, baggage and fuel), computes the resulting moment and CG and checks them against the manufacturer's envelope, including landing and zero-fuel conditions. It runs in your browser, with no sign-up and offline.",
       aircraftListTitle: "Supported aircraft",
       aircraftLink: (/** @type {string} */ name) => `${name} weight and balance`,
     },
     aircraft: {
-      title: (/** @type {string} */ name) =>
-        `${name} weight and balance: CG calculator | W&B Aviation`,
+      title: (/** @type {string} */ name) => `${name} weight and balance: CG calculator | CheckCG`,
       description: (/** @type {string} */ name, /** @type {string} */ maxWeight) =>
         `${name} weight and balance calculator: ${maxWeight} max weight, station arms, CG limits and envelope. Free and offline.`,
       h1: (/** @type {string} */ name) => `${name} weight and balance`,

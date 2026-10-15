@@ -95,7 +95,7 @@ export function LoadSheet({
       <header className="border-2 border-black p-2 space-y-2">
         <div className="flex items-baseline justify-between gap-4">
           <h1 className="text-lg font-bold">{ls.sheetTitle}</h1>
-          <span className="text-xs">W&B Aviation</span>
+          <span className="text-xs">CheckCG</span>
         </div>
         <dl className="grid grid-cols-3 gap-x-4 gap-y-1">
           <Field label={ls.aircraft} value={aircraft.name} />
