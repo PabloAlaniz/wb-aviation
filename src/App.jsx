@@ -12,6 +12,10 @@ import { FuelBurnInput } from "./components/FuelBurnInput"
 import { FlightPhasesPanel } from "./components/FlightPhasesPanel"
 import { CustomAircraftManager } from "./components/CustomAircraftManager"
 import { UnitToggle } from "./components/UnitToggle"
+import { FleetShare } from "./components/FleetShare"
+import { FleetImportDialog } from "./components/FleetImportDialog"
+import { Footer } from "./components/Footer"
+import { useFleetImport } from "./hooks/useFleetImport"
 import { Plane, Calculator, RotateCcw } from "lucide-react"
 import { aircraftData, aircraftOptions, emptyWeightsFor } from "./data/aircraft"
 import {
@@ -30,6 +34,7 @@ const DEFAULT_AIRCRAFT = "king-air-echo-90"
 
 export default function App() {
   const custom = useCustomAircraft()
+  const fleetImport = useFleetImport((records) => records.forEach((record) => custom.save(record)))
   const [selectedAircraft, setSelectedAircraft] = useLocalStorage(
     "wb-selected-aircraft",
     DEFAULT_AIRCRAFT,
@@ -94,6 +99,14 @@ export default function App() {
           <p className="text-gray-600">{m.app.subtitle(aircraft.tcds)}</p>
         </div>
 
+        <FleetImportDialog
+          state={fleetImport}
+          existingRegistrations={custom.records.map((r) => r.registration)}
+          units={units}
+          onImport={fleetImport.accept}
+          onDismiss={fleetImport.dismiss}
+        />
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card>
             <CardHeader>
@@ -128,6 +141,8 @@ export default function App() {
                   if (id === selectedAircraft) handleAircraftChange(DEFAULT_AIRCRAFT)
                 }}
               />
+
+              <FleetShare records={custom.records} />
 
               <Separator />
 
@@ -213,6 +228,8 @@ export default function App() {
             </CardContent>
           </Card>
         </div>
+
+        <Footer />
       </div>
     </div>
   )
