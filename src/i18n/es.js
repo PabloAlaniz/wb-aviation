@@ -220,4 +220,44 @@ export const es = {
       "Ocurrió un error inesperado en la aplicación. Podés reintentar o recargar la página. Si el problema persiste, probá limpiar los datos guardados del navegador.",
     retry: "Reintentar",
   },
+
+  fleet: {
+    shareTitle: "Compartir flota (instructores y escuelas)",
+    shareDescription:
+      "Generá un link con tus aeronaves por matrícula para que tus alumnos las importen en su dispositivo. Solo se comparten modelo base, matrícula, peso vacío y brazo.",
+    schoolNameLabel: "Escuela o aeroclub (opcional)",
+    schoolNamePlaceholder: "Aeroclub ...",
+    shareButton: "Compartir flota",
+    shareEmpty: "Guardá al menos una aeronave por matrícula para compartir tu flota.",
+    truncated: (/** @type {number} */ max) => `Se incluyen solo las primeras ${max} aeronaves.`,
+    copied: "Link de la flota copiado al portapapeles.",
+    shared: "Link de la flota compartido.",
+    copyFailed: "No se pudo copiar automáticamente. Copiá el link:",
+    linkLabel: "Link de la flota",
+    importTitle: "Importar flota",
+    importFrom: (/** @type {string} */ name) => `${name} compartió su flota con vos.`,
+    importAnonymous: "Te compartieron una flota de aeronaves.",
+    importListLabel: "Aeronaves a importar",
+    overwriteNote:
+      "Si ya tenés guardada alguna de estas matrículas, sus datos se van a reemplazar por los del link.",
+    willOverwrite: "Reemplaza la guardada",
+    verifyNote:
+      "Verificá peso vacío y brazo contra el Weight & Balance Report de cada aeronave antes de volar.",
+    importButton: (/** @type {number} */ count) =>
+      count === 1 ? "Importar 1 aeronave" : `Importar ${count} aeronaves`,
+    dismiss: "Descartar",
+    imported: (/** @type {number} */ count) =>
+      count === 1 ? "Se importó 1 aeronave." : `Se importaron ${count} aeronaves.`,
+    invalidLink: "El link de flota no es válido o está dañado.",
+    close: "Cerrar",
+  },
+
+  footer: {
+    madeBy: "Hecho por",
+    sourceCode: "Código fuente en GitHub",
+    fleetHint: "¿Sos instructor o escuela? Compartí tu flota",
+    disclaimer:
+      "Herramienta de ayuda: el POH/AFM y el Weight & Balance Report de tu aeronave son la referencia oficial. Verificá siempre los resultados.",
+    version: (/** @type {string} */ version) => `Versión ${version}`,
+  },
 }
