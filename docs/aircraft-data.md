@@ -26,6 +26,9 @@ Si `dataReliability` no es `verified-complete`, la UI muestra automáticamente u
   emptyWeight: 6682,    // peso vacío (lbs)
   emptyArm: 151.0415,   // brazo del peso vacío (in)
   maxWeight: 10100,     // peso máximo de despegue (lbs)
+  // Opcionales: solo se validan si se declaran (citar la fuente)
+  maxLandingWeight: 9600,   // peso máximo de aterrizaje (lbs)
+  maxZeroFuelWeight: 8000,  // peso máximo sin combustible (lbs)
 
   // Límites de CG (in)
   cgLimits: { forward: 144.7, aft: 160.0 },
@@ -41,9 +44,13 @@ Si `dataReliability` no es `verified-complete`, la UI muestra automáticamente u
 
   // Configuración del formulario: orden, etiquetas y placeholders.
   // Los campos se renderizan de a pares; fullWidth: true ocupa la fila.
+  // labelKey apunta al namespace `stations` de src/i18n/{es,en,pt}.js; la UI
+  // agrega la unidad (lbs/kg, gal/L). label (sin unidades) es solo un respaldo
+  // para estaciones sin traducción. max y placeholder van en lbs.
+  // isFuel: true marca las estaciones de combustible (ver "Fases de vuelo").
   loadStations: [
-    { key: "pilot", label: "Piloto (lbs)", placeholder: "200" },
-    { key: "fuel", label: "Combustible (lbs)", placeholder: "1500", fullWidth: true },
+    { key: "pilot", labelKey: "stations.pilot", placeholder: "200" },
+    { key: "fuel", labelKey: "stations.fuel", max: 318, placeholder: "1500", fullWidth: true, isFuel: true },
   ],
 
   // Envolvente de CG: polígono cerrado (el último punto repite el primero).
@@ -73,6 +80,18 @@ Si `dataReliability` no es `verified-complete`, la UI muestra automáticamente u
 }
 ```
 
+## Fases de vuelo: aterrizaje y peso sin combustible
+
+`calculateFlightPhases(aircraft, weights, fuelBurn)` calcula tres condiciones a partir de la carga y el combustible a consumir que ingresa el piloto:
+
+- **Despegue**: igual a `calculateWeightBalance()`.
+- **Aterrizaje**: despegue menos el combustible consumido, descontado de las estaciones de combustible en proporción a lo cargado en cada una (cada una a su brazo).
+- **Sin combustible (ZFW)**: despegue menos todo el combustible cargado.
+
+Las estaciones de combustible se identifican con `isFuel: true` en `loadStations` (puede haber varias, p. ej. tanques principales y auxiliares). Si ninguna está marcada, se usa la estación `fuel` si existe. El consumo se limita a `[0, combustible cargado]`; si se pide más de lo cargado, `buildLandingReport()` lo reporta como error.
+
+`buildLandingReport()` valida la envolvente al aterrizar (error), la envolvente sin combustible (advertencia) y, **solo si están declarados**, `maxLandingWeight` y `maxZeroFuelWeight`. No cargar estos valores sin una fuente oficial: si faltan, el chequeo se omite.
+
 ## Checklist para agregar una aeronave
 
 1. Conseguir el TCDS en [el sitio de la FAA](https://drs.faa.gov/) y, si es posible, el POH/AFM.
@@ -91,4 +110,6 @@ Si `dataReliability` no es `verified-complete`, la UI muestra automáticamente u
 | `loadStations`                          | `StationForm` (formulario data-driven)                    |
 | `cgEnvelope.points`                     | `isPointInEnvelope()` y `CGEnvelopeChart`                 |
 | `cgLimits`, `safetyFactors`, `metadata` | `buildSafetyReport()` (alertas)                           |
+| `loadStations[].isFuel`                 | `calculateFlightPhases()` (aterrizaje / ZFW)              |
+| `maxLandingWeight`, `maxZeroFuelWeight` | `buildLandingReport()` (opcionales)                       |
 | `metadata`, `dataValidation`            | `AircraftInfo` y `DataSources` (paneles informativos)     |

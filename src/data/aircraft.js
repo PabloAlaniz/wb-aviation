@@ -4,7 +4,9 @@
  * Each aircraft entry must include:
  * - emptyWeight (lbs), emptyArm (in), maxWeight (lbs)
  * - stations: map of station key -> arm (inches aft of datum)
- * - loadStations: ordered UI config for the load form ({ key, label, placeholder })
+ * - loadStations: ordered UI config for the load form ({ key, labelKey, max?, placeholder })
+ *   labelKey points into the i18n `stations` namespace (e.g. "stations.pilot");
+ *   max and placeholder are in lbs
  * - cgLimits: { forward, aft } in inches
  * - cgEnvelope.points: closed polygon of { arm, weight } pairs
  * - safetyFactors, metadata and dataValidation (see docs/aircraft-data.md)
@@ -87,15 +89,21 @@ export const aircraftData = {
 
     // Configuración del formulario de carga (orden y etiquetas de la UI)
     loadStations: [
-      { key: "pilot", label: "Piloto (lbs)", placeholder: "200" },
-      { key: "copilot", label: "Copiloto (lbs)", placeholder: "200" },
-      { key: "passenger1", label: "Pasajero 1 (lbs)", placeholder: "170" },
-      { key: "passenger2", label: "Pasajero 2 (lbs)", placeholder: "170" },
-      { key: "passenger3", label: "Pasajero 3 (lbs)", placeholder: "170" },
-      { key: "passenger4", label: "Pasajero 4 (lbs)", placeholder: "170" },
-      { key: "baggage1", label: "Equipaje 1 (lbs)", placeholder: "100" },
-      { key: "baggage2", label: "Equipaje 2 (lbs)", placeholder: "100" },
-      { key: "fuel", label: "Combustible (lbs)", placeholder: "1500", fullWidth: true },
+      { key: "pilot", labelKey: "stations.pilot", placeholder: "200" },
+      { key: "copilot", labelKey: "stations.copilot", placeholder: "200" },
+      { key: "passenger1", labelKey: "stations.passenger1", placeholder: "170" },
+      { key: "passenger2", labelKey: "stations.passenger2", placeholder: "170" },
+      { key: "passenger3", labelKey: "stations.passenger3", placeholder: "170" },
+      { key: "passenger4", labelKey: "stations.passenger4", placeholder: "170" },
+      { key: "baggage1", labelKey: "stations.baggage1", placeholder: "100" },
+      { key: "baggage2", labelKey: "stations.baggage2", placeholder: "100" },
+      {
+        key: "fuel",
+        labelKey: "stations.fuel",
+        placeholder: "1500",
+        fullWidth: true,
+        isFuel: true,
+      },
     ],
 
     // Envolvente de CG (requiere verificación con TCDS oficial)
@@ -129,6 +137,7 @@ export const aircraftData = {
       pendingVerification: [
         "Estaciones de carga específicas para otras aeronaves",
         "Verificación de número de serie específico para validación de peso vacío",
+        "Pesos máximos de aterrizaje y sin combustible (MLW/MZFW) según TCDS 3A20 (no cargados: no se validan)",
       ],
     },
   },
@@ -172,6 +181,7 @@ export const aircraftData = {
     emptyWeight: 1663,
     emptyArm: 41.0,
     maxWeight: 2550, // Peso máximo de despegue/aterrizaje, categoría normal
+    maxLandingWeight: 2550, // POH 172S Sección 2 (Limitaciones): máx. aterrizaje = máx. despegue, categoría normal
 
     operationalLimits: {
       maxAltitude: 14000, // feet (techo de servicio)
@@ -201,13 +211,20 @@ export const aircraftData = {
     },
 
     loadStations: [
-      { key: "pilot", label: "Piloto (lbs)", placeholder: "170" },
-      { key: "copilot", label: "Acompañante (lbs)", placeholder: "170" },
-      { key: "passenger1", label: "Pasajero trasero 1 (lbs)", placeholder: "170" },
-      { key: "passenger2", label: "Pasajero trasero 2 (lbs)", placeholder: "170" },
-      { key: "baggage1", label: "Equipaje área 1 (lbs, máx 120)", placeholder: "50" },
-      { key: "baggage2", label: "Equipaje área 2 (lbs, máx 50)", placeholder: "20" },
-      { key: "fuel", label: "Combustible (lbs, máx 318)", placeholder: "318", fullWidth: true },
+      { key: "pilot", labelKey: "stations.pilot", placeholder: "170" },
+      { key: "copilot", labelKey: "stations.frontPassenger", placeholder: "170" },
+      { key: "passenger1", labelKey: "stations.rearPassenger1", placeholder: "170" },
+      { key: "passenger2", labelKey: "stations.rearPassenger2", placeholder: "170" },
+      { key: "baggage1", labelKey: "stations.baggageArea1", max: 120, placeholder: "50" },
+      { key: "baggage2", labelKey: "stations.baggageArea2", max: 50, placeholder: "20" },
+      {
+        key: "fuel",
+        labelKey: "stations.fuel",
+        max: 318,
+        placeholder: "318",
+        fullWidth: true,
+        isFuel: true,
+      },
     ],
 
     // Envolvente categoría normal (lbs vs pulgadas aft of datum)
