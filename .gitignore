@@ -28,3 +28,6 @@ coverage
 
 # Astro generated types
 .astro/
+
+# Wrangler local state (wrangler pages dev)
+.wrangler/

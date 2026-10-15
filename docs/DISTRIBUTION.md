@@ -16,7 +16,7 @@ fit → prerequisitos → canales automáticos → envíos manuales → medició
 - [x] Páginas por aeronave/idioma indexables (Sprint 8).
 - [ ] OG card real, screenshot/GIF actualizado en el README.
 - [x] Marca de autor visible (footer + README) y dominio definitivo (checkcg.com).
-- [ ] Eventos de Plausible activos (ver §5).
+- [x] Eventos de conversión propios en Cloudflare activos (ver §5).
 
 ## 3. Canales automáticos / de bajo costo
 
@@ -41,16 +41,50 @@ fit → prerequisitos → canales automáticos → envíos manuales → medició
 
 ## 5. Medición
 
-Eventos de Plausible (cookieless, ya integrado en `src/analytics.js`):
+Eventos de conversión propios (first-party) en **Cloudflare Workers Analytics
+Engine**, sin depender de Plausible. `trackEvent()` (`src/analytics.js`) los
+manda con `navigator.sendBeacon` a `POST /api/e` (`functions/api/e.js`), solo
+desde `checkcg.com` (nunca localhost, previews ni tests). Si Plausible está
+configurado, también le llegan.
 
-- `pdf_export`: hoja de carga generada.
-- `share_link`: link/QR compartido.
-- `custom_aircraft_created`: matrícula propia creada.
-- `fleet_import`: flota importada desde un link de escuela.
+| Evento                    | Cuándo                                   | Props           |
+| ------------------------- | ---------------------------------------- | --------------- |
+| `pdf_export`              | Hoja de carga generada                   | `units`         |
+| `share_link`              | Link/QR compartido (cálculo o flota)     | `method`/`kind` |
+| `fleet_import`            | Flota importada desde un link de escuela | `count`         |
+| `custom_aircraft_created` | Matrícula propia nueva                   | `baseModelId`   |
+| `shared_link_opened`      | Se abrió un link `?s=`                   | `status`        |
+| `fleet_link_opened`       | Se abrió un link `?fleet=`               | `count`         |
+| `units_changed`           | Cambio de unidades                       | `units`         |
+| `install_pwa`             | PWA instalada (`appinstalled`)           | -               |
 
-Reporte semanal (portar `google-suite/tools/agent-distribution/stats/stats.py`
-y su workflow `agent-stats.yml`): una tabla con estrellas de GitHub, visitas y
-eventos de Plausible y clics/impresiones de Search Console.
+**Privacidad:** lista cerrada de eventos, body ≤ 2 KB, ≤ 6 props primitivas
+(strings ≤ 64 caracteres). Se guarda evento, path (sin query), idioma, avión,
+`ref` y país (de Cloudflare). Nunca IP, user agent, cookies ni identificadores.
+
+**Convención `?ref=`:** todo link de campaña lleva `?ref=<fuente>` en
+minúsculas, `[a-z0-9._-]`, máx. 48 caracteres (p. ej. `?ref=flyer-ar`,
+`?ref=reddit-flying`, `?ref=school.aeroclub-sf`). También se acepta
+`utm_source`. Se guarda en `sessionStorage` (`checkcg-ref`) durante la visita y
+se quita de la barra de direcciones (se conservan `s`, `fleet` y el resto).
+
+**Datos:** dataset `checkcg_events` (binding `EVENTS` en `wrangler.toml`).
+Columnas: `blob1` evento, `blob2` path, `blob3` idioma, `blob4` avión,
+`blob5` ref, `blob6` país, `blob7` props (JSON), `double1` = 1. Retención: 3
+meses. Consulta vía SQL API
+(`POST https://api.cloudflare.com/client/v4/accounts/{account_id}/analytics_engine/sql`,
+token con permiso _Account Analytics Read_):
+
+```sql
+SELECT blob1 AS event, blob5 AS ref, SUM(_sample_interval) AS n
+FROM checkcg_events
+WHERE timestamp > NOW() - INTERVAL '7' DAY
+GROUP BY event, ref
+ORDER BY n DESC
+```
+
+Reporte semanal: una tabla con estrellas de GitHub, eventos por `ref` (SQL de
+arriba) y clics/impresiones de Search Console.
 
 ## 6. Revisión
 
