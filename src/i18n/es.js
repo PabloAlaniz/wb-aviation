@@ -197,6 +197,23 @@ export const es = {
     },
   },
 
+  share: {
+    button: "Compartir",
+    buttonLabel: "Compartir enlace a este cálculo",
+    copied: "Enlace copiado",
+    copyFailed: "No se pudo copiar el enlace",
+    showQr: "Mostrar QR",
+    hideQr: "Ocultar QR",
+    qrAlt: "Código QR con el enlace a este cálculo",
+    qrFailed: "No se pudo generar el código QR",
+    shareTitle: (/** @type {string} */ aircraftName) => `Peso y centrado: ${aircraftName}`,
+    loaded: "Se cargó un cálculo compartido.",
+    conflict:
+      "El enlace trae una aeronave con una matrícula que ya tenés guardada con otro peso vacío o brazo. No se cargó para no sobrescribir tus datos.",
+    invalid: "El enlace compartido no es válido o está incompleto.",
+    dismiss: "Cerrar aviso",
+  },
+
   errorBoundary: {
     title: "Algo salió mal",
     description:
