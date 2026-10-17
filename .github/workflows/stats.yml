@@ -1,7 +1,7 @@
 name: Stats
 
 # Weekly distribution report (GitHub, Cloudflare Web Analytics, product
-# events) in the run summary. See docs/DISTRIBUTION.md for the secrets.
+# events) in the run summary. See docs/analytics.md for the secrets.
 on:
   schedule:
     - cron: "0 12 * * 1" # Mondays 12:00 UTC

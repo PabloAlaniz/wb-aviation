@@ -64,6 +64,22 @@ componentes**, solo datos. Seguí la guía completa en
 > un dato contra documentación oficial, marcalo como `estimated` y dejalo claro
 > en `pendingVerification`. Nunca presentes datos estimados como verificados.
 
+## Agregar una guía
+
+Las guías viven en `src/content/guides/{es,en,pt}/*.md` (colección `guides`,
+`src/content.config.ts`); los slugs localizados están en
+`src/content/guides/registry.js` (también alimenta los hreflang del sitemap).
+
+1. Un `.md` por idioma con el mismo `translationKey`.
+2. La entrada en el registry.
+3. `npm test`: verifica frontmatter, links internos, largo (700–1100
+   palabras) y el disclaimer final.
+
+El ejemplo resuelto del Cessna 152 está en `src/content/guides/examples.js`;
+`guides.test.js` lo pasa por `calculateWeightBalance`/`calculateFlightPhases`
+y busca los resultados en las tres guías, así que si cambian los datos del 152
+el test obliga a actualizar el texto.
+
 ## Reportar problemas
 
 Abrí un issue describiendo el comportamiento esperado vs. el observado. Para

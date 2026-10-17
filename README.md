@@ -35,16 +35,14 @@ El sistema incluye:
 
 ### Cálculo de Peso y Balance
 
-- Peso vacío y brazo específicos de aeronave
-- Estaciones de carga para tripulación (piloto, copiloto)
-- Hasta 4 pasajeros en configuración club
-- 2 compartimentos de equipaje
-- Cálculo de combustible
+- Estaciones de carga propias de cada aeronave (tripulación, pasajeros, equipaje, combustible)
+- Peso vacío y brazo de ejemplo del POH, o los de tu avión con "Mis aeronaves"
+- Fases de vuelo: despegue, aterrizaje (según combustible consumido) y sin combustible
 
 ### Sistema de Validación
 
-- Verificación de peso máximo (10,100 lbs)
-- Validación de límites de CG (144.7" - 160.0")
+- Verificación de peso máximo de despegue (y de aterrizaje / sin combustible si están declarados)
+- Validación de límites de CG de cada aeronave
 - Algoritmo de punto en polígono para envolvente irregular
 - Márgenes de seguridad configurables
 
@@ -172,7 +170,7 @@ wb-aviation/
 │   ├── pages/             # Rutas Astro: /, /{es,en,pt}/ y /{es,en,pt}/{aeronave}/
 │   ├── App.jsx            # Componente principal (composición)
 │   └── components/AppIsland.jsx # Isla React (client:only) montada por las páginas
-├── docs/                  # Documentación (sprints, datos de aeronave)
+├── docs/                  # Documentación (datos de aeronave, métricas), demo y PDFs
 ├── public/                # Recursos estáticos
 ├── data/                  # Imágenes de referencia del TCDS
 ├── package.json           # Dependencias y scripts
@@ -207,7 +205,7 @@ Cada aeronave tiene su página con estaciones, envolvente, fuentes y FAQ en [che
 
 **IMPORTANTE**: Esta herramienta es de **referencia general** y no sustituye la documentación oficial de la aeronave.
 
-- ⚠️ Los datos de peso vacío y brazo son **específicos de la aeronave LV-AYG** (S/N: LW-135)
+- ⚠️ Los datos de peso vacío y brazo de cada modelo son **valores de ejemplo** del POH/AFM
 - ⚠️ **Cada aeronave individual** tiene su propio Weight & Balance Report que debe consultarse
 - ⚠️ Siempre verificar con el **Weight & Balance Report específico** de su aeronave
 - ⚠️ Esta calculadora NO reemplaza los procedimientos operacionales oficiales
@@ -261,7 +259,7 @@ isPointInEnvelope(cg, weight, envelopePoints)
 
 Las contribuciones son bienvenidas, especialmente para:
 
-- Agregar más variantes de King Air
+- Agregar aeronaves con datos verificables (ver [CONTRIBUTING.md](CONTRIBUTING.md))
 - Mejorar visualizaciones
 - Agregar más validaciones de seguridad
 - Traducción a otros idiomas
@@ -279,33 +277,8 @@ Para preguntas técnicas o reportar problemas, abrir un issue en el repositorio.
 
 ## 🗺️ Roadmap
 
-La planificación detallada vive en [docs/sprints.md](docs/sprints.md).
-
-### Ya entregado
-
-- [x] Multi-aeronave con selector (King Air E90, Cessna 172S)
-- [x] PWA para uso offline en cabina
-- [x] Persistencia de datos del usuario (localStorage)
-- [x] Tests + CI/CD (lint, formato, tests, build)
-- [x] Deploy en producción (Cloudflare Pages)
-- [x] Accesibilidad y error boundary global
-- [x] Módulo i18n (base para multi-idioma)
-
-- [x] Multi-idioma (español / inglés / portugués)
-- [x] SEO básico (Open Graph, sitemap, robots) + analytics opt-in
-
-### Próximo
-
-- [x] Aeronave custom por matrícula, unidades métricas y CG de aterrizaje
-- [x] Hoja de carga PDF + link/QR compartible + modo escuela
-- [x] Catálogo LATAM (C152, PA-28, PA-38, Tecnam, Diamond) con páginas SEO por idioma
-- [x] Dominio propio: [checkcg.com](https://checkcg.com/)
-- [ ] King Air B200 y Beech 1900D
-- [ ] Guías ES/EN/PT, OG por aeronave, Search Console
-- [ ] Distribución: ver [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md)
+Ver [ROADMAP.md](ROADMAP.md). Las métricas que recolecta el sitio y su política de privacidad están en [docs/analytics.md](docs/analytics.md).
 
 ---
 
 **Desarrollado para la comunidad aeronáutica** 🛩️
-
-_Última actualización: Junio 2026_

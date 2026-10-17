@@ -16,8 +16,7 @@
  *
  * Optional: STATS_GITHUB_REPO (default PabloAlaniz/wb-aviation), STATS_SITE_HOST
  * (default checkcg.com), CLOUDFLARE_WEB_ANALYTICS_SITE_TAG (filter by site tag
- * instead of host). Node 22+, no dependencies (an adaptation of
- * an internal script).
+ * instead of host). Node 22+, no dependencies.
  */
 import process from "node:process"
 import { pathToFileURL } from "node:url"
