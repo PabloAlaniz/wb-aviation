@@ -1,0 +1,25 @@
+name: 🐞 Bug report
+description: Something is wrong in the calculator or the site
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For calculation bugs, please include the aircraft, the values you entered and the result you expected (ideally from the POH example).
+  - type: input
+    id: aircraft
+    attributes:
+      label: Aircraft
+      placeholder: Cessna 152
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Expected vs. observed. A share link (Share → copy link) reproduces your exact loading.
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser / device
+      placeholder: Safari on iPhone, installed as an app

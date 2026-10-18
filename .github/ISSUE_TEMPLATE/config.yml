@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 💬 Questions and ideas
+    url: https://github.com/PabloAlaniz/wb-aviation/discussions
+    about: Ask, share how you use CheckCG or suggest features
+  - name: 🌐 Use CheckCG
+    url: https://checkcg.com
+    about: The calculator itself, free and offline

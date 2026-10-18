@@ -19,6 +19,7 @@ export const EVENT_NAMES = /** @type {const} */ ([
   "fleet_link_opened",
   "units_changed",
   "install_pwa",
+  "github_click",
 ])
 
 /** @typedef {(typeof EVENT_NAMES)[number]} EventName */

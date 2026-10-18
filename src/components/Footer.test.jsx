@@ -1,10 +1,14 @@
-import { describe, it, expect } from "vitest"
+import { describe, it, expect, vi, afterEach } from "vitest"
 import { render, screen, fireEvent } from "@testing-library/react"
 import { Footer } from "./Footer"
 import { FLEET_SHARE_ID } from "./FleetShare"
 import { version } from "../../package.json"
 
 describe("Footer", () => {
+  afterEach(() => {
+    delete window.plausible
+  })
+
   it("links to the author and the repository", () => {
     render(<Footer />)
 
@@ -12,11 +16,18 @@ describe("Footer", () => {
       "href",
       "https://github.com/PabloAlaniz"
     )
-    expect(screen.getByRole("link", { name: "Código fuente en GitHub" })).toHaveAttribute(
-      "href",
-      "https://github.com/PabloAlaniz/wb-aviation"
-    )
+    expect(
+      screen.getByRole("link", { name: "Código abierto: dale una ⭐ en GitHub" })
+    ).toHaveAttribute("href", "https://github.com/PabloAlaniz/wb-aviation")
     expect(screen.getByText(/Hecho por/)).toBeInTheDocument()
+  })
+
+  it("tracks clicks on the repository link", () => {
+    window.plausible = vi.fn()
+    render(<Footer />)
+
+    fireEvent.click(screen.getByRole("link", { name: /GitHub/ }))
+    expect(window.plausible).toHaveBeenCalledWith("github_click", { props: { source: "footer" } })
   })
 
   it("links to the guides in the active language", () => {

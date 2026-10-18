@@ -12,6 +12,7 @@ export const es = {
     aircraftCardDescription: "Selecciona el tipo de avión e ingresa los pesos",
     aircraftSelectLabel: "Tipo de Aeronave",
     aircraftSelectPlaceholder: "Selecciona una aeronave",
+    requestAircraft: "¿No está tu avión? Pedilo en GitHub",
     clearWeights: "Limpiar pesos",
     resultsCardTitle: "Resultados del Cálculo",
     resultsCardDescription: "Peso total y centro de gravedad",
@@ -256,7 +257,7 @@ export const es = {
 
   footer: {
     madeBy: "Hecho por",
-    sourceCode: "Código fuente en GitHub",
+    sourceCode: "Código abierto: dale una ⭐ en GitHub",
     fleetHint: "¿Sos instructor o escuela? Compartí tu flota",
     disclaimer:
       "Herramienta de ayuda: el POH/AFM y el Weight & Balance Report de tu aeronave son la referencia oficial. Verificá siempre los resultados.",
