@@ -14,6 +14,17 @@ describe("App (integración)", () => {
     expect(screen.getByLabelText("Piloto (lbs)")).toBeInTheDocument()
   })
 
+  it("links to the aircraft request form on GitHub", () => {
+    render(<App />)
+
+    expect(
+      screen.getByRole("link", { name: "¿No está tu avión? Pedilo en GitHub" })
+    ).toHaveAttribute(
+      "href",
+      "https://github.com/PabloAlaniz/wb-aviation/issues/new?template=aircraft-request.yml"
+    )
+  })
+
   it("shows empty-aircraft results on load (empty weight only)", () => {
     render(<App />)
 

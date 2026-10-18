@@ -17,7 +17,7 @@ import { ShareButton } from "./components/ShareButton"
 import { SharedCalculationNotice } from "./components/SharedCalculationNotice"
 import { FleetShare } from "./components/FleetShare"
 import { FleetImportDialog } from "./components/FleetImportDialog"
-import { Footer } from "./components/Footer"
+import { AIRCRAFT_REQUEST_URL, Footer } from "./components/Footer"
 import { useFleetImport } from "./hooks/useFleetImport"
 import { LoadSheetPanel } from "./components/LoadSheetPanel"
 import { Plane, Calculator, RotateCcw } from "lucide-react"
@@ -28,6 +28,7 @@ import {
   calculateFlightPhases,
   buildLandingReport,
 } from "./utils/calculations"
+import { trackEvent } from "./analytics"
 import { useLocalStorage } from "./hooks/useLocalStorage"
 import { useCustomAircraft } from "./hooks/useCustomAircraft"
 import { isCustomAircraftId } from "./utils/customAircraft"
@@ -182,6 +183,15 @@ export default function App({ initialAircraft, locale } = {}) {
                   placeholder={m.app.aircraftSelectPlaceholder}
                   options={[...aircraftOptions, ...custom.options]}
                 />
+                <a
+                  href={AIRCRAFT_REQUEST_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackEvent("github_click", { source: "aircraft_request" })}
+                  className="inline-block text-xs text-blue-700 hover:underline"
+                >
+                  {m.app.requestAircraft}
+                </a>
               </div>
 
               <CustomAircraftManager

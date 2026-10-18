@@ -1,0 +1,45 @@
+name: ✈️ Aircraft request
+description: Ask for an aircraft to be added to CheckCG
+title: "[Aircraft] "
+labels: ["aircraft-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks! CheckCG only ships aircraft whose weight & balance data can be checked against official sources (TCDS, POH/AFM).
+        ¿Preferís escribir en español o portugués? Adelante / Pode escrever em português.
+  - type: input
+    id: model
+    attributes:
+      label: Aircraft model
+      description: Manufacturer, model and variant (engine, serial range if it matters)
+      placeholder: Cessna 182T Skylane
+    validations:
+      required: true
+  - type: input
+    id: tcds
+    attributes:
+      label: Type certificate (TCDS)
+      description: Number and authority, if you know it
+      placeholder: FAA 3A13
+  - type: textarea
+    id: sources
+    attributes:
+      label: Data sources
+      description: Links or references to the TCDS, POH/AFM weight & balance section, CG envelope, stations and arms. Never upload copyrighted manuals, just tell us where the data is.
+  - type: dropdown
+    id: use
+    attributes:
+      label: How would you use it?
+      options:
+        - Student pilot
+        - Private / commercial pilot
+        - Flight instructor
+        - Flight school / aeroclub
+        - Other
+  - type: checkboxes
+    id: help
+    attributes:
+      label: Contributing
+      options:
+        - label: I can help verify the data or open a PR (see CONTRIBUTING.md)

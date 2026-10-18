@@ -21,6 +21,7 @@ localhost, previews ni tests). Si Plausible está configurado, también le llega
 | `fleet_link_opened`       | Se abrió un link `?fleet=`               | `count`         |
 | `units_changed`           | Cambio de unidades                       | `units`         |
 | `install_pwa`             | PWA instalada (`appinstalled`)           | -               |
+| `github_click`            | Click a GitHub (footer o pedir avión)    | `source`        |
 
 ## Privacidad
 

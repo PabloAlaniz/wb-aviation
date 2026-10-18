@@ -1,5 +1,6 @@
 import { Github } from "lucide-react"
 import { version } from "../../package.json"
+import { trackEvent } from "../analytics"
 import { activeLocale, messages as m } from "../i18n"
 import { guidesIndexPath } from "../utils/routes"
 import { FLEET_SHARE_ID } from "./FleetShare"
@@ -7,6 +8,8 @@ import { FLEET_SHARE_ID } from "./FleetShare"
 export const AUTHOR_NAME = "Pablo Alaniz"
 export const AUTHOR_URL = "https://github.com/PabloAlaniz"
 export const REPO_URL = "https://github.com/PabloAlaniz/wb-aviation"
+/** New issue from the "aircraft request" form (.github/ISSUE_TEMPLATE/aircraft-request.yml). */
+export const AIRCRAFT_REQUEST_URL = `${REPO_URL}/issues/new?template=aircraft-request.yml`
 
 /** Open the (collapsed) fleet share section the hint points to. */
 function openFleetShare() {
@@ -50,6 +53,7 @@ export function Footer() {
           href={REPO_URL}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => trackEvent("github_click", { source: "footer" })}
           className="inline-flex items-center gap-1 hover:underline"
         >
           <Github className="h-3.5 w-3.5" aria-hidden="true" />
