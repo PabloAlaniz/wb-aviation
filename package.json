@@ -59,7 +59,8 @@
   "overrides": {
     "@vite-pwa/astro": {
       "astro": "$astro"
-    }
+    },
+    "fflate": "^0.7.5"
   },
   "engines": {
     "node": ">=22.12.0"
