@@ -60,7 +60,10 @@
     "@vite-pwa/astro": {
       "astro": "$astro"
     },
-    "fflate": "^0.7.5"
+    "fflate": "^0.7.5",
+    "workbox-build": {
+      "glob": "^14.0.3"
+    }
   },
   "engines": {
     "node": ">=22.12.0"
