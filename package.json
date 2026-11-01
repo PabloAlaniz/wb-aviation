@@ -62,7 +62,8 @@
     },
     "fflate": "^0.7.5",
     "workbox-build": {
-      "glob": "^14.0.3"
+      "glob": "^14.0.3",
+      "@trickfilm400/rollup-plugin-off-main-thread": "^4.0.0"
     }
   },
   "engines": {
