@@ -162,7 +162,12 @@ describe("ogContent", () => {
 
   it("has localized titles for every route locale", () => {
     const titles = ROUTE_LOCALES.map((lang) => ogContent(locales[lang].seo, aircraftData).title)
-    expect(titles).toEqual(["Peso y balance", "Weight and balance", "Peso e balanceamento"])
+    expect(titles).toEqual([
+      "Peso y balance",
+      "Weight and balance",
+      "Peso e balanceamento",
+      "Massa e centraggio",
+    ])
   })
 })
 

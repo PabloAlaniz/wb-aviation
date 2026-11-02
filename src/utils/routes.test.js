@@ -56,6 +56,7 @@ describe("alternateLinks", () => {
       { hreflang: "es", href: `${SITE_URL}/es/cessna-172s/` },
       { hreflang: "en", href: `${SITE_URL}/en/cessna-172s/` },
       { hreflang: "pt", href: `${SITE_URL}/pt/cessna-172s/` },
+      { hreflang: "it", href: `${SITE_URL}/it/cessna-172s/` },
       { hreflang: "x-default", href: `${SITE_URL}/es/cessna-172s/` },
     ])
   })

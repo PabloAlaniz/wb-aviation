@@ -23,6 +23,7 @@ export const GUIDES = [
       es: "como-calcular-peso-y-balance",
       en: "how-to-calculate-weight-and-balance",
       pt: "como-calcular-peso-e-balanceamento",
+      it: "come-calcolare-massa-e-centraggio",
     },
   },
   {
@@ -31,6 +32,7 @@ export const GUIDES = [
       es: "peso-brazo-y-momento",
       en: "weight-arm-and-moment",
       pt: "peso-braco-e-momento",
+      it: "massa-braccio-e-momento",
     },
   },
   {
@@ -39,6 +41,7 @@ export const GUIDES = [
       es: "envolvente-de-cg",
       en: "cg-envelope-explained",
       pt: "envelope-de-cg",
+      it: "inviluppo-del-cg",
     },
   },
 ]

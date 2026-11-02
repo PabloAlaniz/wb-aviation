@@ -17,7 +17,7 @@ export default defineConfig({
     locales: [...ROUTE_LOCALES],
     defaultLocale: DEFAULT_ROUTE_LOCALE,
     routing: {
-      // All locales are prefixed (/es/, /en/, /pt/). The root page (/) stays a
+      // All locales are prefixed (/es/, /en/, /pt/, /it/). The root page (/) stays a
       // working calculator (shared ?s= / ?fleet= links) and redirects to the
       // preferred language client-side, so no automatic redirect here.
       prefixDefaultLocale: true,
