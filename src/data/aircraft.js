@@ -1103,20 +1103,56 @@ export const aircraftData = {
   },
 }
 
+/** Aircraft with up to this many seats (crew included) are "light"; more seats, "multi". */
+export const LIGHT_AIRCRAFT_MAX_SEATS = 5
+
+/** Aircraft categories, in the order they are listed. */
+export const AIRCRAFT_CATEGORIES = /** @type {const} */ (["light", "multi"])
+
+/** Load stations that seat a person (crew or passenger). */
+const SEAT_STATION = /^(pilot|copilot|passenger\d*)$/
+
 /**
- * Options for the aircraft selector, derived from aircraftData and ordered by
- * manufacturer, then by name, so the list stays scannable as the catalog grows.
+ * Number of seats (crew included), counted from the load stations.
+ * @param {import('../types').Aircraft} aircraft
  */
-export const aircraftOptions = Object.entries(aircraftData)
-  .sort(
-    ([, a], [, b]) =>
-      a.metadata.manufacturer.localeCompare(b.metadata.manufacturer, "en") ||
-      a.name.localeCompare(b.name, "en")
-  )
-  .map(([value, aircraft]) => ({
-    value,
-    label: aircraft.name,
-  }))
+export function seatCount(aircraft) {
+  return aircraft.loadStations.filter((station) => SEAT_STATION.test(station.key)).length
+}
+
+/**
+ * "light" for aircraft up to LIGHT_AIRCRAFT_MAX_SEATS seats, "multi" above.
+ * @param {import('../types').Aircraft} aircraft
+ * @returns {import('../types').AircraftCategory}
+ */
+export function aircraftCategory(aircraft) {
+  return seatCount(aircraft) <= LIGHT_AIRCRAFT_MAX_SEATS ? "light" : "multi"
+}
+
+/**
+ * Catalog ids grouped by category (light first), each ordered by
+ * manufacturer, then by name, so the lists stay scannable as the catalog grows.
+ * @type {{ category: import('../types').AircraftCategory, ids: string[] }[]}
+ */
+export const aircraftGroups = AIRCRAFT_CATEGORIES.map((category) => ({
+  category,
+  ids: Object.entries(aircraftData)
+    .filter(([, aircraft]) => aircraftCategory(aircraft) === category)
+    .sort(
+      ([, a], [, b]) =>
+        a.metadata.manufacturer.localeCompare(b.metadata.manufacturer, "en") ||
+        a.name.localeCompare(b.name, "en")
+    )
+    .map(([id]) => id),
+})).filter((group) => group.ids.length > 0)
+
+/**
+ * Options for the aircraft selector, in aircraftGroups order. Each option
+ * carries its category so the UI can show it under a localized heading.
+ */
+export const aircraftOptions = aircraftGroups.flatMap(({ category, ids }) =>
+  ids.map((value) => ({ value, label: aircraftData[value].name, category }))
+)
 
 /**
  * Build an empty weights state object for a given aircraft

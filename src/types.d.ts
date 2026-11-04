@@ -120,10 +120,14 @@ export interface Aircraft {
 /** Weights entered in the form, keyed by station (raw string values). */
 export type StationWeights = Record<string, string>
 
-/** Option for the aircraft selector. */
+/** Light aircraft (up to 5 seats, crew included) or larger ("multi"). */
+export type AircraftCategory = "light" | "multi"
+
+/** Option for a select; consecutive options with the same `group` are listed under it. */
 export interface SelectOption {
   value: string
   label: string
+  group?: string
 }
 
 export interface WeightBalanceResult {

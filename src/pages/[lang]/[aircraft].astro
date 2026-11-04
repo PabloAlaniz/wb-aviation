@@ -8,7 +8,7 @@ import Base from "../../layouts/Base.astro"
 import LanguageNav from "../../components/LanguageNav.astro"
 import Calculator from "../../components/Calculator.astro"
 import { locales } from "../../i18n"
-import { aircraftData } from "../../data/aircraft"
+import { aircraftData, aircraftGroups } from "../../data/aircraft"
 import {
   ROUTE_LOCALES,
   absoluteUrl,
@@ -49,7 +49,9 @@ const faq = aircraftFaq(aircraft, m, lang)
 const stations = stationRows(aircraft, m)
 const envelope = envelopeRows(aircraft)
 const meta = aircraft.metadata
-const otherAircraft = Object.entries(aircraftData).filter(([otherId]) => otherId !== id)
+const otherAircraft = aircraftGroups
+  .map(({ category, ids }) => ({ category, ids: ids.filter((otherId) => otherId !== id) }))
+  .filter((group) => group.ids.length > 0)
 
 const specs = [
   [s.tcds, aircraft.tcds],
@@ -239,15 +241,22 @@ const td = "border-b border-gray-200 px-3 py-1.5"
         otherAircraft.length > 0 && (
           <nav aria-label={s.otherAircraftTitle}>
             <h2 class="mb-2 text-xl font-semibold text-gray-900">{s.otherAircraftTitle}</h2>
-            <ul class="list-disc pl-6">
-              {otherAircraft.map(([otherId, other]) => (
-                <li>
-                  <a href={aircraftPath(lang, otherId)} class="text-blue-700 hover:underline">
-                    {s.h1(other.name)}
-                  </a>
-                </li>
-              ))}
-            </ul>
+            {otherAircraft.map(({ category, ids }) => (
+              <>
+                <h3 class="mt-3 mb-1 font-semibold text-gray-800">
+                  {m.app.aircraftGroups[category]}
+                </h3>
+                <ul class="list-disc pl-6">
+                  {ids.map((otherId) => (
+                    <li>
+                      <a href={aircraftPath(lang, otherId)} class="text-blue-700 hover:underline">
+                        {s.h1(aircraftData[otherId].name)}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ))}
           </nav>
         )
       }

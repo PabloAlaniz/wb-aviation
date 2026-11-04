@@ -12,6 +12,11 @@ export const es = {
     aircraftCardDescription: "Selecciona el tipo de avión e ingresa los pesos",
     aircraftSelectLabel: "Tipo de Aeronave",
     aircraftSelectPlaceholder: "Selecciona una aeronave",
+    aircraftGroups: {
+      light: "Aviones livianos (hasta 5 plazas)",
+      multi: "Aviones de 6 plazas o más",
+      custom: "Mis aeronaves",
+    },
     requestAircraft: "¿No está tu avión? Pedilo en GitHub",
     clearWeights: "Limpiar pesos",
     resultsCardTitle: "Resultados del Cálculo",
@@ -137,7 +142,7 @@ export const es = {
   },
 
   flightPhases: {
-    title: "Aterrizaje y peso sin combustible",
+    title: "Fases del vuelo",
     fuelBurnLabel: "Combustible a consumir en vuelo",
     fuelBurnPlaceholder: "800",
     taxiFuelLabel: "Combustible de puesta en marcha y rodaje",

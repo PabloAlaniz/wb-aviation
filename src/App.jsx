@@ -195,7 +195,16 @@ export default function App({ initialAircraft, locale } = {}) {
                   value={selectedAircraft}
                   onValueChange={handleAircraftChange}
                   placeholder={m.app.aircraftSelectPlaceholder}
-                  options={[...aircraftOptions, ...custom.options]}
+                  options={[
+                    ...aircraftOptions.map((option) => ({
+                      ...option,
+                      group: m.app.aircraftGroups[option.category],
+                    })),
+                    ...custom.options.map((option) => ({
+                      ...option,
+                      group: m.app.aircraftGroups.custom,
+                    })),
+                  ]}
                 />
                 <a
                   href={AIRCRAFT_REQUEST_URL}

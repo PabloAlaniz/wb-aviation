@@ -10,6 +10,11 @@ export const en = {
     aircraftCardDescription: "Select the aircraft type and enter the weights",
     aircraftSelectLabel: "Aircraft Type",
     aircraftSelectPlaceholder: "Select an aircraft",
+    aircraftGroups: {
+      light: "Light aircraft (up to 5 seats)",
+      multi: "Aircraft with 6 or more seats",
+      custom: "My aircraft",
+    },
     requestAircraft: "Missing your aircraft? Request it on GitHub",
     clearWeights: "Clear weights",
     resultsCardTitle: "Calculation Results",
@@ -136,7 +141,7 @@ export const en = {
   },
 
   flightPhases: {
-    title: "Landing and zero-fuel weight",
+    title: "Flight phases",
     fuelBurnLabel: "Planned fuel burn",
     fuelBurnPlaceholder: "800",
     taxiFuelLabel: "Start and taxi fuel",
