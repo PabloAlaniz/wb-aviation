@@ -139,6 +139,10 @@ export const en = {
     title: "Landing and zero-fuel weight",
     fuelBurnLabel: "Planned fuel burn",
     fuelBurnPlaceholder: "800",
+    taxiFuelLabel: "Start and taxi fuel",
+    taxiFuelPlaceholder: "0",
+    taxiFuelHint:
+      "Subtracted from the fuel loaded (weight and moment) to get the takeoff condition.",
     fuelLoaded: (/** @type {string|number} */ value, unit = "lbs") =>
       `Fuel loaded: ${value} ${unit}`,
     noFuelStation: "This aircraft has no fuel station defined",
@@ -146,6 +150,7 @@ export const en = {
     weight: "Weight",
     cg: "CG",
     status: "Status",
+    ramp: "Ramp (before taxi)",
     takeoff: "Takeoff",
     landing: "Landing",
     zeroFuel: "Zero fuel (ZFW)",
@@ -160,11 +165,18 @@ export const en = {
       `Zero-fuel weight exceeds the maximum (${value} ${unit})`,
     landingOutOfEnvelope: "Landing center of gravity outside the envelope",
     zeroFuelOutOfEnvelope: "Zero-fuel center of gravity outside the envelope",
+    overMaxRampWeight: (/** @type {string|number} */ value, unit = "lbs") =>
+      `Ramp weight exceeds the maximum (${value} ${unit})`,
+    taxiExceedsFuel: (
+      /** @type {string|number} */ taxi,
+      /** @type {string|number} */ loaded,
+      unit = "lbs"
+    ) => `Taxi fuel (${taxi} ${unit}) exceeds the fuel loaded (${loaded} ${unit})`,
     burnExceedsFuel: (
       /** @type {string|number} */ burn,
       /** @type {string|number} */ loaded,
       unit = "lbs"
-    ) => `Planned burn (${burn} ${unit}) exceeds the fuel loaded (${loaded} ${unit})`,
+    ) => `Planned burn (${burn} ${unit}) exceeds the fuel on board at takeoff (${loaded} ${unit})`,
     chartLanding: "Landing",
     chartZeroFuel: "Zero fuel",
     chartBurnPath: "Fuel burn",
@@ -297,10 +309,13 @@ export const en = {
     inEnvelope: "WITHIN",
     outOfEnvelope: "OUT",
     plannedBurn: "Planned fuel burn",
+    rampTotal: "Ramp total",
+    taxiFuel: "Start and taxi fuel",
     limitsTitle: "Limits",
     maxTakeoffWeight: "Max takeoff weight",
     maxLandingWeight: "Max landing weight",
     maxZeroFuelWeight: "Max zero-fuel weight",
+    maxRampWeight: "Max ramp weight",
     cgLimits: "CG limits (fwd / aft)",
     takeoffOk: "Takeoff within limits",
     takeoffNotOk: "TAKEOFF OUT OF LIMITS",

@@ -51,6 +51,34 @@ const cells = (/** @type {string} */ testId) =>
     .map((cell) => cell.textContent)
 
 describe("LoadSheet", () => {
+  it("prints the ramp total and the taxi fuel before the takeoff total", () => {
+    const weights = { ...emptyWeightsFor(cessna), pilot: "170", fuel: "240" }
+    const phases = /** @type {import("../types").FlightPhasesResult} */ (
+      calculateFlightPhases(cessna, weights, "120", "12")
+    )
+    const results = /** @type {import("../types").WeightBalanceResult} */ (
+      calculateWeightBalance(cessna, { ...weights, fuel: "228" })
+    )
+    render(
+      <LoadSheet
+        aircraft={cessna}
+        weights={weights}
+        results={results}
+        safetyChecks={null}
+        phases={phases}
+        landingReport={buildLandingReport(cessna, phases)}
+        details={details}
+        units="imperial"
+      />
+    )
+
+    // rampa 2073 lbs; rodaje 12 lbs @ 48" = 576 lb-in; despegue 2061 lbs
+    expect(cells("sheet-ramp-total").slice(0, 2)).toEqual(["Total en rampa", "2073.0"])
+    expect(cells("sheet-taxi-fuel")).toEqual(["Combustible de rodaje", "−12.0", "", "−576"])
+    expect(cells("sheet-total")[1]).toBe("2061.0")
+    expect(within(screen.getByTestId("sheet-phase-ramp")).getByText("2073.0")).toBeInTheDocument()
+  })
+
   it("prints stations, totals and phases in imperial units", () => {
     render(<LoadSheet {...sheetProps()} details={details} units="imperial" />)
 

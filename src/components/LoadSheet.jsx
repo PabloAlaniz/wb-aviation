@@ -2,6 +2,7 @@ import { CGEnvelopeChart } from "./CGEnvelopeChart"
 import { messages as m } from "../i18n"
 import { resolveStationLabel } from "../utils/stationLabel"
 import { localizeLandingIssue, localizeSafetyMessage } from "../utils/safetyDisplay"
+import { buildRampIssues } from "../utils/calculations"
 import { APP_URL, buildLoadSheetRows } from "../utils/loadSheet"
 import { armToDisplay, momentToDisplay, unitSymbols, weightToDisplay } from "../utils/units"
 
@@ -50,6 +51,9 @@ export function LoadSheet({
 
   const phaseRows = phases
     ? [
+        ...(phases.taxiFuel > 0
+          ? [{ key: "ramp", label: m.flightPhases.ramp, phase: phases.ramp }]
+          : []),
         { key: "takeoff", label: m.flightPhases.takeoff, phase: phases.takeoff },
         { key: "landing", label: m.flightPhases.landing, phase: phases.landing },
         { key: "zeroFuel", label: m.flightPhases.zeroFuel, phase: phases.zeroFuel },
@@ -62,8 +66,11 @@ export function LoadSheet({
         },
       ]
 
-  const takeoffOk = results.isWeightOk && results.isCgOk
+  const rampIssues = phases ? buildRampIssues(aircraft, phases) : []
+  const takeoffOk = results.isWeightOk && results.isCgOk && rampIssues.length === 0
+  const taxiFuel = phases?.taxiFuel ?? 0
   const warnings = [
+    ...rampIssues.map((issue) => localizeLandingIssue(issue, units, phases ?? undefined)),
     ...(safetyChecks
       ? safetyChecks.warnings.map((w) => localizeSafetyMessage(w, safetyChecks, units))
       : []),
@@ -134,6 +141,24 @@ export function LoadSheet({
                 <td className={num}>{moment(row.moment)}</td>
               </tr>
             ))}
+            {phases && taxiFuel > 0 && (
+              <>
+                <tr className="font-bold" data-testid="sheet-ramp-total">
+                  <td className={td}>{ls.rampTotal}</td>
+                  <td className={num}>{weight(phases.ramp.totalWeight)}</td>
+                  <td className={num}>{arm(phases.ramp.centerOfGravity)}</td>
+                  <td className={num}>{moment(phases.ramp.totalMoment)}</td>
+                </tr>
+                <tr data-testid="sheet-taxi-fuel">
+                  <td className={td}>{ls.taxiFuel}</td>
+                  <td className={num}>−{weight(taxiFuel)}</td>
+                  <td className={num} />
+                  <td className={num}>
+                    −{moment(phases.ramp.totalMoment - phases.takeoff.totalMoment)}
+                  </td>
+                </tr>
+              </>
+            )}
             <tr className="font-bold" data-testid="sheet-total">
               <td className={td}>{ls.total}</td>
               <td className={num}>{weight(results.totalWeight)}</td>
@@ -188,6 +213,13 @@ export function LoadSheet({
               label={ls.maxTakeoffWeight}
               value={`${weight(aircraft.maxWeight)} ${symbols.weight}`}
             />
+            {aircraft.maxRampWeight !== undefined && (
+              <Field
+                inline
+                label={ls.maxRampWeight}
+                value={`${weight(aircraft.maxRampWeight)} ${symbols.weight}`}
+              />
+            )}
             {aircraft.maxLandingWeight !== undefined && (
               <Field
                 inline

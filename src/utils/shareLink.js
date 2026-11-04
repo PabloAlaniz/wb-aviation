@@ -1,11 +1,11 @@
 /**
  * Shareable calculation links.
  *
- * A calculation (aircraft, station weights, planned fuel burn and display
- * units) is encoded as base64url JSON in the `s` URL param:
+ * A calculation (aircraft, station weights, planned fuel burn, taxi fuel and
+ * display units) is encoded as base64url JSON in the `s` URL param:
  *
  *   ?s=<base64url(JSON)>
- *   { v: 1, a: aircraftId, w?: { station: lbs }, b?: fuelBurnLbs, u?: "i" | "m",
+ *   { v: 1, a: aircraftId, w?: { station: lbs }, b?: fuelBurnLbs, t?: taxiFuelLbs, u?: "i" | "m",
  *     c?: { m: baseModelId, r: registration, e: emptyWeight, x: emptyArm, n?: name } }
  *
  * Weights are always in lbs (the internal unit), rounded to 2 decimals; empty
@@ -32,6 +32,7 @@ const MAX_NAME_LENGTH = 60
  *   aircraftId: string,
  *   weights: import("../types").StationWeights,
  *   fuelBurn: string,
+ *   taxiFuel?: string,
  *   units: import("../types").UnitSystem,
  *   customRecords?: import("./customAircraft").CustomAircraftRecord[],
  * }} ShareableState
@@ -41,6 +42,7 @@ const MAX_NAME_LENGTH = 60
  *   customRecord: import("./customAircraft").CustomAircraftRecord | null,
  *   weights: import("../types").StationWeights,
  *   fuelBurn: string,
+ *   taxiFuel: string,
  *   units: import("../types").UnitSystem | null,
  * }} SharedCalculation
  */
@@ -108,6 +110,7 @@ export function encodeSharedCalculation({
   aircraftId,
   weights,
   fuelBurn,
+  taxiFuel = "",
   units,
   customRecords = [],
 }) {
@@ -140,6 +143,8 @@ export function encodeSharedCalculation({
 
   const burn = toShareableWeight(fuelBurn)
   if (burn !== null) payload.b = burn
+  const taxi = toShareableWeight(taxiFuel)
+  if (taxi !== null) payload.t = taxi
   if (units === "metric") payload.u = "m"
 
   return toBase64Url(JSON.stringify(payload))
@@ -166,7 +171,7 @@ export function decodeSharedCalculation(param) {
   }
   if (!isPlainObject(payload) || payload.v !== SHARE_VERSION) return null
 
-  const { a: aircraftId, c, w, b, u } = payload
+  const { a: aircraftId, c, w, b, t, u } = payload
   if (typeof aircraftId !== "string") return null
 
   /** @type {import("./customAircraft").CustomAircraftRecord | null} */
@@ -204,6 +209,7 @@ export function decodeSharedCalculation(param) {
   }
 
   if (b !== undefined && !isValidWeight(b)) return null
+  if (t !== undefined && !isValidWeight(t)) return null
   if (u !== undefined && u !== "i" && u !== "m") return null
 
   return {
@@ -211,6 +217,7 @@ export function decodeSharedCalculation(param) {
     customRecord,
     weights,
     fuelBurn: b === undefined ? "" : String(b),
+    taxiFuel: t === undefined ? "" : String(t),
     units: u === "m" ? "metric" : u === "i" ? "imperial" : null,
   }
 }

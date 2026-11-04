@@ -223,7 +223,42 @@ describe("App: fuel burn, landing and zero-fuel", () => {
     fireEvent.change(screen.getByLabelText(/Combustible a consumir/), { target: { value: "800" } })
 
     expect(screen.getByText(/ATERRIZAJE FUERA DE LÍMITES/)).toBeInTheDocument()
-    expect(screen.getByText(/supera el combustible cargado \(500 lbs\)/)).toBeInTheDocument()
+    expect(
+      screen.getByText(/supera el combustible a bordo al despegue \(500 lbs\)/)
+    ).toBeInTheDocument()
+  })
+
+  it("removes the taxi fuel for takeoff and shows the ramp condition", () => {
+    render(<App />)
+
+    fireEvent.change(screen.getByLabelText("Combustible (lbs)"), { target: { value: "1500" } })
+    expect(screen.queryByTestId("phase-ramp")).not.toBeInTheDocument()
+
+    fireEvent.change(screen.getByLabelText(/Combustible de puesta en marcha y rodaje/), {
+      target: { value: "90" },
+    })
+
+    // 6682 + 1500 = 8182 en rampa; 8092 al despegue
+    expect(within(screen.getByTestId("phase-ramp")).getByText("8182.0")).toBeInTheDocument()
+    expect(within(screen.getByTestId("phase-takeoff")).getByText("8092.0")).toBeInTheDocument()
+    expect(screen.getByText("8092.0 lbs")).toBeInTheDocument()
+    expect(screen.getByText(/AERONAVE LISTA PARA DESPEGUE/)).toBeInTheDocument()
+  })
+
+  it("rejects takeoff when the taxi fuel exceeds the fuel loaded", () => {
+    render(<App />)
+
+    fireEvent.change(screen.getByLabelText("Combustible (lbs)"), { target: { value: "50" } })
+    fireEvent.change(screen.getByLabelText(/Combustible de puesta en marcha y rodaje/), {
+      target: { value: "90" },
+    })
+
+    expect(screen.getByText(/NO APTO PARA DESPEGUE/)).toBeInTheDocument()
+    expect(
+      screen.getAllByText(
+        /El combustible de rodaje \(90 lbs\) supera el combustible cargado \(50 lbs\)/
+      ).length
+    ).toBeGreaterThan(0)
   })
 
   it("persists the planned fuel burn across remounts", () => {

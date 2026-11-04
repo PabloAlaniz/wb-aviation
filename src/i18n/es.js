@@ -140,6 +140,9 @@ export const es = {
     title: "Aterrizaje y peso sin combustible",
     fuelBurnLabel: "Combustible a consumir en vuelo",
     fuelBurnPlaceholder: "800",
+    taxiFuelLabel: "Combustible de puesta en marcha y rodaje",
+    taxiFuelPlaceholder: "0",
+    taxiFuelHint: "Se descuenta del combustible cargado (peso y momento) para obtener el despegue.",
     fuelLoaded: (/** @type {string|number} */ value, unit = "lbs") =>
       `Combustible cargado: ${value} ${unit}`,
     noFuelStation: "Esta aeronave no tiene estación de combustible definida",
@@ -147,6 +150,7 @@ export const es = {
     weight: "Peso",
     cg: "CG",
     status: "Estado",
+    ramp: "Rampa (antes del rodaje)",
     takeoff: "Despegue",
     landing: "Aterrizaje",
     zeroFuel: "Sin combustible (ZFW)",
@@ -161,12 +165,20 @@ export const es = {
       `Peso sin combustible excede el máximo (${value} ${unit})`,
     landingOutOfEnvelope: "Centro de gravedad al aterrizar fuera de la envolvente",
     zeroFuelOutOfEnvelope: "Centro de gravedad sin combustible fuera de la envolvente",
+    overMaxRampWeight: (/** @type {string|number} */ value, unit = "lbs") =>
+      `Peso en rampa excede el máximo (${value} ${unit})`,
+    taxiExceedsFuel: (
+      /** @type {string|number} */ taxi,
+      /** @type {string|number} */ loaded,
+      unit = "lbs"
+    ) =>
+      `El combustible de rodaje (${taxi} ${unit}) supera el combustible cargado (${loaded} ${unit})`,
     burnExceedsFuel: (
       /** @type {string|number} */ burn,
       /** @type {string|number} */ loaded,
       unit = "lbs"
     ) =>
-      `El consumo planificado (${burn} ${unit}) supera el combustible cargado (${loaded} ${unit})`,
+      `El consumo planificado (${burn} ${unit}) supera el combustible a bordo al despegue (${loaded} ${unit})`,
     chartLanding: "Aterrizaje",
     chartZeroFuel: "Sin combustible",
     chartBurnPath: "Consumo de combustible",
@@ -299,10 +311,13 @@ export const es = {
     inEnvelope: "DENTRO",
     outOfEnvelope: "FUERA",
     plannedBurn: "Consumo previsto",
+    rampTotal: "Total en rampa",
+    taxiFuel: "Combustible de rodaje",
     limitsTitle: "Límites",
     maxTakeoffWeight: "Peso máximo de despegue",
     maxLandingWeight: "Peso máximo de aterrizaje",
     maxZeroFuelWeight: "Peso máximo sin combustible",
+    maxRampWeight: "Peso máximo de rampa",
     cgLimits: "Límites de CG (del. / tras.)",
     takeoffOk: "Despegue dentro de límites",
     takeoffNotOk: "DESPEGUE FUERA DE LÍMITES",

@@ -47,8 +47,8 @@ export function localizeSafetyMessage(item, report, units) {
 }
 
 /**
- * Re-render weight-based landing messages in the selected units; the report
- * itself is built in lbs by calculations.js.
+ * Re-render weight-based landing and ramp messages in the selected units; the
+ * reports themselves are built in lbs by calculations.js.
  * @param {import("../types").SafetyIssue} issue
  * @param {import("../types").UnitSystem} units
  * @param {import("../types").FlightPhasesResult} [phases]
@@ -68,6 +68,12 @@ export function localizeLandingIssue(issue, units, phases) {
       return issue.limit === undefined
         ? issue.message
         : fp.overMaxZeroFuelWeight(kg(issue.limit), unit)
+    case "ramp-weight":
+      return issue.limit === undefined ? issue.message : fp.overMaxRampWeight(kg(issue.limit), unit)
+    case "taxi-exceeds-fuel":
+      return phases
+        ? fp.taxiExceedsFuel(kg(phases.requestedTaxiFuel), kg(phases.rampFuel), unit)
+        : issue.message
     case "burn-exceeds-fuel":
       return phases
         ? fp.burnExceedsFuel(kg(phases.requestedBurn), kg(phases.fuelLoaded), unit)

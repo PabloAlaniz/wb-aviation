@@ -29,6 +29,7 @@ Si `dataReliability` no es `verified-complete`, la UI muestra automáticamente u
   // Opcionales: solo se validan si se declaran (citar la fuente)
   maxLandingWeight: 9600,   // peso máximo de aterrizaje (lbs)
   maxZeroFuelWeight: 8000,  // peso máximo sin combustible (lbs)
+  maxRampWeight: 10200,     // peso máximo de rampa / rodaje (lbs)
 
   // Límites de CG (in)
   cgLimits: { forward: 144.7, aft: 160.0 },
@@ -92,6 +93,8 @@ Las estaciones de combustible se identifican con `isFuel: true` en `loadStations
 
 `buildLandingReport()` valida la envolvente al aterrizar (error), la envolvente sin combustible (advertencia) y, **solo si están declarados**, `maxLandingWeight` y `maxZeroFuelWeight`. No cargar estos valores sin una fuente oficial: si faltan, el chequeo se omite.
 
+El combustible de puesta en marcha y rodaje lo ingresa el piloto: `applyTaxiFuel()` lo descuenta de las estaciones de combustible (peso **y** momento) para pasar de la condición de rampa a la de despegue, y `buildRampIssues()` valida `maxRampWeight` **solo si está declarado**.
+
 ## Checklist para agregar una aeronave
 
 1. Conseguir el TCDS en [el sitio de la FAA](https://drs.faa.gov/) y, si es posible, el POH/AFM.
@@ -139,4 +142,5 @@ Aero Boero AB-115/AB-180: no se cargaron. El AB-115 tiene límites en la especif
 | `cgLimits`, `safetyFactors`, `metadata` | `buildSafetyReport()` (alertas)                           |
 | `loadStations[].isFuel`                 | `calculateFlightPhases()` (aterrizaje / ZFW)              |
 | `maxLandingWeight`, `maxZeroFuelWeight` | `buildLandingReport()` (opcionales)                       |
+| `maxRampWeight`                         | `buildRampIssues()` (opcional)                            |
 | `metadata`, `dataValidation`            | `AircraftInfo` y `DataSources` (paneles informativos)     |

@@ -104,6 +104,8 @@ export interface Aircraft {
   maxLandingWeight?: number
   /** Max zero-fuel weight (lbs). Optional: only checked when declared. */
   maxZeroFuelWeight?: number
+  /** Max ramp (taxi) weight (lbs). Optional: only checked when declared. */
+  maxRampWeight?: number
   cgLimits: CgLimits
   stations: Record<string, number | string>
   loadStations: LoadStation[]
@@ -171,13 +173,36 @@ export interface FlightPhase {
   inEnvelope: boolean
 }
 
+/** Takeoff station weights after removing the start and taxi fuel. */
+export interface TaxiFuelResult {
+  /** Station weights at takeoff (raw strings, like the form's). */
+  weights: StationWeights
+  /** Fuel loaded at the ramp, across fuel stations (lbs). */
+  rampFuel: number
+  /** Effective taxi fuel, clamped to [0, rampFuel] (lbs). */
+  taxiFuel: number
+  /** Taxi fuel as requested by the user, before clamping (lbs, >= 0). */
+  requestedTaxiFuel: number
+  taxiExceedsFuel: boolean
+}
+
 export interface FlightPhasesResult {
+  /** As loaded, before start and taxi. */
+  ramp: FlightPhase
+  /** Ramp minus the (clamped) taxi fuel. */
   takeoff: FlightPhase
   /** Takeoff minus the (clamped) planned fuel burn. */
   landing: FlightPhase
   /** Takeoff minus all the loaded fuel. */
   zeroFuel: FlightPhase
-  /** Total fuel loaded across fuel stations (lbs). */
+  /** Fuel loaded at the ramp, across fuel stations (lbs). */
+  rampFuel: number
+  /** Effective start and taxi fuel, clamped to [0, rampFuel] (lbs). */
+  taxiFuel: number
+  /** Taxi fuel as requested by the user, before clamping (lbs, >= 0). */
+  requestedTaxiFuel: number
+  taxiExceedsFuel: boolean
+  /** Fuel on board at takeoff, across fuel stations (lbs). */
   fuelLoaded: number
   /** Effective burn used for landing, clamped to [0, fuelLoaded] (lbs). */
   fuelBurn: number
