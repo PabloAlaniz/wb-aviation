@@ -1,3 +1,5 @@
+import { seatKind } from "../utils/standardWeights"
+
 /**
  * Aircraft database for W&B calculations.
  *
@@ -1109,15 +1111,12 @@ export const LIGHT_AIRCRAFT_MAX_SEATS = 5
 /** Aircraft categories, in the order they are listed. */
 export const AIRCRAFT_CATEGORIES = /** @type {const} */ (["light", "multi"])
 
-/** Load stations that seat a person (crew or passenger). */
-const SEAT_STATION = /^(pilot|copilot|passenger\d*)$/
-
 /**
  * Number of seats (crew included), counted from the load stations.
  * @param {import('../types').Aircraft} aircraft
  */
 export function seatCount(aircraft) {
-  return aircraft.loadStations.filter((station) => SEAT_STATION.test(station.key)).length
+  return aircraft.loadStations.filter((station) => seatKind(station.key) !== null).length
 }
 
 /**

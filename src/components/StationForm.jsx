@@ -3,6 +3,15 @@ import { Input, Label } from "./Input"
 import { messages as m } from "../i18n"
 import { useLocalStorage } from "../hooks/useLocalStorage"
 import { resolveStationLabel } from "../utils/stationLabel"
+import { StandardWeightsEditor } from "./StandardWeightsEditor"
+import {
+  DEFAULT_STANDARD_WEIGHTS,
+  STANDARD_WEIGHTS_FOR_SEAT,
+  STANDARD_WEIGHTS_STORAGE_KEY,
+  isStandardWeights,
+  seatKind,
+  standardWeightText,
+} from "../utils/standardWeights"
 import {
   AVGAS_KG_PER_L,
   AVGAS_LB_PER_US_GAL,
@@ -26,7 +35,8 @@ const FUEL_KEY = "fuel"
  *
  * Inputs are shown in the chosen display units, but `weights` always holds
  * lbs (as strings), so the calculations are unit-agnostic. The fuel station
- * can also be entered by volume (US gal / L) using AVGAS density.
+ * can also be entered by volume (US gal / L) using AVGAS density. Crew and
+ * passenger seats offer one-tap standard weights (editable, persisted).
  * @param {{
  *   aircraft: import("../types").Aircraft,
  *   weights: import("../types").StationWeights,
@@ -39,6 +49,11 @@ export function StationForm({ aircraft, weights, onWeightChange, units = "imperi
     "wb-fuel-input-mode",
     /** @type {FuelInputMode} */ ("weight"),
     (value) => value === "weight" || value === "volume"
+  )
+  const [standardWeights, setStandardWeights] = useLocalStorage(
+    STANDARD_WEIGHTS_STORAGE_KEY,
+    DEFAULT_STANDARD_WEIGHTS,
+    isStandardWeights
   )
   // Raw text typed by the user, so converted values don't fight the caret
   const [drafts, setDrafts] = useState(/** @type {Record<string, string>} */ ({}))
@@ -78,6 +93,7 @@ export function StationForm({ aircraft, weights, onWeightChange, units = "imperi
         ? trimNumber(toDisplay(placeholderLbs, mode), 0)
         : station.placeholder
 
+    const seat = seatKind(station.key)
     const stored = weights[station.key] ?? ""
     const draft = drafts[station.key]
     const value =
@@ -127,6 +143,32 @@ export function StationForm({ aircraft, weights, onWeightChange, units = "imperi
             onWeightChange(station.key, inputToLbsText(text, units, mode))
           }}
         />
+        {seat && (
+          <div className="flex flex-wrap gap-1">
+            {STANDARD_WEIGHTS_FOR_SEAT[seat].map((kind) => {
+              const lbs = standardWeights[kind]
+              const shown = `${trimNumber(weightToDisplay(lbs, units), 0)} ${symbols.weight}`
+              return (
+                <button
+                  key={kind}
+                  type="button"
+                  aria-label={m.standardWeights.apply(m.standardWeights[kind], shown, name)}
+                  onClick={() => {
+                    setDrafts((prev) => {
+                      const next = { ...prev }
+                      delete next[station.key]
+                      return next
+                    })
+                    onWeightChange(station.key, standardWeightText(lbs, units))
+                  }}
+                  className="rounded-full border border-gray-200 px-2 py-0.5 text-xs text-gray-600 hover:bg-gray-50"
+                >
+                  {m.standardWeights[kind]} · {shown}
+                </button>
+              )
+            })}
+          </div>
+        )}
         {isFuel && mode === "volume" && (
           <p className="text-xs text-gray-500">
             {stored !== "" && `${m.units.fuelEquivalent(formatWeight(Number(stored), units))} · `}
@@ -149,6 +191,13 @@ export function StationForm({ aircraft, weights, onWeightChange, units = "imperi
         </div>
       ))}
       {fullWidth.map(renderField)}
+      {stations.some((station) => seatKind(station.key)) && (
+        <StandardWeightsEditor
+          value={standardWeights}
+          onChange={setStandardWeights}
+          units={units}
+        />
+      )}
     </div>
   )
 }

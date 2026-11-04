@@ -95,6 +95,20 @@ export const es = {
     fuel: "Combustible",
   },
 
+  standardWeights: {
+    title: "Pesos estándar",
+    description:
+      "Valores para los botones rápidos de tripulación y pasajeros. Usá los del manual de operaciones de tu operador.",
+    crew: "Tripulante",
+    adult: "Adulto",
+    child: "Niño",
+    apply: (
+      /** @type {string} */ kind,
+      /** @type {string} */ weight,
+      /** @type {string} */ station
+    ) => `Cargar ${kind} (${weight}): ${station}`,
+  },
+
   units: {
     label: "Unidades",
     imperial: "Imperial (lbs, in, gal)",
