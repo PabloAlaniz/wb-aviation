@@ -55,6 +55,7 @@ export const aircraftData = {
     },
 
     // Especificaciones de peso verificadas con manual oficial
+    fuelType: "jet-a",
     emptyWeight: 6682, // Peso vacío oficial del manual Beechcraft E90 (LV-AYG)
     emptyArm: 151.0415, // Brazo oficial del manual específico
     maxWeight: 10100, // Actualizado según datos oficiales (10,100 lbs)
@@ -140,6 +141,396 @@ export const aircraftData = {
         "Estaciones de carga específicas para otras aeronaves",
         "Verificación de número de serie específico para validación de peso vacío",
         "Pesos máximos de aterrizaje y sin combustible (MLW/MZFW) según TCDS 3A20 (no cargados: no se validan)",
+      ],
+    },
+  },
+
+  "king-air-b200": {
+    name: "King Air B200 (Beechcraft) - ejecutivo",
+    tcds: "TCDS# A24CE (FAA)",
+
+    metadata: {
+      manufacturer: "Beechcraft Corporation (now Textron Aviation Inc.)",
+      productionYears: "1981-presente",
+      totalProduced: "s/d",
+      engines: "2x Pratt & Whitney PT6A-42 (850 SHP each)",
+      lastDataVerification: "2026-11-04",
+      sourceDocuments: [
+        "Planilla de peso y balance de un operador argentino (B200, configuración ejecutiva de 8 pasajeros, rev. 2025): brazos de estaciones, combustible y pesos máximos",
+        "FAA TCDS A24CE (Beechcraft 200 series): límites de CG",
+      ],
+      dataReliability: "estimated",
+      notes:
+        "Datos tomados de la planilla de un operador; no verificados contra el POH. Brazos de asientos según la numeración del plano de cabina de esa planilla.",
+      aircraftSpecific: {
+        registrationExample: "B200 de operador (ejemplo de planilla)",
+        serialNumber: "N/A",
+        warning:
+          'Peso vacío y brazo corresponden a un B200 de ejemplo (8198 lbs @ 186.1"). Cargue el Weight & Balance Report de su aeronave con "Mis aeronaves" y verifique los brazos de cada asiento con el POH de su configuración de cabina.',
+      },
+    },
+
+    variants: {
+      B200: {
+        description: "Configuración ejecutiva: 2 tripulantes + 8 pasajeros",
+        productionYears: "1981-presente",
+        modifications: [],
+      },
+    },
+
+    fuelType: "jet-a",
+    emptyWeight: 8198,
+    emptyArm: 186.1,
+    maxWeight: 12500, // planilla del operador: máximo de despegue 12,500 lbs
+    maxRampWeight: 12590, // planilla del operador: máximo de rampa 12,590 lbs
+    maxLandingWeight: 12500, // planilla del operador: máximo de aterrizaje 12,500 lbs
+    maxZeroFuelWeight: 10400, // planilla del operador: máximo sin combustible 10,400 lbs
+
+    operationalLimits: {
+      fuelCapacity: 544, // gal usables (estándar B200)
+      cabinConfiguration: "2 tripulantes + 8 pasajeros (ejecutivo)",
+    },
+
+    cgLimits: {
+      forward: 181.0, // hasta 11,279 lbs; lineal hasta 185.0" a 12,500 lbs
+      aft: 196.4,
+      notes:
+        'TCDS A24CE (B200): 181.0" a 11,279 lbs o menos, variación lineal hasta 185.0" a 12,500 lbs; trasero 196.4" a todos los pesos. La planilla del operador usa una franja fija 181.0-196.4".',
+    },
+
+    stations: {
+      pilot: 129,
+      copilot: 129,
+      passenger1: 215,
+      passenger2: 215,
+      passenger3: 259,
+      passenger4: 259,
+      passenger5: 183,
+      passenger6: 176,
+      passenger7: 163,
+      passenger8: 293,
+      baggage: 305,
+      fuel: 195.9,
+      notes:
+        'Brazos de la planilla del operador. Combustible con brazo fijo 195.9" (la planilla no usa la tabla de momentos por cantidad del POH).',
+    },
+
+    loadStations: [
+      { key: "pilot", labelKey: "stations.pilot", placeholder: "187" },
+      { key: "copilot", labelKey: "stations.copilot", placeholder: "187" },
+      { key: "passenger1", labelKey: "stations.passenger1", placeholder: "165" },
+      { key: "passenger2", labelKey: "stations.passenger2", placeholder: "165" },
+      { key: "passenger3", labelKey: "stations.passenger3", placeholder: "165" },
+      { key: "passenger4", labelKey: "stations.passenger4", placeholder: "165" },
+      { key: "passenger5", labelKey: "stations.passenger5", placeholder: "165" },
+      { key: "passenger6", labelKey: "stations.passenger6", placeholder: "165" },
+      { key: "passenger7", labelKey: "stations.passenger7", placeholder: "165" },
+      { key: "passenger8", labelKey: "stations.passenger8", placeholder: "165" },
+      { key: "baggage", labelKey: "stations.baggage", placeholder: "100", fullWidth: true },
+      {
+        key: "fuel",
+        labelKey: "stations.fuel",
+        max: 3645, // 544 gal usables x 6.7 lbs/gal (Jet A)
+        placeholder: "2000",
+        fullWidth: true,
+        isFuel: true,
+      },
+    ],
+
+    // TCDS A24CE (B200). 7500 lbs: piso del gráfico, por debajo del peso vacío típico.
+    cgEnvelope: {
+      points: [
+        { arm: 181.0, weight: 7500 },
+        { arm: 181.0, weight: 11279 },
+        { arm: 185.0, weight: 12500 },
+        { arm: 196.4, weight: 12500 },
+        { arm: 196.4, weight: 7500 },
+        { arm: 181.0, weight: 7500 },
+      ],
+      source: "FAA TCDS A24CE (B200)",
+      verificationStatus: "estimated",
+    },
+
+    safetyFactors: {
+      weightMargin: 0.95,
+      cgMargin: 0.1,
+      recommendedReserve: {
+        fuel: 400,
+        weight: 200,
+      },
+    },
+
+    dataValidation: {
+      lastUpdated: "2026-11-04",
+      verifiedAgainst: ["Planilla de peso y balance de un operador (B200, rev. 2025)"],
+      pendingVerification: [
+        "Brazos de asientos, equipaje y combustible contra el POH B200 (tomados de una planilla de operador)",
+        'Tabla de momentos de combustible por cantidad (se usa un brazo fijo de 195.9")',
+        "Peso máximo sin combustible: la planilla usa 10,400 lbs; verificar el de su número de serie y modificaciones",
+        "Envolvente de CG contra el POH vigente (límites del TCDS A24CE)",
+        "Peso vacío y brazo de la aeronave individual (obligatorio: W&B Report propio)",
+      ],
+    },
+  },
+
+  "king-air-b200-medevac": {
+    name: "King Air B200 (Beechcraft) - sanitario",
+    tcds: "TCDS# A24CE (FAA)",
+
+    metadata: {
+      manufacturer: "Beechcraft Corporation (now Textron Aviation Inc.)",
+      productionYears: "1981-presente",
+      totalProduced: "s/d",
+      engines: "2x Pratt & Whitney PT6A-42 (850 SHP each)",
+      lastDataVerification: "2026-11-04",
+      sourceDocuments: [
+        "Planilla de peso y balance de un operador argentino (B200, configuración sanitaria, rev. 2023): brazos de estaciones, combustible y pesos máximos",
+        "FAA TCDS A24CE (Beechcraft 200 series): límites de CG",
+      ],
+      dataReliability: "estimated",
+      notes:
+        "Configuración sanitaria (camilla y equipo médico) de la planilla de un operador; no verificada contra el POH ni el suplemento de la instalación sanitaria.",
+      aircraftSpecific: {
+        registrationExample: "B200 de operador (ejemplo de planilla)",
+        serialNumber: "N/A",
+        warning:
+          'Peso vacío y brazo corresponden a un B200 de ejemplo (8198 lbs @ 186.1"). Cargue el Weight & Balance Report de su aeronave con "Mis aeronaves" y verifique los brazos con el suplemento de su instalación sanitaria.',
+      },
+    },
+
+    variants: {
+      B200: {
+        description: "Configuración sanitaria: 2 tripulantes, camilla, equipo médico y 5 asientos",
+        productionYears: "1981-presente",
+        modifications: ["Instalación sanitaria (camilla y equipo médico)"],
+      },
+    },
+
+    fuelType: "jet-a",
+    emptyWeight: 8198,
+    emptyArm: 186.1,
+    maxWeight: 12500,
+    maxRampWeight: 12590,
+    maxLandingWeight: 12500,
+    maxZeroFuelWeight: 10400,
+
+    operationalLimits: {
+      fuelCapacity: 544,
+      cabinConfiguration: "2 tripulantes + camilla + 5 asientos (sanitario)",
+    },
+
+    cgLimits: {
+      forward: 181.0,
+      aft: 196.4,
+      notes:
+        'TCDS A24CE (B200): 181.0" a 11,279 lbs o menos, variación lineal hasta 185.0" a 12,500 lbs; trasero 196.4" a todos los pesos.',
+    },
+
+    stations: {
+      pilot: 129,
+      copilot: 129,
+      medicalEquipment: 215,
+      patient: 257,
+      passenger3: 259,
+      passenger5: 183,
+      passenger6: 176,
+      passenger7: 163,
+      passenger8: 293,
+      baggage: 305,
+      fuel: 195.9,
+      notes:
+        "Brazos de la planilla del operador (posiciones numeradas según su plano de cabina). Equipo médico en la posición 1, camilla en la 2.",
+    },
+
+    loadStations: [
+      { key: "pilot", labelKey: "stations.pilot", placeholder: "187" },
+      { key: "copilot", labelKey: "stations.copilot", placeholder: "187" },
+      { key: "medicalEquipment", labelKey: "stations.medicalEquipment", placeholder: "24" },
+      { key: "patient", labelKey: "stations.patient", placeholder: "165" },
+      { key: "passenger3", labelKey: "stations.passenger3", placeholder: "165" },
+      { key: "passenger5", labelKey: "stations.passenger5", placeholder: "165" },
+      { key: "passenger6", labelKey: "stations.passenger6", placeholder: "165" },
+      { key: "passenger7", labelKey: "stations.passenger7", placeholder: "165" },
+      { key: "passenger8", labelKey: "stations.passenger8", placeholder: "165" },
+      { key: "baggage", labelKey: "stations.baggage", placeholder: "100" },
+      {
+        key: "fuel",
+        labelKey: "stations.fuel",
+        max: 3645,
+        placeholder: "2000",
+        fullWidth: true,
+        isFuel: true,
+      },
+    ],
+
+    cgEnvelope: {
+      points: [
+        { arm: 181.0, weight: 7500 },
+        { arm: 181.0, weight: 11279 },
+        { arm: 185.0, weight: 12500 },
+        { arm: 196.4, weight: 12500 },
+        { arm: 196.4, weight: 7500 },
+        { arm: 181.0, weight: 7500 },
+      ],
+      source: "FAA TCDS A24CE (B200)",
+      verificationStatus: "estimated",
+    },
+
+    safetyFactors: {
+      weightMargin: 0.95,
+      cgMargin: 0.1,
+      recommendedReserve: {
+        fuel: 400,
+        weight: 200,
+      },
+    },
+
+    dataValidation: {
+      lastUpdated: "2026-11-04",
+      verifiedAgainst: ["Planilla de peso y balance de un operador (B200 sanitario, rev. 2023)"],
+      pendingVerification: [
+        "Brazos de camilla, equipo médico y asientos contra el suplemento de la instalación sanitaria",
+        'Tabla de momentos de combustible por cantidad (se usa un brazo fijo de 195.9")',
+        "Peso máximo sin combustible: la planilla usa 10,400 lbs; verificar el de su número de serie y modificaciones",
+        "Envolvente de CG contra el POH vigente (límites del TCDS A24CE)",
+        "Peso vacío y brazo de la aeronave individual (obligatorio: W&B Report propio)",
+      ],
+    },
+  },
+
+  "beech-1900d": {
+    name: "Beech 1900D (Beechcraft)",
+    tcds: "TCDS# A24CE (FAA)",
+
+    metadata: {
+      manufacturer: "Beechcraft Corporation (now Textron Aviation Inc.)",
+      productionYears: "1991-2002",
+      totalProduced: "s/d",
+      engines: "2x Pratt & Whitney PT6A-67D (1279 SHP each)",
+      lastDataVerification: "2026-11-04",
+      sourceDocuments: [
+        "Planilla de peso y balance de un operador argentino (1900D, 19 pasajeros, rev. 2025): brazos de estaciones, combustible, pesos máximos y límites de CG",
+        "FAA TCDS A24CE (Beechcraft 1900 series)",
+      ],
+      dataReliability: "estimated",
+      notes:
+        "Datos tomados de la planilla de un operador; no verificados contra el POH. Límites de CG como franja fija (la envolvente del POH no se tuvo a la vista).",
+      aircraftSpecific: {
+        registrationExample: "1900D de operador (ejemplo de planilla)",
+        serialNumber: "N/A",
+        warning:
+          'Peso vacío y brazo corresponden a un 1900D de ejemplo (10650.8 lbs @ 283.88"). Cargue el Weight & Balance Report de su aeronave con "Mis aeronaves" y verifique los brazos de cada fila de asientos con el POH.',
+      },
+    },
+
+    variants: {
+      "1900D": {
+        description: "Configuración regional: 2 tripulantes + 19 pasajeros",
+        productionYears: "1991-2002",
+        modifications: [],
+      },
+    },
+
+    // momento 3,023,547.62 lb-in / 10,650.8 lbs = 283.88"
+    fuelType: "jet-a",
+    emptyWeight: 10650.8,
+    emptyArm: 283.88,
+    maxWeight: 17120, // planilla del operador: máximo de despegue 17,120 lbs
+    maxRampWeight: 17230, // planilla del operador: máximo de rampa 17,230 lbs
+    maxLandingWeight: 16765, // planilla del operador: máximo de aterrizaje 16,765 lbs
+    maxZeroFuelWeight: 15165, // planilla del operador: máximo sin combustible 15,165 lbs
+
+    operationalLimits: {
+      cabinConfiguration: "2 tripulantes + 19 pasajeros",
+    },
+
+    cgLimits: {
+      forward: 272.0,
+      aft: 304.0,
+      notes:
+        'Franja fija 272.0-304.0" de la planilla del operador. El POH puede tener un límite delantero que varía con el peso: verificar.',
+    },
+
+    stations: {
+      pilot: 129,
+      copilot: 129,
+      passenger1: 197,
+      passenger2: 197,
+      passenger3: 227,
+      passenger4: 227,
+      passenger5: 257,
+      passenger6: 257,
+      passenger7: 287,
+      passenger8: 287,
+      passenger9: 317,
+      passenger10: 317,
+      passenger11: 347,
+      passenger12: 347,
+      passenger13: 377,
+      passenger14: 377,
+      passenger15: 407,
+      passenger16: 407,
+      passenger17: 436,
+      passenger18: 436,
+      passenger19: 436,
+      baggage1: 483.5,
+      baggage2: 533,
+      fuel: 295.72, // momento de tanques llenos 967,300 lb-in / 3,271 lbs
+      notes:
+        'Brazos de la planilla del operador, filas cada 30" (2 asientos por fila, 3 en la última). Combustible con brazo fijo de tanques llenos (la planilla no usa la tabla de momentos por cantidad). Equipaje en dos compartimientos (la planilla promedia ambos brazos).',
+    },
+
+    loadStations: [
+      { key: "pilot", labelKey: "stations.pilot", placeholder: "187" },
+      { key: "copilot", labelKey: "stations.copilot", placeholder: "187" },
+      ...Array.from({ length: 19 }, (_, i) => ({
+        key: `passenger${i + 1}`,
+        labelKey: `stations.passenger${i + 1}`,
+        placeholder: "165",
+      })),
+      { key: "baggage1", labelKey: "stations.baggage1", placeholder: "200" },
+      { key: "baggage2", labelKey: "stations.baggage2", placeholder: "200" },
+      {
+        key: "fuel",
+        labelKey: "stations.fuel",
+        max: 3271, // tanques llenos según la planilla
+        placeholder: "1600",
+        fullWidth: true,
+        isFuel: true,
+      },
+    ],
+
+    // Franja fija de la planilla. 10000 lbs: piso del gráfico, por debajo del peso vacío típico.
+    cgEnvelope: {
+      points: [
+        { arm: 272.0, weight: 10000 },
+        { arm: 272.0, weight: 17120 },
+        { arm: 304.0, weight: 17120 },
+        { arm: 304.0, weight: 10000 },
+        { arm: 272.0, weight: 10000 },
+      ],
+      source: "Planilla de peso y balance de un operador (1900D)",
+      verificationStatus: "estimated",
+    },
+
+    safetyFactors: {
+      weightMargin: 0.95,
+      cgMargin: 0.1,
+      recommendedReserve: {
+        fuel: 500,
+        weight: 200,
+      },
+    },
+
+    dataValidation: {
+      lastUpdated: "2026-11-04",
+      verifiedAgainst: ["Planilla de peso y balance de un operador (1900D, rev. 2025)"],
+      pendingVerification: [
+        "Brazos de asientos, compartimientos de equipaje y combustible contra el POH 1900D (tomados de una planilla de operador)",
+        'Envolvente de CG del POH (se usa la franja fija 272.0-304.0" de la planilla)',
+        'Tabla de momentos de combustible por cantidad (se usa el brazo de tanques llenos, 295.72")',
+        "Límites de carga de cada compartimiento de equipaje",
+        "Peso vacío y brazo de la aeronave individual (obligatorio: W&B Report propio)",
       ],
     },
   },

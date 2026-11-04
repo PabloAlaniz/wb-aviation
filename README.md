@@ -32,19 +32,22 @@ CheckCG does the math, draws your loading on the official CG envelope and warns 
 
 ## Supported aircraft
 
-| Aircraft                 | TCDS          | Max weight (lbs) | Data reliability |
-| ------------------------ | ------------- | ---------------- | ---------------- |
-| King Air E90             | FAA 3A20      | 10,100           | verified         |
-| Cessna 172S Skyhawk      | FAA 3A12      | 2,550            | estimated        |
-| Cessna 152               | FAA 3A19      | 1,670            | estimated        |
-| Piper PA-28-161 Warrior  | FAA 2A13      | 2,440            | partial          |
-| Piper PA-38-112 Tomahawk | FAA A18SO     | 1,670            | partial          |
-| Tecnam P2008 JC          | EASA.A.583    | 1,388            | estimated        |
-| Tecnam P2002 JF          | EASA.A.006    | 1,278            | estimated        |
-| Diamond DA20-C1          | EASA.IM.A.223 | 1,653            | estimated        |
-| Diamond DA40 (IO-360)    | EASA.IM.A.022 | 2,535            | estimated        |
+| Aircraft                  | TCDS          | Max weight (lbs) | Data reliability |
+| ------------------------- | ------------- | ---------------- | ---------------- |
+| King Air E90              | FAA 3A20      | 10,100           | verified         |
+| King Air B200 (executive) | FAA A24CE     | 12,500           | estimated        |
+| King Air B200 (medevac)   | FAA A24CE     | 12,500           | estimated        |
+| Beech 1900D               | FAA A24CE     | 17,120           | estimated        |
+| Cessna 172S Skyhawk       | FAA 3A12      | 2,550            | estimated        |
+| Cessna 152                | FAA 3A19      | 1,670            | estimated        |
+| Piper PA-28-161 Warrior   | FAA 2A13      | 2,440            | partial          |
+| Piper PA-38-112 Tomahawk  | FAA A18SO     | 1,670            | partial          |
+| Tecnam P2008 JC           | EASA.A.583    | 1,388            | estimated        |
+| Tecnam P2002 JF           | EASA.A.006    | 1,278            | estimated        |
+| Diamond DA20-C1           | EASA.IM.A.223 | 1,653            | estimated        |
+| Diamond DA40 (IO-360)     | EASA.IM.A.022 | 2,535            | estimated        |
 
-Coming next: King Air B200 and Beech 1900D.
+The B200 and 1900D profiles come from operator load sheets and are pending verification against the POH.
 
 **Missing your aircraft?** [Request it](https://github.com/PabloAlaniz/wb-aviation/issues/new?template=aircraft-request.yml), or add it yourself: the app is data-driven, so a new aircraft is one data entry plus a test, with no UI code. See [CONTRIBUTING.md](CONTRIBUTING.md).
 

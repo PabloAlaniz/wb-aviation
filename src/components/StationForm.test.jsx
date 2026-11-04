@@ -165,6 +165,23 @@ describe("StationForm", () => {
       expect(screen.getByLabelText("Combustible (gal)")).toHaveValue(53)
     })
 
+    it("uses Jet A density (6.7 lb/gal) for turbine aircraft", () => {
+      const onWeightChange = vi.fn()
+      render(
+        <StationForm
+          aircraft={{ ...aircraft, fuelType: "jet-a" }}
+          weights={{}}
+          onWeightChange={onWeightChange}
+        />
+      )
+
+      fireEvent.click(screen.getByRole("button", { name: "Volumen (gal)" }))
+      fireEvent.change(screen.getByLabelText("Combustible (gal)"), { target: { value: "100" } })
+
+      expect(onWeightChange).toHaveBeenLastCalledWith("fuel", "670")
+      expect(screen.getByText(/Densidad Jet A: 6\.7 lb\/gal/)).toBeInTheDocument()
+    })
+
     it("only offers volume entry for the fuel station", () => {
       render(<StationForm aircraft={aircraft} weights={{}} onWeightChange={() => {}} />)
 

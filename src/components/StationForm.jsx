@@ -13,9 +13,10 @@ import {
   standardWeightText,
 } from "../utils/standardWeights"
 import {
-  AVGAS_KG_PER_L,
-  AVGAS_LB_PER_US_GAL,
+  KG_PER_LB,
+  L_PER_US_GAL,
   formatWeight,
+  fuelDensityLbPerGal,
   inputToLbsText,
   lbsTextToInput,
   lbsToFuelVolume,
@@ -35,7 +36,8 @@ const FUEL_KEY = "fuel"
  *
  * Inputs are shown in the chosen display units, but `weights` always holds
  * lbs (as strings), so the calculations are unit-agnostic. The fuel station
- * can also be entered by volume (US gal / L) using AVGAS density. Crew and
+ * can also be entered by volume (US gal / L) using the density of the
+ * aircraft's fuel (AVGAS or Jet A). Crew and
  * passenger seats offer one-tap standard weights (editable, persisted).
  * @param {{
  *   aircraft: import("../types").Aircraft,
@@ -59,6 +61,7 @@ export function StationForm({ aircraft, weights, onWeightChange, units = "imperi
   const [drafts, setDrafts] = useState(/** @type {Record<string, string>} */ ({}))
 
   const symbols = unitSymbols(units)
+  const lbPerGal = fuelDensityLbPerGal(aircraft.fuelType)
   const stations = aircraft.loadStations
   const paired = stations.filter((station) => !station.fullWidth)
   const fullWidth = stations.filter((station) => station.fullWidth)
@@ -74,7 +77,7 @@ export function StationForm({ aircraft, weights, onWeightChange, units = "imperi
    * @param {FuelInputMode} mode
    */
   const toDisplay = (lbs, mode) =>
-    mode === "volume" ? lbsToFuelVolume(lbs, units) : weightToDisplay(lbs, units)
+    mode === "volume" ? lbsToFuelVolume(lbs, units, lbPerGal) : weightToDisplay(lbs, units)
 
   const renderField = (/** @type {import("../types").LoadStation} */ station) => {
     const isFuel = station.key === FUEL_KEY
@@ -97,9 +100,9 @@ export function StationForm({ aircraft, weights, onWeightChange, units = "imperi
     const stored = weights[station.key] ?? ""
     const draft = drafts[station.key]
     const value =
-      draft !== undefined && inputToLbsText(draft, units, mode) === stored
+      draft !== undefined && inputToLbsText(draft, units, mode, lbPerGal) === stored
         ? draft
-        : lbsTextToInput(stored, units, mode)
+        : lbsTextToInput(stored, units, mode, lbPerGal)
 
     return (
       <div key={station.key} className="space-y-2">
@@ -140,7 +143,7 @@ export function StationForm({ aircraft, weights, onWeightChange, units = "imperi
           onChange={(e) => {
             const text = e.target.value
             setDrafts((prev) => ({ ...prev, [station.key]: text }))
-            onWeightChange(station.key, inputToLbsText(text, units, mode))
+            onWeightChange(station.key, inputToLbsText(text, units, mode, lbPerGal))
           }}
         />
         {seat && (
@@ -173,9 +176,10 @@ export function StationForm({ aircraft, weights, onWeightChange, units = "imperi
           <p className="text-xs text-gray-500">
             {stored !== "" && `${m.units.fuelEquivalent(formatWeight(Number(stored), units))} · `}
             {m.units.fuelDensityNote(
+              aircraft.fuelType === "jet-a" ? "Jet A" : "AVGAS",
               units === "metric"
-                ? `${trimNumber(AVGAS_KG_PER_L, 2)} kg/L`
-                : `${AVGAS_LB_PER_US_GAL.toFixed(1)} lb/gal`
+                ? `${trimNumber((lbPerGal * KG_PER_LB) / L_PER_US_GAL, 2)} kg/L`
+                : `${lbPerGal.toFixed(1)} lb/gal`
             )}
           </p>
         )}

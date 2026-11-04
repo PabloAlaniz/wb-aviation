@@ -87,6 +87,9 @@ export interface LoadStation {
   isFuel?: boolean
 }
 
+/** Fuel burned by the aircraft; sets the density for volume entry. */
+export type FuelType = "avgas" | "jet-a"
+
 /** Display unit system. Calculations always stay in imperial units. */
 export type UnitSystem = "imperial" | "metric"
 
@@ -106,6 +109,8 @@ export interface Aircraft {
   maxZeroFuelWeight?: number
   /** Max ramp (taxi) weight (lbs). Optional: only checked when declared. */
   maxRampWeight?: number
+  /** Fuel type, for volume <-> weight conversion. Defaults to AVGAS. */
+  fuelType?: FuelType
   cgLimits: CgLimits
   stations: Record<string, number | string>
   loadStations: LoadStation[]

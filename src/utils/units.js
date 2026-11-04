@@ -23,6 +23,17 @@ export const AVGAS_LB_PER_US_GAL = 6.0
  */
 export const AVGAS_KG_PER_L = (AVGAS_LB_PER_US_GAL * KG_PER_LB) / L_PER_US_GAL
 
+/** Standard Jet A density used for W&B in turbine aircraft: 6.7 lb per US gallon. */
+export const JET_A_LB_PER_US_GAL = 6.7
+
+/**
+ * Fuel density (lb per US gal) for an aircraft's fuel type; AVGAS by default.
+ * @param {import("../types").FuelType} [fuelType]
+ */
+export function fuelDensityLbPerGal(fuelType) {
+  return fuelType === "jet-a" ? JET_A_LB_PER_US_GAL : AVGAS_LB_PER_US_GAL
+}
+
 export const DEFAULT_UNITS = /** @type {UnitSystem} */ ("imperial")
 
 /** @type {UnitSystem[]} */
@@ -118,25 +129,26 @@ export function momentFromDisplay(value, units) {
 // --- fuel volume ----------------------------------------------------------
 
 /**
- * Convert a fuel volume (US gal or L, per unit system) to weight in lbs
- * using the standard AVGAS density.
+ * Convert a fuel volume (US gal or L, per unit system) to weight in lbs.
  * @param {number} volume
  * @param {UnitSystem} units
+ * @param {number} [lbPerGal] - fuel density, AVGAS by default
  * @returns {number} fuel weight in lbs
  */
-export function fuelVolumeToLbs(volume, units) {
+export function fuelVolumeToLbs(volume, units, lbPerGal = AVGAS_LB_PER_US_GAL) {
   const gallons = units === "metric" ? volume / L_PER_US_GAL : volume
-  return gallons * AVGAS_LB_PER_US_GAL
+  return gallons * lbPerGal
 }
 
 /**
  * Convert a fuel weight in lbs to volume (US gal or L, per unit system).
  * @param {number} lbs
  * @param {UnitSystem} units
+ * @param {number} [lbPerGal] - fuel density, AVGAS by default
  * @returns {number} volume in gal or L
  */
-export function lbsToFuelVolume(lbs, units) {
-  const gallons = lbs / AVGAS_LB_PER_US_GAL
+export function lbsToFuelVolume(lbs, units, lbPerGal = AVGAS_LB_PER_US_GAL) {
+  const gallons = lbs / lbPerGal
   return units === "metric" ? gallons * L_PER_US_GAL : gallons
 }
 
@@ -180,13 +192,15 @@ export function formatArm(inches, units, decimals) {
  * @param {string | undefined} lbsText
  * @param {UnitSystem} units
  * @param {"weight" | "volume"} [mode]
+ * @param {number} [lbPerGal] - fuel density for volume mode, AVGAS by default
  */
-export function lbsTextToInput(lbsText, units, mode = "weight") {
+export function lbsTextToInput(lbsText, units, mode = "weight", lbPerGal = AVGAS_LB_PER_US_GAL) {
   if (lbsText === undefined || lbsText === "") return ""
   if (units === "imperial" && mode === "weight") return lbsText
   const lbs = Number(lbsText)
   if (!Number.isFinite(lbs)) return ""
-  const value = mode === "volume" ? lbsToFuelVolume(lbs, units) : weightToDisplay(lbs, units)
+  const value =
+    mode === "volume" ? lbsToFuelVolume(lbs, units, lbPerGal) : weightToDisplay(lbs, units)
   return trimNumber(value, 1)
 }
 
@@ -197,12 +211,14 @@ export function lbsTextToInput(lbsText, units, mode = "weight") {
  * @param {string} inputText
  * @param {UnitSystem} units
  * @param {"weight" | "volume"} [mode]
+ * @param {number} [lbPerGal] - fuel density for volume mode, AVGAS by default
  */
-export function inputToLbsText(inputText, units, mode = "weight") {
+export function inputToLbsText(inputText, units, mode = "weight", lbPerGal = AVGAS_LB_PER_US_GAL) {
   if (inputText === "") return ""
   if (units === "imperial" && mode === "weight") return inputText
   const value = Number(inputText)
   if (!Number.isFinite(value)) return ""
-  const lbs = mode === "volume" ? fuelVolumeToLbs(value, units) : weightFromDisplay(value, units)
+  const lbs =
+    mode === "volume" ? fuelVolumeToLbs(value, units, lbPerGal) : weightFromDisplay(value, units)
   return trimNumber(lbs, 4)
 }
