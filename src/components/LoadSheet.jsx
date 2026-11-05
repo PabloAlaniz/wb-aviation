@@ -1,4 +1,5 @@
 import { CGEnvelopeChart } from "./CGEnvelopeChart"
+import { FuelConversionsTable } from "./FuelConversionsTable"
 import { messages as m } from "../i18n"
 import { resolveStationLabel } from "../utils/stationLabel"
 import { localizeLandingIssue, localizeSafetyMessage } from "../utils/safetyDisplay"
@@ -286,6 +287,10 @@ export function LoadSheet({
             <p className="mt-2 border-2 border-black p-1 text-center font-bold">
               {takeoffOk ? ls.takeoffOk : ls.takeoffNotOk}
             </p>
+          </section>
+          <section className={section}>
+            <h2 className={heading}>{m.fuelConversions.title}</h2>
+            <FuelConversionsTable fuelType={aircraft.fuelType} />
           </section>
         </div>
       </div>

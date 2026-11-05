@@ -110,6 +110,28 @@ export const pt = {
     fuel: "Combustível",
   },
 
+  fuelConversions: {
+    title: "Conversões rápidas de combustível",
+    note: (/** @type {string} */ fuel, /** @type {string} */ density) =>
+      `${fuel}, densidade ${density} kg/L. Cada linha: quanto vale 1 unidade.`,
+    from: "1 unidade de",
+    units: {
+      usGal: "gal US",
+      impGal: "gal imp.",
+      l: "L",
+      lb: "lb",
+      kg: "kg",
+    },
+    fuels: {
+      avgas: "AVGAS (6,0 lb/gal US)",
+      "jet-a": "Jet A (6,7 lb/gal US)",
+    },
+    amount: "Quantidade",
+    unit: "Unidade",
+    fuel: "Combustível",
+    result: "Equivale a",
+  },
+
   standardWeights: {
     title: "Pesos padrão",
     description:

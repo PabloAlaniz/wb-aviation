@@ -8,6 +8,7 @@ import { render, type CollectionEntry } from "astro:content"
 import Base from "../../layouts/Base.astro"
 import LanguageNav from "../LanguageNav.astro"
 import GuidesFooter from "./GuidesFooter.astro"
+import FuelConverter from "./FuelConverter.jsx"
 import "./guide-prose.css"
 import { locales } from "../../i18n"
 import { aircraftData } from "../../data/aircraft"
@@ -125,6 +126,8 @@ const otherGuides = GUIDES.filter((other) => other.key !== guide.key)
             Pablo Alaniz
           </p>
         </header>
+
+        {data.tool === "fuel-converter" && <FuelConverter client:visible lang={lang} />}
 
         <div class="guide-prose">
           <Content />

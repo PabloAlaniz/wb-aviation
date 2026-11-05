@@ -25,6 +25,8 @@ const guides = defineCollection({
     faq: z.array(z.object({ q: z.string(), a: z.string() })).optional(),
     /** Steps for schema.org HowTo (procedural guides only). */
     steps: z.array(z.object({ name: z.string(), text: z.string() })).optional(),
+    /** Interactive tool rendered above the guide content. */
+    tool: z.enum(["fuel-converter"]).optional(),
   }),
 })
 

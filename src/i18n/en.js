@@ -111,6 +111,28 @@ export const en = {
     fuel: "Fuel",
   },
 
+  fuelConversions: {
+    title: "Quick fuel conversions",
+    note: (/** @type {string} */ fuel, /** @type {string} */ density) =>
+      `${fuel}, density ${density} kg/L. Each row: what 1 unit equals.`,
+    from: "1 unit of",
+    units: {
+      usGal: "US gal",
+      impGal: "imp. gal",
+      l: "L",
+      lb: "lb",
+      kg: "kg",
+    },
+    fuels: {
+      avgas: "AVGAS (6.0 lb/US gal)",
+      "jet-a": "Jet A (6.7 lb/US gal)",
+    },
+    amount: "Amount",
+    unit: "Unit",
+    fuel: "Fuel",
+    result: "Equals",
+  },
+
   standardWeights: {
     title: "Standard weights",
     description:
