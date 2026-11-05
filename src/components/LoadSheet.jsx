@@ -109,20 +109,24 @@ export function LoadSheet({
       className="load-sheet mx-auto max-w-[190mm] bg-white text-black text-[11px] leading-snug space-y-4"
       data-testid="load-sheet"
     >
-      <header className="border-2 border-black p-2 space-y-2">
+      <header className="border border-black px-2 py-1 space-y-1">
         <div className="flex items-baseline justify-between gap-4">
-          <h1 className="text-lg font-bold">{ls.sheetTitle}</h1>
-          <span className="text-xs">CheckCG</span>
+          <h1 className="text-sm font-bold">{ls.sheetTitle}</h1>
+          <span className="text-[10px]">CheckCG</span>
         </div>
-        <dl className="grid grid-cols-3 gap-x-4 gap-y-1">
-          <Field label={ls.aircraft} value={aircraft.name} />
-          <Field label={ls.tcds} value={aircraft.tcds} />
-          <Field label={ls.registration} value={details.registration} testId="sheet-registration" />
-          <Field label={ls.date} value={details.date} />
-          <Field label={ls.route} value={route} />
-          <Field label={ls.pilot} value={details.pilot} />
+        <dl className="grid grid-cols-[3fr_2fr_2fr] gap-x-3 gap-y-0.5">
+          <Field row label={ls.aircraft} value={aircraft.name} />
+          <Field row label={ls.tcds} value={aircraft.tcds} />
+          <Field
+            row
+            label={ls.registration}
+            value={details.registration}
+            testId="sheet-registration"
+          />
+          <Field row label={ls.date} value={details.date} />
+          <Field row label={ls.route} value={route} />
+          <Field row label={ls.pilot} value={details.pilot} />
         </dl>
-        <p className="text-[10px]">{ls.units(symbols.weight, symbols.arm, symbols.moment)}</p>
       </header>
 
       <div className="grid grid-cols-2 items-start gap-4">
@@ -351,14 +355,18 @@ export function LoadSheet({
 
 /**
  * Label/value pair of the sheet; blank values leave a line to fill by hand.
- * @param {{ label: string, value: string, inline?: boolean, testId?: string }} props
+ * `inline` puts the value right-aligned on the label's line; `row` puts it on
+ * the label's line as a fill-in line (compact header).
+ * @param {{ label: string, value: string, inline?: boolean, row?: boolean, testId?: string }} props
  */
-function Field({ label, value, inline = false, testId }) {
+function Field({ label, value, inline = false, row = false, testId }) {
   return (
-    <div className={inline ? "flex justify-between gap-2" : ""}>
-      <dt className="text-[10px] uppercase">{label}</dt>
+    <div className={inline ? "flex justify-between gap-2" : row ? "flex items-baseline gap-1" : ""}>
+      <dt className={`text-[10px] uppercase${row ? " shrink-0" : ""}`}>{label}</dt>
       <dd
-        className="min-h-[1.25em] border-b border-dotted border-black font-semibold"
+        className={`min-h-[1.25em] border-b border-dotted border-black font-semibold${
+          row ? " min-w-0 flex-1" : ""
+        }`}
         data-testid={testId}
       >
         {value}

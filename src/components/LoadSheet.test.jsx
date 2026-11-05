@@ -167,7 +167,8 @@ describe("LoadSheet", () => {
 
     expect(cells("sheet-station-pilot")).toEqual(["Piloto", "77.1", "939.8", "72469"])
     expect(cells("sheet-total")).toEqual(["Total al despegue", "940.3", "1053.7", "990747"])
-    expect(screen.getByText("Unidades: peso kg, brazo mm, momento kg·mm")).toBeInTheDocument()
+    expect(screen.queryByText(/^Unidades:/)).not.toBeInTheDocument() // the column headers carry them
+    expect(screen.getByText("Momento (kg·mm)")).toBeInTheDocument()
     expect(screen.getAllByText("1156.7 kg")).toHaveLength(2) // MTOW and MLW (2550 lbs)
   })
 

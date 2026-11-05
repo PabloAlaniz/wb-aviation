@@ -327,11 +327,6 @@ export const en = {
     aircraft: "Aircraft",
     tcds: "TCDS",
     route: "Route",
-    units: (
-      /** @type {string} */ weight,
-      /** @type {string} */ arm,
-      /** @type {string} */ moment
-    ) => `Units: weight ${weight}, arm ${arm}, moment ${moment}`,
     stationsTitle: "Load distribution",
     emptyStationsOmitted: (/** @type {number} */ count) =>
       count === 1
