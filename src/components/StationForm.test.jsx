@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest"
 import { useState } from "react"
 import { render, screen, fireEvent } from "@testing-library/react"
 import { StationForm } from "./StationForm"
+import { aircraftData } from "../data/aircraft"
 
 const aircraft = {
   loadStations: [
@@ -256,5 +257,21 @@ describe("StationForm standard weights", () => {
     fireEvent.change(screen.getByLabelText("Niño (lbs)"), { target: { value: "-5" } })
 
     expect(screen.getByRole("button", { name: /Niño \(77 lbs\): Pasajero 1/ })).toBeVisible()
+  })
+
+  it("offers adult/child on a Cessna front passenger seat keyed as copilot", () => {
+    render(
+      <StationForm
+        aircraft={aircraftData["cessna-172s"]}
+        weights={{}}
+        units="metric"
+        onWeightChange={() => {}}
+      />
+    )
+
+    expect(screen.getByRole("button", { name: /Tripulante .*: Piloto$/ })).toBeVisible()
+    expect(screen.getByRole("button", { name: /Adulto .*: Acompañante$/ })).toBeVisible()
+    expect(screen.getByRole("button", { name: /Niño .*: Acompañante$/ })).toBeVisible()
+    expect(screen.queryByRole("button", { name: /Tripulante .*: Acompañante$/ })).toBeNull()
   })
 })

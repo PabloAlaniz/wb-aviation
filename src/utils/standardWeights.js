@@ -33,15 +33,20 @@ export const STANDARD_WEIGHTS_FOR_SEAT = /** @type {Record<SeatKind, StandardWei
 
 const CREW_STATION = /^(pilot|copilot)$/
 const PASSENGER_STATION = /^(frontPassenger|rearPassenger\d*|passenger\d*|patient)$/
+const CREW_LABELS = new Set(["stations.pilot", "stations.copilot"])
 
 /**
  * Whether a load station seats crew, a passenger, or nobody (baggage, fuel...).
- * @param {string} stationKey
+ * The label decides for crew keys: trainers reuse the "copilot" key for the
+ * front passenger seat (labelKey "stations.frontPassenger").
+ * @param {Pick<import("../types").LoadStation, "key" | "labelKey">} station
  * @returns {SeatKind | null}
  */
-export function seatKind(stationKey) {
-  if (CREW_STATION.test(stationKey)) return "crew"
-  if (PASSENGER_STATION.test(stationKey)) return "passenger"
+export function seatKind({ key, labelKey }) {
+  if (CREW_STATION.test(key)) {
+    return labelKey === undefined || CREW_LABELS.has(labelKey) ? "crew" : "passenger"
+  }
+  if (PASSENGER_STATION.test(key)) return "passenger"
   return null
 }
 

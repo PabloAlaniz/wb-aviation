@@ -51,6 +51,48 @@ const cells = (/** @type {string} */ testId) =>
     .map((cell) => cell.textContent)
 
 describe("LoadSheet", () => {
+  /** @param {import("../types").Aircraft} aircraft @param {Record<string, string>} weights */
+  function renderWithTaxi(aircraft, weights, taxi) {
+    const phases = /** @type {import("../types").FlightPhasesResult} */ (
+      calculateFlightPhases(aircraft, weights, "0", taxi)
+    )
+    const results = /** @type {import("../types").WeightBalanceResult} */ (
+      calculateWeightBalance(aircraft, weights)
+    )
+    render(
+      <LoadSheet
+        aircraft={aircraft}
+        weights={weights}
+        results={results}
+        safetyChecks={null}
+        phases={phases}
+        landingReport={buildLandingReport(aircraft, phases)}
+        details={details}
+        units="imperial"
+      />
+    )
+    return phases
+  }
+
+  it("checks the printed ramp row against the max ramp weight, not the envelope", () => {
+    // B200: 8198 + 374 crew + 3978 fuel = 12550 lbs at the ramp, above the 12500 lbs
+    // MTOW (and the envelope) but below the 12590 lbs max ramp weight
+    const b200 = aircraftData["king-air-b200"]
+    const phases = renderWithTaxi(
+      b200,
+      { ...emptyWeightsFor(b200), pilot: "187", copilot: "187", fuel: "3978" },
+      "90"
+    )
+    expect(phases.ramp.totalWeight).toBe(12550)
+    expect(phases.ramp.inEnvelope).toBe(false)
+    expect(cells("sheet-phase-ramp")[3]).toBe("OK")
+  })
+
+  it("leaves the printed ramp row unassessed without a max ramp weight", () => {
+    renderWithTaxi(cessna, { ...emptyWeightsFor(cessna), pilot: "170", fuel: "240" }, "12")
+    expect(cells("sheet-phase-ramp")[3]).toBe("—")
+  })
+
   it("prints the ramp total and the taxi fuel before the takeoff total", () => {
     const weights = { ...emptyWeightsFor(cessna), pilot: "170", fuel: "240" }
     const phases = /** @type {import("../types").FlightPhasesResult} */ (

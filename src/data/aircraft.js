@@ -1507,7 +1507,7 @@ export const AIRCRAFT_CATEGORIES = /** @type {const} */ (["light", "multi"])
  * @param {import('../types').Aircraft} aircraft
  */
 export function seatCount(aircraft) {
-  return aircraft.loadStations.filter((station) => seatKind(station.key) !== null).length
+  return aircraft.loadStations.filter((station) => seatKind(station) !== null).length
 }
 
 /**

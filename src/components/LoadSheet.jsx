@@ -192,7 +192,15 @@ export function LoadSheet({
                   <td className={num}>{weight(phase.totalWeight)}</td>
                   <td className={num}>{arm(phase.centerOfGravity)}</td>
                   <td className={`${td} font-bold`}>
-                    {phase.inEnvelope ? ls.inEnvelope : ls.outOfEnvelope}
+                    {key !== "ramp"
+                      ? phase.inEnvelope
+                        ? ls.inEnvelope
+                        : ls.outOfEnvelope
+                      : aircraft.maxRampWeight === undefined
+                        ? "—"
+                        : phase.totalWeight <= aircraft.maxRampWeight
+                          ? m.results.ok
+                          : m.results.overweight}
                   </td>
                 </tr>
               ))}

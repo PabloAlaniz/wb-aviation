@@ -96,7 +96,7 @@ export function StationForm({ aircraft, weights, onWeightChange, units = "imperi
         ? trimNumber(toDisplay(placeholderLbs, mode), 0)
         : station.placeholder
 
-    const seat = seatKind(station.key)
+    const seat = seatKind(station)
     const stored = weights[station.key] ?? ""
     const draft = drafts[station.key]
     const value =
@@ -195,7 +195,7 @@ export function StationForm({ aircraft, weights, onWeightChange, units = "imperi
         </div>
       ))}
       {fullWidth.map(renderField)}
-      {stations.some((station) => seatKind(station.key)) && (
+      {stations.some((station) => seatKind(station)) && (
         <StandardWeightsEditor
           value={standardWeights}
           onChange={setStandardWeights}

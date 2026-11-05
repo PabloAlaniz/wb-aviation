@@ -9,8 +9,9 @@ import { KG_PER_LB } from "./units"
 
 describe("seatKind", () => {
   it("tells crew, passenger and non-seat stations apart", () => {
-    expect(seatKind("pilot")).toBe("crew")
-    expect(seatKind("copilot")).toBe("crew")
+    expect(seatKind({ key: "pilot", labelKey: "stations.pilot" })).toBe("crew")
+    expect(seatKind({ key: "copilot", labelKey: "stations.copilot" })).toBe("crew")
+    expect(seatKind({ key: "copilot" })).toBe("crew")
     for (const key of [
       "passenger1",
       "passenger12",
@@ -18,11 +19,15 @@ describe("seatKind", () => {
       "rearPassenger2",
       "patient",
     ]) {
-      expect(seatKind(key)).toBe("passenger")
+      expect(seatKind({ key })).toBe("passenger")
     }
     for (const key of ["baggage", "baggage1", "fuel", "medicalEquipment", "pilotBag"]) {
-      expect(seatKind(key)).toBeNull()
+      expect(seatKind({ key })).toBeNull()
     }
+  })
+
+  it("treats a 'copilot' key labeled as front passenger as a passenger seat", () => {
+    expect(seatKind({ key: "copilot", labelKey: "stations.frontPassenger" })).toBe("passenger")
   })
 })
 
