@@ -143,6 +143,25 @@ describe("LoadSheet", () => {
     expect(screen.getByText("Despegue dentro de límites")).toBeInTheDocument()
   })
 
+  it("lists only loaded stations and says how many were left out", () => {
+    render(<LoadSheet {...sheetProps()} details={details} units="imperial" />)
+
+    // Cessna 172S: pilot and fuel loaded; copilot, 2 passengers and 2 baggage areas empty
+    expect(screen.queryByTestId("sheet-station-copilot")).not.toBeInTheDocument()
+    expect(screen.queryByTestId("sheet-station-baggage1")).not.toBeInTheDocument()
+    expect(screen.getByTestId("sheet-omitted-stations")).toHaveTextContent(
+      "5 estaciones sin carga no se listan"
+    )
+  })
+
+  it("does not mention omitted stations when every station is loaded", () => {
+    const props = sheetProps()
+    const weights = Object.fromEntries(cessna.loadStations.map((s) => [s.key, "10"]))
+    render(<LoadSheet {...props} weights={weights} details={details} units="imperial" />)
+
+    expect(screen.queryByTestId("sheet-omitted-stations")).not.toBeInTheDocument()
+  })
+
   it("prints the same load in metric units", () => {
     render(<LoadSheet {...sheetProps()} details={details} units="metric" />)
 

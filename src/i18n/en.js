@@ -333,6 +333,10 @@ export const en = {
       /** @type {string} */ moment
     ) => `Units: weight ${weight}, arm ${arm}, moment ${moment}`,
     stationsTitle: "Load distribution",
+    emptyStationsOmitted: (/** @type {number} */ count) =>
+      count === 1
+        ? "1 station without load is not listed"
+        : `${count} stations without load are not listed`,
     station: "Station",
     weight: "Weight",
     arm: "Arm",

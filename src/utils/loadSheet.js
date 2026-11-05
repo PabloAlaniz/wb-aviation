@@ -75,8 +75,10 @@ export function normalizeIcao(value) {
  */
 
 /**
- * Rows of the stations table: the empty aircraft first, then every load
+ * Rows of the stations table: the empty aircraft first, then every loaded
  * station in form order (weights in lbs, arms in inches, moments in lb-in).
+ * Stations without load are left out so a 19-seat cabin fits on one page;
+ * they add nothing to the totals.
  * @param {import("../types").Aircraft} aircraft
  * @param {import("../types").StationWeights} weights
  * @param {(station: import("../types").LoadStation) => string} labelFor
@@ -98,6 +100,7 @@ export function buildLoadSheetRows(aircraft, weights, labelFor, emptyLabel) {
     const arm = aircraft.stations[station.key]
     if (typeof arm !== "number") continue
     const weight = Number.parseFloat(weights[station.key]) || 0
+    if (weight <= 0) continue
     rows.push({ key: station.key, label: labelFor(station), weight, arm, moment: weight * arm })
   }
   return rows

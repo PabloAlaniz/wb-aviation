@@ -7,7 +7,7 @@ import { APP_URL, buildLoadSheetRows } from "../utils/loadSheet"
 import { armToDisplay, momentToDisplay, unitSymbols, weightToDisplay } from "../utils/units"
 
 /** Chart size for print: fits the printable width of A4 and Letter at 12 mm margins. */
-const PRINT_CHART_SIZE = { width: 680, height: 320 }
+const PRINT_CHART_SIZE = { width: 620, height: 240 }
 
 /**
  * Printable load sheet (hoja de carga), modeled on a typical weight and
@@ -49,6 +49,12 @@ export function LoadSheet({
     ls.emptyWeight
   )
 
+  // estaciones sin carga: no se imprimen (buildLoadSheetRows), solo se cuentan
+  const omittedStations =
+    aircraft.loadStations.filter((station) => typeof aircraft.stations[station.key] === "number")
+      .length -
+    (rows.length - 1)
+
   const phaseRows = phases
     ? [
         ...(phases.taxiFuel > 0
@@ -88,8 +94,8 @@ export function LoadSheet({
         : m.aircraftInfo.reliabilityEstimated
   const route = [details.departure, details.destination].filter(Boolean).join(" → ")
 
-  const th = "border border-black px-2 py-1 text-left font-semibold"
-  const td = "border border-black px-2 py-1"
+  const th = "border border-black px-2 py-0.5 text-left font-semibold"
+  const td = "border border-black px-2 py-0.5"
   const num = `${td} text-right font-mono`
   const section = "break-inside-avoid space-y-1"
   const heading = "text-sm font-bold uppercase tracking-wide border-b border-black"
@@ -167,6 +173,11 @@ export function LoadSheet({
             </tr>
           </tbody>
         </table>
+        {omittedStations > 0 && (
+          <p className="text-[10px]" data-testid="sheet-omitted-stations">
+            {ls.emptyStationsOmitted(omittedStations)}
+          </p>
+        )}
       </section>
 
       <div className="grid grid-cols-2 gap-4">

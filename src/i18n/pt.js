@@ -334,6 +334,10 @@ export const pt = {
       /** @type {string} */ moment
     ) => `Unidades: peso ${weight}, braço ${arm}, momento ${moment}`,
     stationsTitle: "Distribuição da carga",
+    emptyStationsOmitted: (/** @type {number} */ count) =>
+      count === 1
+        ? "1 estação sem carga não é listada"
+        : `${count} estações sem carga não são listadas`,
     station: "Estação",
     weight: "Peso",
     arm: "Braço",
