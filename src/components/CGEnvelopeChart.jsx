@@ -41,6 +41,11 @@ export function CGEnvelopeChart({
   size,
 }) {
   const animate = !size
+  // Narrow fixed-size chart (print, half a page): fewer X ticks, tick values
+  // without units (the axis titles carry them), tighter margins and room for
+  // a legend that wraps to two lines
+  const compact = size !== undefined && size.width < 480
+  const legendHeight = compact ? PRINT_LEGEND_HEIGHT + 12 : PRINT_LEGEND_HEIGHT
   // Datos en lbs/pulgadas; solo se convierten para mostrar (units)
   const x = (/** @type {number} */ inches) => armToDisplay(inches, units)
   const y = (/** @type {number} */ lbs) => weightToDisplay(lbs, units)
@@ -76,7 +81,7 @@ export function CGEnvelopeChart({
   if (hasZeroFuel) plotted.push({ x: x(zeroFuelCG), y: y(zeroFuelWeight) })
   const xScale = niceScale(
     plotted.map((point) => point.x),
-    { count: 10 }
+    { count: compact ? 5 : 10 }
   )
   const yScale = niceScale(
     plotted.map((point) => point.y),
@@ -115,7 +120,7 @@ export function CGEnvelopeChart({
       </div>
 
       {/* Gráfico principal */}
-      <div className={size ? "bg-white" : "h-80 bg-white"}>
+      <div className={size ? "flex justify-center bg-white" : "h-80 bg-white"}>
         <ChartFrame size={size}>
           <ScatterChart
             width={size?.width}
@@ -123,10 +128,10 @@ export function CGEnvelopeChart({
             margin={{
               // Fixed size (print): the chart is rendered hidden, so Recharts
               // measures the legend as 0 px tall; reserve its space explicitly
-              top: size ? 20 + PRINT_LEGEND_HEIGHT : 20,
-              right: 30,
+              top: size ? 20 + legendHeight : 20,
+              right: compact ? 15 : 30,
               bottom: 40,
-              left: 50,
+              left: compact ? 10 : 50,
             }}
           >
             {/* Rejilla cartesiana de fondo */}
@@ -137,7 +142,7 @@ export function CGEnvelopeChart({
               type="number"
               dataKey="x"
               name="Arm"
-              unit={metric ? " mm" : " inches"}
+              unit={compact ? undefined : metric ? " mm" : " inches"}
               domain={xScale.domain}
               ticks={xScale.ticks}
               allowDataOverflow
@@ -156,11 +161,11 @@ export function CGEnvelopeChart({
               type="number"
               dataKey="y"
               name="Weight"
-              unit={metric ? " kg" : " lbs"}
+              unit={compact ? undefined : metric ? " kg" : " lbs"}
               domain={yScale.domain}
               ticks={yScale.ticks}
               allowDataOverflow
-              width={80}
+              width={compact ? 60 : 80}
               fontSize={10}
               stroke="#000"
               tickFormatter={(value) => value.toLocaleString()}

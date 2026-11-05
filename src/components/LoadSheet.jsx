@@ -6,8 +6,12 @@ import { buildRampIssues } from "../utils/calculations"
 import { APP_URL, buildLoadSheetRows } from "../utils/loadSheet"
 import { armToDisplay, momentToDisplay, unitSymbols, weightToDisplay } from "../utils/units"
 
-/** Chart size for print: fits the printable width of A4 and Letter at 12 mm margins. */
-const PRINT_CHART_SIZE = { width: 620, height: 240 }
+/**
+ * Chart size for print: half the printable width of A4 and Letter (12 mm
+ * margins), beside the loading table, and tall enough that the envelope keeps
+ * its shape instead of flattening.
+ */
+const PRINT_CHART_SIZE = { width: 330, height: 330 }
 
 /**
  * Printable load sheet (hoja de carga), modeled on a typical weight and
@@ -94,8 +98,8 @@ export function LoadSheet({
         : m.aircraftInfo.reliabilityEstimated
   const route = [details.departure, details.destination].filter(Boolean).join(" → ")
 
-  const th = "border border-black px-2 py-0.5 text-left font-semibold"
-  const td = "border border-black px-2 py-0.5"
+  const th = "border border-black px-1 py-0.5 text-left font-semibold"
+  const td = "border border-black px-1 py-0.5"
   const num = `${td} text-right font-mono`
   const section = "break-inside-avoid space-y-1"
   const heading = "text-sm font-bold uppercase tracking-wide border-b border-black"
@@ -121,148 +125,165 @@ export function LoadSheet({
         <p className="text-[10px]">{ls.units(symbols.weight, symbols.arm, symbols.moment)}</p>
       </header>
 
-      <section className={section}>
-        <h2 className={heading}>{ls.stationsTitle}</h2>
-        <table className="w-full border-collapse">
-          <thead>
-            <tr>
-              <th className={th}>{ls.station}</th>
-              <th className={`${th} text-right`}>
-                {ls.weight} ({symbols.weight})
-              </th>
-              <th className={`${th} text-right`}>
-                {ls.arm} ({symbols.arm})
-              </th>
-              <th className={`${th} text-right`}>
-                {ls.moment} ({symbols.moment})
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => (
-              <tr key={row.key} data-testid={`sheet-station-${row.key}`}>
-                <td className={td}>{row.label}</td>
-                <td className={num}>{weight(row.weight)}</td>
-                <td className={num}>{arm(row.arm)}</td>
-                <td className={num}>{moment(row.moment)}</td>
-              </tr>
-            ))}
-            {phases && taxiFuel > 0 && (
-              <>
-                <tr className="font-bold" data-testid="sheet-ramp-total">
-                  <td className={td}>{ls.rampTotal}</td>
-                  <td className={num}>{weight(phases.ramp.totalWeight)}</td>
-                  <td className={num}>{arm(phases.ramp.centerOfGravity)}</td>
-                  <td className={num}>{moment(phases.ramp.totalMoment)}</td>
+      <div className="grid grid-cols-2 items-start gap-4">
+        <div className="space-y-3">
+          <section className={section}>
+            <h2 className={heading}>{ls.stationsTitle}</h2>
+            <table className="w-full border-collapse">
+              <thead>
+                <tr>
+                  <th className={th}>{ls.station}</th>
+                  <th className={`${th} text-right`}>
+                    {ls.weight} ({symbols.weight})
+                  </th>
+                  <th className={`${th} text-right`}>
+                    {ls.arm} ({symbols.arm})
+                  </th>
+                  <th className={`${th} text-right`}>
+                    {ls.moment} ({symbols.moment})
+                  </th>
                 </tr>
-                <tr data-testid="sheet-taxi-fuel">
-                  <td className={td}>{ls.taxiFuel}</td>
-                  <td className={num}>−{weight(taxiFuel)}</td>
-                  <td className={num} />
-                  <td className={num}>
-                    −{moment(phases.ramp.totalMoment - phases.takeoff.totalMoment)}
-                  </td>
+              </thead>
+              <tbody>
+                {rows.map((row) => (
+                  <tr key={row.key} data-testid={`sheet-station-${row.key}`}>
+                    <td className={td}>{row.label}</td>
+                    <td className={num}>{weight(row.weight)}</td>
+                    <td className={num}>{arm(row.arm)}</td>
+                    <td className={num}>{moment(row.moment)}</td>
+                  </tr>
+                ))}
+                {phases && taxiFuel > 0 && (
+                  <>
+                    <tr className="font-bold" data-testid="sheet-ramp-total">
+                      <td className={td}>{ls.rampTotal}</td>
+                      <td className={num}>{weight(phases.ramp.totalWeight)}</td>
+                      <td className={num}>{arm(phases.ramp.centerOfGravity)}</td>
+                      <td className={num}>{moment(phases.ramp.totalMoment)}</td>
+                    </tr>
+                    <tr data-testid="sheet-taxi-fuel">
+                      <td className={td}>{ls.taxiFuel}</td>
+                      <td className={num}>−{weight(taxiFuel)}</td>
+                      <td className={num} />
+                      <td className={num}>
+                        −{moment(phases.ramp.totalMoment - phases.takeoff.totalMoment)}
+                      </td>
+                    </tr>
+                  </>
+                )}
+                <tr className="font-bold" data-testid="sheet-total">
+                  <td className={td}>{ls.total}</td>
+                  <td className={num}>{weight(results.totalWeight)}</td>
+                  <td className={num}>{arm(results.centerOfGravity)}</td>
+                  <td className={num}>{moment(results.totalMoment)}</td>
                 </tr>
-              </>
+              </tbody>
+            </table>
+            {omittedStations > 0 && (
+              <p className="text-[10px]" data-testid="sheet-omitted-stations">
+                {ls.emptyStationsOmitted(omittedStations)}
+              </p>
             )}
-            <tr className="font-bold" data-testid="sheet-total">
-              <td className={td}>{ls.total}</td>
-              <td className={num}>{weight(results.totalWeight)}</td>
-              <td className={num}>{arm(results.centerOfGravity)}</td>
-              <td className={num}>{moment(results.totalMoment)}</td>
-            </tr>
-          </tbody>
-        </table>
-        {omittedStations > 0 && (
-          <p className="text-[10px]" data-testid="sheet-omitted-stations">
-            {ls.emptyStationsOmitted(omittedStations)}
-          </p>
-        )}
-      </section>
-
-      <div className="grid grid-cols-2 gap-4">
-        <section className={section}>
-          <h2 className={heading}>{ls.phasesTitle}</h2>
-          <table className="w-full border-collapse">
-            <thead>
-              <tr>
-                <th className={th}>{ls.phase}</th>
-                <th className={`${th} text-right`}>
-                  {ls.weight} ({symbols.weight})
-                </th>
-                <th className={`${th} text-right`}>
-                  {ls.cg} ({symbols.arm})
-                </th>
-                <th className={th}>{ls.status}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {phaseRows.map(({ key, label, phase }) => (
-                <tr key={key} data-testid={`sheet-phase-${key}`}>
-                  <td className={td}>{label}</td>
-                  <td className={num}>{weight(phase.totalWeight)}</td>
-                  <td className={num}>{arm(phase.centerOfGravity)}</td>
-                  <td className={`${td} font-bold`}>
-                    {key !== "ramp"
-                      ? phase.inEnvelope
-                        ? ls.inEnvelope
-                        : ls.outOfEnvelope
-                      : aircraft.maxRampWeight === undefined
-                        ? "—"
-                        : phase.totalWeight <= aircraft.maxRampWeight
-                          ? m.results.ok
-                          : m.results.overweight}
-                  </td>
+          </section>
+          <section className={section}>
+            <h2 className={heading}>{ls.phasesTitle}</h2>
+            <table className="w-full border-collapse">
+              <thead>
+                <tr>
+                  <th className={th}>{ls.phase}</th>
+                  <th className={`${th} text-right`}>
+                    {ls.weight} ({symbols.weight})
+                  </th>
+                  <th className={`${th} text-right`}>
+                    {ls.cg} ({symbols.arm})
+                  </th>
+                  <th className={th}>{ls.status}</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          {phases && phases.fuelBurn > 0 && (
-            <p>
-              {ls.plannedBurn}: {weight(phases.fuelBurn)} {symbols.weight}
+              </thead>
+              <tbody>
+                {phaseRows.map(({ key, label, phase }) => (
+                  <tr key={key} data-testid={`sheet-phase-${key}`}>
+                    <td className={td}>{label}</td>
+                    <td className={num}>{weight(phase.totalWeight)}</td>
+                    <td className={num}>{arm(phase.centerOfGravity)}</td>
+                    <td className={`${td} font-bold`}>
+                      {key !== "ramp"
+                        ? phase.inEnvelope
+                          ? ls.inEnvelope
+                          : ls.outOfEnvelope
+                        : aircraft.maxRampWeight === undefined
+                          ? "—"
+                          : phase.totalWeight <= aircraft.maxRampWeight
+                            ? m.results.ok
+                            : m.results.overweight}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {phases && phases.fuelBurn > 0 && (
+              <p>
+                {ls.plannedBurn}: {weight(phases.fuelBurn)} {symbols.weight}
+              </p>
+            )}
+          </section>
+        </div>
+
+        <div className="space-y-3">
+          <section className={section}>
+            <h2 className={heading}>{ls.envelopeTitle}</h2>
+            <CGEnvelopeChart
+              aircraft={aircraft}
+              currentCG={results.centerOfGravity}
+              currentWeight={results.totalWeight}
+              landingCG={phases?.fuelBurn ? phases.landing.centerOfGravity : undefined}
+              landingWeight={phases?.fuelBurn ? phases.landing.totalWeight : undefined}
+              zeroFuelCG={phases?.fuelLoaded ? phases.zeroFuel.centerOfGravity : undefined}
+              zeroFuelWeight={phases?.fuelLoaded ? phases.zeroFuel.totalWeight : undefined}
+              units={units}
+              size={PRINT_CHART_SIZE}
+            />
+          </section>
+          <section className={section}>
+            <h2 className={heading}>{ls.limitsTitle}</h2>
+            <dl className="space-y-0.5">
+              <Field
+                inline
+                label={ls.maxTakeoffWeight}
+                value={`${weight(aircraft.maxWeight)} ${symbols.weight}`}
+              />
+              {aircraft.maxRampWeight !== undefined && (
+                <Field
+                  inline
+                  label={ls.maxRampWeight}
+                  value={`${weight(aircraft.maxRampWeight)} ${symbols.weight}`}
+                />
+              )}
+              {aircraft.maxLandingWeight !== undefined && (
+                <Field
+                  inline
+                  label={ls.maxLandingWeight}
+                  value={`${weight(aircraft.maxLandingWeight)} ${symbols.weight}`}
+                />
+              )}
+              {aircraft.maxZeroFuelWeight !== undefined && (
+                <Field
+                  inline
+                  label={ls.maxZeroFuelWeight}
+                  value={`${weight(aircraft.maxZeroFuelWeight)} ${symbols.weight}`}
+                />
+              )}
+              <Field
+                inline
+                label={ls.cgLimits}
+                value={`${arm(aircraft.cgLimits.forward)} / ${arm(aircraft.cgLimits.aft)} ${symbols.arm}`}
+              />
+            </dl>
+            <p className="mt-2 border-2 border-black p-1 text-center font-bold">
+              {takeoffOk ? ls.takeoffOk : ls.takeoffNotOk}
             </p>
-          )}
-        </section>
-
-        <section className={section}>
-          <h2 className={heading}>{ls.limitsTitle}</h2>
-          <dl className="space-y-0.5">
-            <Field
-              inline
-              label={ls.maxTakeoffWeight}
-              value={`${weight(aircraft.maxWeight)} ${symbols.weight}`}
-            />
-            {aircraft.maxRampWeight !== undefined && (
-              <Field
-                inline
-                label={ls.maxRampWeight}
-                value={`${weight(aircraft.maxRampWeight)} ${symbols.weight}`}
-              />
-            )}
-            {aircraft.maxLandingWeight !== undefined && (
-              <Field
-                inline
-                label={ls.maxLandingWeight}
-                value={`${weight(aircraft.maxLandingWeight)} ${symbols.weight}`}
-              />
-            )}
-            {aircraft.maxZeroFuelWeight !== undefined && (
-              <Field
-                inline
-                label={ls.maxZeroFuelWeight}
-                value={`${weight(aircraft.maxZeroFuelWeight)} ${symbols.weight}`}
-              />
-            )}
-            <Field
-              inline
-              label={ls.cgLimits}
-              value={`${arm(aircraft.cgLimits.forward)} / ${arm(aircraft.cgLimits.aft)} ${symbols.arm}`}
-            />
-          </dl>
-          <p className="mt-2 border-2 border-black p-1 text-center font-bold">
-            {takeoffOk ? ls.takeoffOk : ls.takeoffNotOk}
-          </p>
-        </section>
+          </section>
+        </div>
       </div>
 
       <section className={section}>
@@ -276,21 +297,6 @@ export function LoadSheet({
         ) : (
           <p>{ls.noWarnings}</p>
         )}
-      </section>
-
-      <section className={section}>
-        <h2 className={heading}>{ls.envelopeTitle}</h2>
-        <CGEnvelopeChart
-          aircraft={aircraft}
-          currentCG={results.centerOfGravity}
-          currentWeight={results.totalWeight}
-          landingCG={phases?.fuelBurn ? phases.landing.centerOfGravity : undefined}
-          landingWeight={phases?.fuelBurn ? phases.landing.totalWeight : undefined}
-          zeroFuelCG={phases?.fuelLoaded ? phases.zeroFuel.centerOfGravity : undefined}
-          zeroFuelWeight={phases?.fuelLoaded ? phases.zeroFuel.totalWeight : undefined}
-          units={units}
-          size={PRINT_CHART_SIZE}
-        />
       </section>
 
       <section className={section}>
