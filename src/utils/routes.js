@@ -13,7 +13,7 @@
 export const SITE_URL = "https://checkcg.com"
 
 /** Route locales, default first. Must match the i18n catalogs in src/i18n. */
-export const ROUTE_LOCALES = /** @type {const} */ (["es", "en", "pt"])
+export const ROUTE_LOCALES = /** @type {const} */ (["es", "en", "pt", "it"])
 
 /** @typedef {(typeof ROUTE_LOCALES)[number]} RouteLocale */
 
@@ -124,7 +124,7 @@ export function rootRedirectTarget(search, stored, navigatorLang, locales) {
  * Localized folder of the guides section, e.g. /es/guias/, /en/guides/.
  * @type {Record<RouteLocale, string>}
  */
-export const GUIDES_DIR = { es: "guias", en: "guides", pt: "guias" }
+export const GUIDES_DIR = { es: "guias", en: "guides", pt: "guias", it: "guide" }
 
 /**
  * @param {RouteLocale} locale

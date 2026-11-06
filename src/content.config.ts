@@ -18,7 +18,7 @@ const guides = defineCollection({
   schema: z.object({
     title: z.string().min(10).max(70),
     description: z.string().min(50).max(170),
-    lang: z.enum(["es", "en", "pt"]),
+    lang: z.enum(["es", "en", "pt", "it"]),
     translationKey: z.string(),
     slug: z.string().regex(/^[a-z0-9-]+$/),
     updated: z.coerce.date(),

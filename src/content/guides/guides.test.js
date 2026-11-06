@@ -49,7 +49,12 @@ describe("guides registry", () => {
   it("groups the localized paths of the index and every guide", () => {
     const groups = guideTranslationGroups()
     expect(groups).toHaveLength(GUIDES.length + 1)
-    expect(groups[0]).toEqual({ es: "/es/guias/", en: "/en/guides/", pt: "/pt/guias/" })
+    expect(groups[0]).toEqual({
+      es: "/es/guias/",
+      en: "/en/guides/",
+      pt: "/pt/guias/",
+      it: "/it/guide/",
+    })
     expect(groups[2].en).toBe("/en/guides/weight-arm-and-moment/")
   })
 })
