@@ -43,7 +43,7 @@ Questa guida segue la procedura completa, la stessa che esegue il [calcolatore d
 
 Copia la **massa a vuoto base** e il suo **braccio** (detto anche stazione) dal rapporto di massa e centraggio. Alcuni rapporti riportano il momento invece del braccio; in quel caso il braccio è momento ÷ massa. Se il POH usa momenti divisi per 1000, mantieni quella scala per tutto il calcolo.
 
-Non usare la massa a vuoto dell'esempio del POH né quello di un altro aereo dello stesso modello: due aerei "identici" possono differire di decine di libbre e nel braccio.
+Non usare la massa a vuoto dell'esempio del POH né quella di un altro aereo dello stesso modello: due aerei "identici" possono differire di decine di libbre e nel braccio.
 
 ## Passo 2: massa in ogni stazione
 
@@ -68,7 +68,7 @@ Il **momento** è massa × braccio. Calcolalo per ogni stazione, inclusa la mass
 
 ## Passo 6: verifica massa massima e inviluppo
 
-1. **Massa totale ≤ massa massima al decollo.** Alcuni aerei hanno anche una massa massima di rampa (per avviamento e rullaggio) e una massa massima all'atterraggio diverso.
+1. **Massa totale ≤ massa massima al decollo.** Alcuni aerei hanno anche una massa massima di rampa (per avviamento e rullaggio) e una massa massima all'atterraggio diversa.
 2. **Il punto (CG, massa) all'interno dell'inviluppo.** Confrontare il CG con un solo numero non basta: in molti aerei il limite anteriore arretra all'aumentare della massa. Riporta il punto sul grafico del POH o interpola tra i vertici dell'inviluppo. Lo spieghiamo in [L'inviluppo del CG](/it/guide/inviluppo-del-cg/).
 
 ## Passo 7: atterraggio e senza carburante

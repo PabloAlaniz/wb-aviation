@@ -7,7 +7,7 @@ slug: massa-braccio-e-momento
 updated: 2026-10-30
 faq:
   - q: "Cos'è il momento nel calcolo di massa e centraggio?"
-    a: "È la massa di un elemento moltiplicato per il suo braccio (la distanza dal datum), espresso per esempio in libbre-pollici (lb-in). Sommando tutti i momenti e dividendo per la massa totale si ottiene il centro di gravità."
+    a: "È la massa di un elemento moltiplicata per il suo braccio (la distanza dal datum), espresso per esempio in libbre-pollici (lb-in). Sommando tutti i momenti e dividendo per la massa totale si ottiene il centro di gravità."
   - q: "Perché il POH divide i momenti per 1000?"
     a: "Per mantenere piccoli i numeri di tabelle e grafici. È solo una scala e va usata in modo coerente in tutto il calcolo."
   - q: "Quanto pesano 24,5 galloni di avgas?"
@@ -22,7 +22,7 @@ Ogni calcolo di massa e centraggio si basa su tre idee: **datum**, **braccio** e
 - **Braccio** (o stazione): la distanza orizzontale dal datum al centro di gravità di un elemento. Negli aerei con unità imperiali si misura in pollici; per convenzione è positivo dietro il datum e negativo davanti.
 - **Momento**: massa × braccio. Misura quanta leva ha una massa rispetto al datum. Un oggetto da 20 lb molto arretrato può contare per il centraggio più di uno da 50 lb vicino al datum.
 
-Il **centro di gravità** è il punto in cui agisce tutto la massa: **CG = somma dei momenti ÷ somma delle masse**.
+Il **centro di gravità** è il punto in cui agisce tutta la massa: **CG = somma dei momenti ÷ somma delle masse**.
 
 ## Esempio svolto: Cessna 152
 

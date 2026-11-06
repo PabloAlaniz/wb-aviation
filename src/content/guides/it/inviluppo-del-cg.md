@@ -21,12 +21,12 @@ L'**inviluppo del CG** è l'area, su un grafico della massa in funzione della po
 L'asse orizzontale è il **CG** (braccio in pollici o millimetri dietro il datum, oppure un momento). L'asse verticale è la **massa**. L'inviluppo è un poligono:
 
 - Il **lato superiore** è la massa massima.
-- Il **lato sinistro** è il **limite anteriore**. In molti aerei non è una linea verticale: oltre un certo massa si inclina all'indietro, quindi più sei pesante, meno CG avanzato è consentito.
+- Il **lato sinistro** è il **limite anteriore**. In molti aerei non è una linea verticale: oltre una certa massa si inclina all'indietro, quindi più sei pesante, meno avanzato può essere il CG.
 - Il **lato destro** è il **limite posteriore**.
 
 Per esempio, sul Cessna 152 (dati di riferimento del TCDS 3A19) il limite anteriore è 31,0 in fino a 1350 lb e arretra linearmente fino a 32,65 in a 1670 lb; il limite posteriore è 36,5 in. Alcuni aerei hanno anche inviluppi separati per le categorie normale e utility: quello utility di solito è più piccolo ed è quello che consente certe manovre.
 
-Per sapere se un carico è all'interno, riporta il punto sul grafico del POH o interpola il limite al tuo massa. Confrontare il CG con un solo numero (quello alla massa massima o alla massa minimo) può trarti in inganno.
+Per sapere se un carico è all'interno, riporta il punto sul grafico del POH o interpola il limite alla tua massa. Confrontare il CG con un solo numero (quello alla massa massima o alla massa minima) può trarti in inganno.
 
 ## Perché conta il limite anteriore
 
@@ -51,7 +51,7 @@ Oltre il limite posteriore l'aereo può diventare instabile in beccheggio. È la
 
 Durante il volo il carburante si consuma, e il carburante ha un suo braccio. Se il serbatoio è **dietro** il CG, consumare carburante sposta il CG **in avanti**; se è **davanti**, il CG si sposta **indietro**. Per questo si verificano anche i punti di atterraggio e senza carburante, non solo quello di decollo. Nell'[esempio del Cessna 152](/it/guide/massa-braccio-e-momento/) il CG passa da 33,27 in al decollo a 32,97 in all'atterraggio.
 
-Anche le masse massime possono cambiare: alcuni aerei hanno una massa massima all'atterraggio inferiore a quello al decollo, altri una massa massima senza carburante.
+Anche le masse massime possono cambiare: alcuni aerei hanno una massa massima all'atterraggio inferiore a quella al decollo, altri una massa massima senza carburante.
 
 ## Cosa fare se sei fuori limiti
 
