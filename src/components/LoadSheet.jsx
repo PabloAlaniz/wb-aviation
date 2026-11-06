@@ -1,5 +1,5 @@
 import { CGEnvelopeChart } from "./CGEnvelopeChart"
-import { FuelConversionsTable } from "./FuelConversionsTable"
+import { FuelConversionDiagram } from "./FuelConversionDiagram"
 import { messages as m } from "../i18n"
 import { resolveStationLabel } from "../utils/stationLabel"
 import { localizeLandingIssue, localizeSafetyMessage } from "../utils/safetyDisplay"
@@ -290,7 +290,7 @@ export function LoadSheet({
           </section>
           <section className={section}>
             <h2 className={heading}>{m.fuelConversions.title}</h2>
-            <FuelConversionsTable fuelType={aircraft.fuelType} />
+            <FuelConversionDiagram fuelType={aircraft.fuelType} printable />
           </section>
         </div>
       </div>

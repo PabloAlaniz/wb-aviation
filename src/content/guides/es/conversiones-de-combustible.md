@@ -54,7 +54,7 @@ Mismo formato, con 6,7 lb por galón US. Esta es la que corresponde a turbohéli
 | **lb**       |  0,149 |    0,124 | 0,565 |    1 | 0,454 |
 | **kg**       |  0,329 |    0,274 |  1,25 | 2,20 |     1 |
 
-La hoja de carga de la calculadora imprime la tabla que corresponde al combustible del avión elegido.
+La hoja de carga de la calculadora imprime el gráfico de conversiones con los factores del combustible del avión elegido.
 
 ## Ejemplos resueltos
 

@@ -191,14 +191,18 @@ describe("LoadSheet", () => {
   it("prints quick fuel conversions for the aircraft's fuel", () => {
     render(<LoadSheet {...sheetProps()} details={details} units="imperial" />)
     // Cessna 172S: AVGAS, 6.0 lb per US gallon
-    expect(cells("fuel-conversions-usGal")).toEqual(["1", "0.833", "3.79", "6.00", "2.72"])
-    expect(screen.getByTestId("fuel-conversions")).toHaveTextContent("AVGAS, densidad 0.719 kg/L")
+    const edge = (/** @type {string} */ id) => screen.getByTestId(`fuel-edge-${id}`).textContent
+    expect(edge("usGal-l")).toBe("3.79")
+    expect(edge("usGal-lb")).toBe("6.00")
+    expect(edge("l-kg")).toBe("0.719")
+    expect(edge("kg-lb")).toBe("2.20")
+    expect(screen.getByTestId("fuel-conversions")).toHaveTextContent("AVGAS 0.719 kg/L")
   })
 
   it("uses Jet A factors for turbine aircraft", () => {
     render(<LoadSheet {...sheetProps(aircraftData["king-air-b200"])} details={details} />)
-    expect(cells("fuel-conversions-usGal")[3]).toBe("6.70")
-    expect(screen.getByTestId("fuel-conversions")).toHaveTextContent("Jet A, densidad 0.803 kg/L")
+    expect(screen.getByTestId("fuel-edge-usGal-lb")).toHaveTextContent("6.70")
+    expect(screen.getByTestId("fuel-conversions")).toHaveTextContent("Jet A 0.803 kg/L")
   })
 
   it("prints the same load in metric units", () => {

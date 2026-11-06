@@ -54,7 +54,7 @@ Mesmo formato, com 6,7 lb por galão US. É a que corresponde a turboélices com
 | **lb**       |  0,149 |    0,124 | 0,565 |    1 | 0,454 |
 | **kg**       |  0,329 |    0,274 |  1,25 | 2,20 |     1 |
 
-A ficha de carregamento da calculadora imprime a tabela do combustível da aeronave escolhida.
+A ficha de carregamento da calculadora imprime o gráfico de conversões com os fatores do combustível da aeronave escolhida.
 
 ## Exemplos resolvidos
 

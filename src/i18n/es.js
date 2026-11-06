@@ -114,9 +114,17 @@ export const es = {
 
   fuelConversions: {
     title: "Conversiones rápidas de combustible",
-    note: (/** @type {string} */ fuel, /** @type {string} */ density) =>
-      `${fuel}, densidad ${density} kg/L. Cada fila: cuánto equivale 1 unidad.`,
-    from: "1 unidad de",
+    boxes: {
+      l: "LITROS",
+      usGal: "GAL US",
+      impGal: "GAL IMP.",
+      lb: "LIBRAS",
+      kg: "KILOS",
+    },
+    diagramNote: (/** @type {string} */ fuel, /** @type {string} */ density) =>
+      `${fuel} ${density} kg/L · con la flecha ×, en contra ÷`,
+    fuelDependent:
+      "Los factores resaltados dependen del combustible; el resto son conversiones de unidades fijas.",
     units: {
       usGal: "gal US",
       impGal: "gal imp.",

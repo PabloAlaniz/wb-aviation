@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { locales } from "../../i18n"
 import { FUEL_UNITS, convertFuel } from "../../utils/fuelConversions"
+import { FuelConversionDiagram } from "../FuelConversionDiagram"
 
 /** @typedef {import("../../utils/fuelConversions").FuelUnit} FuelUnit */
 /** @typedef {import("../../types").FuelType} FuelType */
@@ -9,9 +10,10 @@ import { FUEL_UNITS, convertFuel } from "../../utils/fuelConversions"
 const FUEL_TYPES = ["avgas", "jet-a"]
 
 /**
- * Interactive fuel converter for the fuel conversions guide: type an amount
- * in any unit and see it in the others, for AVGAS or Jet A. Server-rendered
- * with a default amount and hydrated on the page (`client:visible`).
+ * Fuel converter for the fuel conversions guide: the conversion diagram for
+ * AVGAS or Jet A, plus a quick calculator (type an amount in any unit and see
+ * it in the others). Server-rendered and hydrated on the page
+ * (`client:visible`).
  * @param {{ lang: keyof typeof locales }} props
  */
 export default function FuelConverter({ lang }) {
@@ -34,21 +36,31 @@ export default function FuelConverter({ lang }) {
       data-testid="fuel-converter"
     >
       <h2 className="mb-3 text-lg font-semibold text-gray-900">{fc.title}</h2>
-      <div className="grid gap-3 sm:grid-cols-3">
-        <label className="flex flex-col gap-1 text-sm text-gray-700">
-          {fc.fuel}
-          <select
-            className={field}
-            value={fuelType}
-            onChange={(e) => setFuelType(/** @type {FuelType} */ (e.target.value))}
+      <div
+        role="group"
+        aria-label={fc.fuel}
+        className="mb-3 inline-flex rounded-md border border-gray-300 bg-white text-sm"
+      >
+        {FUEL_TYPES.map((type) => (
+          <button
+            key={type}
+            type="button"
+            aria-pressed={fuelType === type}
+            onClick={() => setFuelType(type)}
+            className={`rounded px-3 py-1.5 ${fuelType === type ? "bg-blue-700 text-white" : "text-gray-700"}`}
           >
-            {FUEL_TYPES.map((type) => (
-              <option key={type} value={type}>
-                {fc.fuels[type]}
-              </option>
-            ))}
-          </select>
-        </label>
+            {fc.fuels[type]}
+          </button>
+        ))}
+      </div>
+      <FuelConversionDiagram
+        fuelType={fuelType}
+        messages={locales[lang]}
+        decimalSeparator={lang === "en" ? "." : ","}
+        className="rounded-md bg-white p-2"
+      />
+      <p className="mt-1 mb-4 text-xs text-gray-600">{fc.fuelDependent}</p>
+      <div className="grid gap-3 sm:grid-cols-2">
         <label className="flex flex-col gap-1 text-sm text-gray-700">
           {fc.amount}
           <input

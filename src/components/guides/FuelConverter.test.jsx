@@ -18,7 +18,7 @@ describe("FuelConverter", () => {
   it("converts with Jet A density and from any unit", () => {
     render(<FuelConverter lang="en" />)
 
-    fireEvent.change(screen.getByLabelText("Fuel"), { target: { value: "jet-a" } })
+    fireEvent.click(screen.getByRole("button", { name: "Jet A (6.7 lb/US gal)" }))
     expect(shown("lb")).toBe("177 lb")
 
     fireEvent.change(screen.getByLabelText("Unit"), { target: { value: "usGal" } })
@@ -32,5 +32,21 @@ describe("FuelConverter", () => {
 
     fireEvent.change(screen.getByLabelText("Quantidade"), { target: { value: "" } })
     expect(shown("lb")).toBe("— lb")
+  })
+
+  it("draws the conversion diagram for the selected fuel", () => {
+    render(<FuelConverter lang="es" />)
+    const edge = (/** @type {string} */ id) => screen.getByTestId(`fuel-edge-${id}`).textContent
+
+    expect(edge("usGal-lb")).toBe("6,00")
+    expect(edge("l-kg")).toBe("0,719")
+    expect(edge("impGal-usGal")).toBe("1,20")
+
+    fireEvent.click(screen.getByRole("button", { name: "Jet A (6,7 lb/gal US)" }))
+    expect(edge("usGal-lb")).toBe("6,70")
+    expect(edge("l-kg")).toBe("0,803")
+    // unit-only factors don't change with the fuel
+    expect(edge("impGal-usGal")).toBe("1,20")
+    expect(screen.getByRole("img", { name: /Jet A/ })).toBeInTheDocument()
   })
 })

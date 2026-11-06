@@ -11,7 +11,7 @@ Lo que viene, sin fechas. Las sugerencias son bienvenidas en
 - Combustible de rodaje con condición de rampa y peso máximo de rampa.
 - Pesos estándar editables (tripulante, adulto, niño) con carga de un toque.
 - Aeronaves agrupadas en livianas (hasta 5 plazas) y de 6 plazas o más.
-- Conversiones rápidas de combustible (AVGAS y Jet A) en la hoja de carga y guía con conversor.
+- Gráfico de conversiones rápidas de combustible (AVGAS y Jet A) en la hoja de carga y guía con conversor.
 - Hoja de carga imprimible / PDF, link y QR para compartir, import de flota para escuelas.
 - Página por aeronave e idioma y guías de peso y balance.
 - 12 aeronaves: King Air E90, King Air B200 (ejecutivo y sanitario), Beech 1900D,

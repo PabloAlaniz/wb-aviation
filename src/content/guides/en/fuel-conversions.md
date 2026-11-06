@@ -54,7 +54,7 @@ Same layout, with 6.7 lb per US gallon. This is the one for turboprops such as t
 | **lb**       |  0.149 |    0.124 | 0.565 |    1 | 0.454 |
 | **kg**       |  0.329 |    0.274 |  1.25 | 2.20 |     1 |
 
-The calculator's load sheet prints the table for the selected aircraft's fuel.
+The calculator's load sheet prints the conversion diagram with the factors for the selected aircraft's fuel.
 
 ## Worked examples
 
