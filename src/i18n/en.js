@@ -10,6 +10,11 @@ export const en = {
     aircraftCardDescription: "Select the aircraft type and enter the weights",
     aircraftSelectLabel: "Aircraft Type",
     aircraftSelectPlaceholder: "Select an aircraft",
+    aircraftGroups: {
+      light: "Light aircraft (up to 5 seats)",
+      multi: "Aircraft with 6 or more seats",
+      custom: "My aircraft",
+    },
     requestAircraft: "Missing your aircraft? Request it on GitHub",
     clearWeights: "Clear weights",
     resultsCardTitle: "Calculation Results",
@@ -78,6 +83,23 @@ export const en = {
     passenger2: "Passenger 2",
     passenger3: "Passenger 3",
     passenger4: "Passenger 4",
+    passenger5: "Passenger 5",
+    passenger6: "Passenger 6",
+    passenger7: "Passenger 7",
+    passenger8: "Passenger 8",
+    passenger9: "Passenger 9",
+    passenger10: "Passenger 10",
+    passenger11: "Passenger 11",
+    passenger12: "Passenger 12",
+    passenger13: "Passenger 13",
+    passenger14: "Passenger 14",
+    passenger15: "Passenger 15",
+    passenger16: "Passenger 16",
+    passenger17: "Passenger 17",
+    passenger18: "Passenger 18",
+    passenger19: "Passenger 19",
+    patient: "Patient (stretcher)",
+    medicalEquipment: "Medical equipment",
     rearPassenger1: "Rear passenger 1",
     rearPassenger2: "Rear passenger 2",
     baggage: "Baggage",
@@ -87,6 +109,49 @@ export const en = {
     baggageArea2: "Baggage area 2",
     baggageExtension: "Baggage extension",
     fuel: "Fuel",
+  },
+
+  fuelConversions: {
+    title: "Quick fuel conversions",
+    boxes: {
+      l: "LITERS",
+      usGal: "US GAL",
+      impGal: "IMP. GAL",
+      lb: "POUNDS",
+      kg: "KILOGRAMS",
+    },
+    diagramNote: (/** @type {string} */ fuel, /** @type {string} */ density) =>
+      `${fuel} ${density} kg/L · along the arrow ×, against it ÷`,
+    fuelDependent: "Highlighted factors depend on the fuel; the rest are fixed unit conversions.",
+    units: {
+      usGal: "US gal",
+      impGal: "imp. gal",
+      l: "L",
+      lb: "lb",
+      kg: "kg",
+    },
+    fuels: {
+      avgas: "AVGAS (6.0 lb/US gal)",
+      "jet-a": "Jet A (6.7 lb/US gal)",
+    },
+    amount: "Amount",
+    unit: "Unit",
+    fuel: "Fuel",
+    result: "Equals",
+  },
+
+  standardWeights: {
+    title: "Standard weights",
+    description:
+      "Values for the quick crew and passenger buttons. Use the ones in your operator's operations manual.",
+    crew: "Crew",
+    adult: "Adult",
+    child: "Child",
+    apply: (
+      /** @type {string} */ kind,
+      /** @type {string} */ weight,
+      /** @type {string} */ station
+    ) => `Load ${kind} (${weight}): ${station}`,
   },
 
   units: {
@@ -103,7 +168,8 @@ export const en = {
     byWeight: "Weight",
     byVolume: "Volume",
     fuelEquivalent: (/** @type {string} */ value) => `Equivalent to ${value}`,
-    fuelDensityNote: (/** @type {string} */ density) => `AVGAS density: ${density}`,
+    fuelDensityNote: (/** @type {string} */ fuel, /** @type {string} */ density) =>
+      `${fuel} density: ${density}`,
     millimeters: "millimeters",
     kilograms: "kilograms",
     axisNoteMetric: "C.G. Arm - mm aft of Datum STA 0.0",
@@ -136,9 +202,13 @@ export const en = {
   },
 
   flightPhases: {
-    title: "Landing and zero-fuel weight",
+    title: "Flight phases",
     fuelBurnLabel: "Planned fuel burn",
     fuelBurnPlaceholder: "800",
+    taxiFuelLabel: "Start and taxi fuel",
+    taxiFuelPlaceholder: "0",
+    taxiFuelHint:
+      "Subtracted from the fuel loaded (weight and moment) to get the takeoff condition.",
     fuelLoaded: (/** @type {string|number} */ value, unit = "lbs") =>
       `Fuel loaded: ${value} ${unit}`,
     noFuelStation: "This aircraft has no fuel station defined",
@@ -146,6 +216,7 @@ export const en = {
     weight: "Weight",
     cg: "CG",
     status: "Status",
+    ramp: "Ramp (before taxi)",
     takeoff: "Takeoff",
     landing: "Landing",
     zeroFuel: "Zero fuel (ZFW)",
@@ -160,11 +231,18 @@ export const en = {
       `Zero-fuel weight exceeds the maximum (${value} ${unit})`,
     landingOutOfEnvelope: "Landing center of gravity outside the envelope",
     zeroFuelOutOfEnvelope: "Zero-fuel center of gravity outside the envelope",
+    overMaxRampWeight: (/** @type {string|number} */ value, unit = "lbs") =>
+      `Ramp weight exceeds the maximum (${value} ${unit})`,
+    taxiExceedsFuel: (
+      /** @type {string|number} */ taxi,
+      /** @type {string|number} */ loaded,
+      unit = "lbs"
+    ) => `Taxi fuel (${taxi} ${unit}) exceeds the fuel loaded (${loaded} ${unit})`,
     burnExceedsFuel: (
       /** @type {string|number} */ burn,
       /** @type {string|number} */ loaded,
       unit = "lbs"
-    ) => `Planned burn (${burn} ${unit}) exceeds the fuel loaded (${loaded} ${unit})`,
+    ) => `Planned burn (${burn} ${unit}) exceeds the fuel on board at takeoff (${loaded} ${unit})`,
     chartLanding: "Landing",
     chartZeroFuel: "Zero fuel",
     chartBurnPath: "Fuel burn",
@@ -278,12 +356,11 @@ export const en = {
     aircraft: "Aircraft",
     tcds: "TCDS",
     route: "Route",
-    units: (
-      /** @type {string} */ weight,
-      /** @type {string} */ arm,
-      /** @type {string} */ moment
-    ) => `Units: weight ${weight}, arm ${arm}, moment ${moment}`,
     stationsTitle: "Load distribution",
+    emptyStationsOmitted: (/** @type {number} */ count) =>
+      count === 1
+        ? "1 station without load is not listed"
+        : `${count} stations without load are not listed`,
     station: "Station",
     weight: "Weight",
     arm: "Arm",
@@ -297,10 +374,13 @@ export const en = {
     inEnvelope: "WITHIN",
     outOfEnvelope: "OUT",
     plannedBurn: "Planned fuel burn",
+    rampTotal: "Ramp total",
+    taxiFuel: "Start and taxi fuel",
     limitsTitle: "Limits",
     maxTakeoffWeight: "Max takeoff weight",
     maxLandingWeight: "Max landing weight",
     maxZeroFuelWeight: "Max zero-fuel weight",
+    maxRampWeight: "Max ramp weight",
     cgLimits: "CG limits (fwd / aft)",
     takeoffOk: "Takeoff within limits",
     takeoffNotOk: "TAKEOFF OUT OF LIMITS",

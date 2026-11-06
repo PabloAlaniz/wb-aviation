@@ -1,5 +1,13 @@
 import { describe, it, expect } from "vitest"
-import { aircraftData, aircraftOptions } from "./aircraft"
+import {
+  AIRCRAFT_CATEGORIES,
+  LIGHT_AIRCRAFT_MAX_SEATS,
+  aircraftCategory,
+  aircraftData,
+  aircraftGroups,
+  aircraftOptions,
+  seatCount,
+} from "./aircraft"
 import { calculateWeightBalance, isPointInEnvelope } from "../utils/calculations"
 
 // Training aircraft added to the catalog (LATAM flight schools). Each one gets
@@ -90,17 +98,54 @@ describe.each(CATALOG)("catalog aircraft %s", (key) => {
 })
 
 describe("aircraftOptions ordering", () => {
-  it("is sorted by manufacturer, then by name", () => {
-    const keys = aircraftOptions.map((o) => {
-      const a = aircraftData[o.value]
-      return `${a.metadata.manufacturer}|${a.name}`
-    })
-    const sorted = [...keys].sort((a, b) => {
-      const [ma, na] = a.split("|")
-      const [mb, nb] = b.split("|")
-      return ma.localeCompare(mb, "en") || na.localeCompare(nb, "en")
-    })
-    expect(keys).toEqual(sorted)
+  it("lists light aircraft first, each group sorted by manufacturer, then by name", () => {
+    const categories = aircraftOptions.map((o) => o.category)
+    expect(categories).toEqual(
+      [...categories].sort((a, b) => (a === b ? 0 : a === "light" ? -1 : 1))
+    )
+
+    for (const category of AIRCRAFT_CATEGORIES) {
+      const keys = aircraftOptions
+        .filter((o) => o.category === category)
+        .map((o) => {
+          const a = aircraftData[o.value]
+          return `${a.metadata.manufacturer}|${a.name}`
+        })
+      const sorted = [...keys].sort((a, b) => {
+        const [ma, na] = a.split("|")
+        const [mb, nb] = b.split("|")
+        return ma.localeCompare(mb, "en") || na.localeCompare(nb, "en")
+      })
+      expect(keys).toEqual(sorted)
+    }
+  })
+})
+
+describe("aircraft categories by seats", () => {
+  it("counts crew and passenger seats from the load stations", () => {
+    expect(seatCount(aircraftData["king-air-echo-90"])).toBe(6)
+    expect(seatCount(aircraftData["cessna-172s"])).toBe(4)
+    expect(seatCount(aircraftData["cessna-152"])).toBe(2)
+  })
+
+  it("splits light aircraft (up to 5 seats) from 6+ seat aircraft", () => {
+    expect(aircraftCategory(aircraftData["king-air-echo-90"])).toBe("multi")
+    expect(aircraftCategory(aircraftData["cessna-172s"])).toBe("light")
+    const fiveSeats = {
+      ...aircraftData["cessna-172s"],
+      loadStations: [
+        ...aircraftData["cessna-172s"].loadStations,
+        { key: "passenger3", labelKey: "stations.passenger3" },
+      ],
+    }
+    expect(seatCount(fiveSeats)).toBe(LIGHT_AIRCRAFT_MAX_SEATS)
+    expect(aircraftCategory(fiveSeats)).toBe("light")
+  })
+
+  it("groups every catalog aircraft exactly once", () => {
+    const ids = aircraftGroups.flatMap((group) => group.ids)
+    expect(ids.sort()).toEqual(Object.keys(aircraftData).sort())
+    expect(aircraftGroups.map((group) => group.category)).toEqual(["light", "multi"])
   })
 })
 

@@ -4,7 +4,7 @@ import Base from "../../layouts/Base.astro"
 import LanguageNav from "../../components/LanguageNav.astro"
 import Calculator from "../../components/Calculator.astro"
 import { locales } from "../../i18n"
-import { aircraftData } from "../../data/aircraft"
+import { aircraftData, aircraftGroups } from "../../data/aircraft"
 import {
   ROUTE_LOCALES,
   absoluteUrl,
@@ -65,18 +65,23 @@ const jsonLd = [
 
     <section class="mx-auto max-w-4xl px-4 pb-8 print:hidden">
       <h2 class="mb-2 text-xl font-semibold text-gray-900">{s.home.aircraftListTitle}</h2>
-      <ul class="list-disc space-y-1 pl-6">
-        {
-          Object.entries(aircraftData).map(([id, aircraft]) => (
-            <li>
-              <a href={aircraftPath(lang, id)} class="text-blue-700 hover:underline">
-                {s.home.aircraftLink(aircraft.name)}
-              </a>{" "}
-              <span class="text-sm text-gray-600">({aircraft.tcds})</span>
-            </li>
-          ))
-        }
-      </ul>
+      {
+        aircraftGroups.map(({ category, ids }) => (
+          <>
+            <h3 class="mt-3 mb-1 font-semibold text-gray-800">{m.app.aircraftGroups[category]}</h3>
+            <ul class="list-disc space-y-1 pl-6">
+              {ids.map((id) => (
+                <li>
+                  <a href={aircraftPath(lang, id)} class="text-blue-700 hover:underline">
+                    {s.home.aircraftLink(aircraftData[id].name)}
+                  </a>{" "}
+                  <span class="text-sm text-gray-600">({aircraftData[id].tcds})</span>
+                </li>
+              ))}
+            </ul>
+          </>
+        ))
+      }
     </section>
 
     <section class="mx-auto max-w-4xl px-4 pb-8 print:hidden">

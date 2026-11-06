@@ -30,6 +30,7 @@ describe("encodeSharedCalculation / decodeSharedCalculation", () => {
       aircraftId: "king-air-echo-90",
       weights: { pilot: "180", copilot: "", fuel: "1500.5", baggage1: "0" },
       fuelBurn: "800",
+      taxiFuel: "90",
       units: "metric",
     })
 
@@ -39,15 +40,17 @@ describe("encodeSharedCalculation / decodeSharedCalculation", () => {
       customRecord: null,
       weights: { pilot: "180", fuel: "1500.5" },
       fuelBurn: "800",
+      taxiFuel: "90",
       units: "metric",
     })
   })
 
-  it("keeps the payload compact: drops empty stations, burn and default units", () => {
+  it("keeps the payload compact: drops empty stations, burn, taxi fuel and default units", () => {
     const encoded = encodeSharedCalculation({
       aircraftId: "cessna-172s",
       weights: { pilot: "", copilot: "" },
       fuelBurn: "",
+      taxiFuel: "0",
       units: "imperial",
     })
 
@@ -57,6 +60,7 @@ describe("encodeSharedCalculation / decodeSharedCalculation", () => {
       customRecord: null,
       weights: {},
       fuelBurn: "",
+      taxiFuel: "",
       units: null,
     })
   })
@@ -86,6 +90,7 @@ describe("encodeSharedCalculation / decodeSharedCalculation", () => {
       customRecord: { ...C172_RECORD, name: "Club 172" },
       weights: { pilot: "170" },
       fuelBurn: "",
+      taxiFuel: "",
       units: null,
     })
   })
@@ -155,6 +160,8 @@ describe("decodeSharedCalculation: strict validation", () => {
     ["weights not an object", { ...valid, w: [170] }],
     ["bad fuel burn", { ...valid, b: "lots" }],
     ["negative fuel burn", { ...valid, b: -1 }],
+    ["negative taxi fuel", { ...valid, t: -1 }],
+    ["taxi fuel as a string", { ...valid, t: "90" }],
     ["bad units", { ...valid, u: "cubits" }],
     ["custom record on a catalog aircraft", { ...valid, c: {} }],
   ])("rejects invalid payload: %s", (_label, payload) => {

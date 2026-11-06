@@ -4,6 +4,7 @@ import { dirname } from "node:path"
 import { aircraftData } from "../../data/aircraft"
 import { calculateFlightPhases, calculateWeightBalance } from "../../utils/calculations"
 import { ROUTE_LOCALES } from "../../utils/routes"
+import { FUEL_UNITS, formatFactor, fuelConversionTable } from "../../utils/fuelConversions"
 import { GUIDES, findGuide, guideTranslationGroups } from "./registry"
 import { WORKED_EXAMPLE, WORKED_EXAMPLE_EXPECTED as X, formatGuideNumber } from "./examples"
 
@@ -137,6 +138,39 @@ describe("worked example (Cessna 152)", () => {
         f(X.zeroFuelCg, 2),
       ]
       for (const value of expected) expect(text, value).toContain(value)
+    })
+  }
+})
+
+describe("fuel conversions guide", () => {
+  /** @param {string} locale */
+  const tableRows = (locale) =>
+    body(readGuide(locale, findGuide("fuel-conversions").slugs[locale]))
+      .split("\n")
+      .filter((line) => line.startsWith("| **"))
+
+  for (const locale of ROUTE_LOCALES) {
+    it(`${locale}: the AVGAS and Jet A tables match the calculator's factors`, () => {
+      const sep = locale === "en" ? "." : ","
+      const rows = tableRows(locale)
+      expect(rows).toHaveLength(2 * FUEL_UNITS.length)
+      // header + separator + one row per unit, per table: nothing else
+      const tableLines = body(readGuide(locale, findGuide("fuel-conversions").slugs[locale]))
+        .split("\n")
+        .filter((line) => line.startsWith("|"))
+      expect(tableLines).toHaveLength(2 * (FUEL_UNITS.length + 2))
+      ;["avgas", "jet-a"].forEach((fuel, index) => {
+        const table = fuelConversionTable(fuel)
+        FUEL_UNITS.forEach((from, row) => {
+          const cells = rows[index * FUEL_UNITS.length + row]
+            .split("|")
+            .slice(2, -1)
+            .map((cell) => cell.trim())
+          expect(cells).toEqual(
+            FUEL_UNITS.map((to) => (from === to ? "1" : formatFactor(table[from][to], sep)))
+          )
+        })
+      })
     })
   }
 })

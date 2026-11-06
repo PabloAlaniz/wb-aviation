@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest"
 import { useState } from "react"
 import { render, screen, fireEvent } from "@testing-library/react"
 import { StationForm } from "./StationForm"
+import { aircraftData } from "../data/aircraft"
 
 const aircraft = {
   loadStations: [
@@ -165,10 +166,112 @@ describe("StationForm", () => {
       expect(screen.getByLabelText("Combustible (gal)")).toHaveValue(53)
     })
 
+    it("uses Jet A density (6.7 lb/gal) for turbine aircraft", () => {
+      const onWeightChange = vi.fn()
+      render(
+        <StationForm
+          aircraft={{ ...aircraft, fuelType: "jet-a" }}
+          weights={{}}
+          onWeightChange={onWeightChange}
+        />
+      )
+
+      fireEvent.click(screen.getByRole("button", { name: "Volumen (gal)" }))
+      fireEvent.change(screen.getByLabelText("Combustible (gal)"), { target: { value: "100" } })
+
+      expect(onWeightChange).toHaveBeenLastCalledWith("fuel", "670")
+      expect(screen.getByText(/Densidad Jet A: 6\.7 lb\/gal/)).toBeInTheDocument()
+    })
+
     it("only offers volume entry for the fuel station", () => {
       render(<StationForm aircraft={aircraft} weights={{}} onWeightChange={() => {}} />)
 
       expect(screen.getAllByRole("button", { name: /Volumen/ })).toHaveLength(1)
     })
+  })
+})
+
+describe("StationForm standard weights", () => {
+  const cabin = {
+    loadStations: [
+      { key: "pilot", labelKey: "stations.pilot" },
+      { key: "passenger1", labelKey: "stations.passenger1" },
+      { key: "baggage", labelKey: "stations.baggage" },
+    ],
+  }
+
+  /** @param {{ units?: "imperial" | "metric" }} props */
+  function CabinHarness({ units }) {
+    const [weights, setWeights] = useState({})
+    return (
+      <>
+        <StationForm
+          aircraft={cabin}
+          weights={weights}
+          units={units}
+          onWeightChange={(key, value) => setWeights((prev) => ({ ...prev, [key]: value }))}
+        />
+        <output data-testid="state">{JSON.stringify(weights)}</output>
+      </>
+    )
+  }
+
+  beforeEach(() => {
+    window.localStorage.removeItem("wb-standard-weights")
+  })
+
+  it("offers crew weight on crew seats and adult/child on passenger seats only", () => {
+    render(<CabinHarness units="metric" />)
+
+    expect(screen.getByRole("button", { name: "Cargar Tripulante (85 kg): Piloto" })).toBeVisible()
+    expect(screen.getByRole("button", { name: "Cargar Adulto (75 kg): Pasajero 1" })).toBeVisible()
+    expect(screen.getByRole("button", { name: "Cargar Niño (35 kg): Pasajero 1" })).toBeVisible()
+    expect(screen.queryByRole("button", { name: /Equipaje/ })).not.toBeInTheDocument()
+  })
+
+  it("loads the standard weight in lbs, reading back as the exact kg value", () => {
+    render(<CabinHarness units="metric" />)
+
+    fireEvent.click(screen.getByRole("button", { name: /Adulto \(75 kg\): Pasajero 1/ }))
+
+    expect(screen.getByLabelText("Pasajero 1 (kg)")).toHaveValue(75)
+    expect(JSON.parse(screen.getByTestId("state").textContent).passenger1).toBe("165.3467")
+  })
+
+  it("uses the edited standard weights and remembers them", () => {
+    const { unmount } = render(<CabinHarness units="imperial" />)
+
+    fireEvent.change(screen.getByLabelText("Adulto (lbs)"), { target: { value: "190" } })
+    fireEvent.click(screen.getByRole("button", { name: /Adulto \(190 lbs\): Pasajero 1/ }))
+    expect(screen.getByLabelText("Pasajero 1 (lbs)")).toHaveValue(190)
+    unmount()
+
+    render(<CabinHarness units="imperial" />)
+    expect(screen.getByRole("button", { name: /Adulto \(190 lbs\): Pasajero 1/ })).toBeVisible()
+  })
+
+  it("ignores empty or invalid standard weights", () => {
+    render(<CabinHarness units="imperial" />)
+
+    fireEvent.change(screen.getByLabelText("Niño (lbs)"), { target: { value: "" } })
+    fireEvent.change(screen.getByLabelText("Niño (lbs)"), { target: { value: "-5" } })
+
+    expect(screen.getByRole("button", { name: /Niño \(77 lbs\): Pasajero 1/ })).toBeVisible()
+  })
+
+  it("offers adult/child on a Cessna front passenger seat keyed as copilot", () => {
+    render(
+      <StationForm
+        aircraft={aircraftData["cessna-172s"]}
+        weights={{}}
+        units="metric"
+        onWeightChange={() => {}}
+      />
+    )
+
+    expect(screen.getByRole("button", { name: /Tripulante .*: Piloto$/ })).toBeVisible()
+    expect(screen.getByRole("button", { name: /Adulto .*: Acompañante$/ })).toBeVisible()
+    expect(screen.getByRole("button", { name: /Niño .*: Acompañante$/ })).toBeVisible()
+    expect(screen.queryByRole("button", { name: /Tripulante .*: Acompañante$/ })).toBeNull()
   })
 })

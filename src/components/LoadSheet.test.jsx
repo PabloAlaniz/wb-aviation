@@ -51,6 +51,76 @@ const cells = (/** @type {string} */ testId) =>
     .map((cell) => cell.textContent)
 
 describe("LoadSheet", () => {
+  /** @param {import("../types").Aircraft} aircraft @param {Record<string, string>} weights */
+  function renderWithTaxi(aircraft, weights, taxi) {
+    const phases = /** @type {import("../types").FlightPhasesResult} */ (
+      calculateFlightPhases(aircraft, weights, "0", taxi)
+    )
+    const results = /** @type {import("../types").WeightBalanceResult} */ (
+      calculateWeightBalance(aircraft, weights)
+    )
+    render(
+      <LoadSheet
+        aircraft={aircraft}
+        weights={weights}
+        results={results}
+        safetyChecks={null}
+        phases={phases}
+        landingReport={buildLandingReport(aircraft, phases)}
+        details={details}
+        units="imperial"
+      />
+    )
+    return phases
+  }
+
+  it("checks the printed ramp row against the max ramp weight, not the envelope", () => {
+    // B200: 8198 + 374 crew + 3978 fuel = 12550 lbs at the ramp, above the 12500 lbs
+    // MTOW (and the envelope) but below the 12590 lbs max ramp weight
+    const b200 = aircraftData["king-air-b200"]
+    const phases = renderWithTaxi(
+      b200,
+      { ...emptyWeightsFor(b200), pilot: "187", copilot: "187", fuel: "3978" },
+      "90"
+    )
+    expect(phases.ramp.totalWeight).toBe(12550)
+    expect(phases.ramp.inEnvelope).toBe(false)
+    expect(cells("sheet-phase-ramp")[3]).toBe("OK")
+  })
+
+  it("leaves the printed ramp row unassessed without a max ramp weight", () => {
+    renderWithTaxi(cessna, { ...emptyWeightsFor(cessna), pilot: "170", fuel: "240" }, "12")
+    expect(cells("sheet-phase-ramp")[3]).toBe("—")
+  })
+
+  it("prints the ramp total and the taxi fuel before the takeoff total", () => {
+    const weights = { ...emptyWeightsFor(cessna), pilot: "170", fuel: "240" }
+    const phases = /** @type {import("../types").FlightPhasesResult} */ (
+      calculateFlightPhases(cessna, weights, "120", "12")
+    )
+    const results = /** @type {import("../types").WeightBalanceResult} */ (
+      calculateWeightBalance(cessna, { ...weights, fuel: "228" })
+    )
+    render(
+      <LoadSheet
+        aircraft={cessna}
+        weights={weights}
+        results={results}
+        safetyChecks={null}
+        phases={phases}
+        landingReport={buildLandingReport(cessna, phases)}
+        details={details}
+        units="imperial"
+      />
+    )
+
+    // rampa 2073 lbs; rodaje 12 lbs @ 48" = 576 lb-in; despegue 2061 lbs
+    expect(cells("sheet-ramp-total").slice(0, 2)).toEqual(["Total en rampa", "2073.0"])
+    expect(cells("sheet-taxi-fuel")).toEqual(["Combustible de rodaje", "−12.0", "", "−576"])
+    expect(cells("sheet-total")[1]).toBe("2061.0")
+    expect(within(screen.getByTestId("sheet-phase-ramp")).getByText("2073.0")).toBeInTheDocument()
+  })
+
   it("prints stations, totals and phases in imperial units", () => {
     render(<LoadSheet {...sheetProps()} details={details} units="imperial" />)
 
@@ -73,12 +143,75 @@ describe("LoadSheet", () => {
     expect(screen.getByText("Despegue dentro de límites")).toBeInTheDocument()
   })
 
+  it("lists only loaded stations and says how many were left out", () => {
+    render(<LoadSheet {...sheetProps()} details={details} units="imperial" />)
+
+    // Cessna 172S: pilot and fuel loaded; copilot, 2 passengers and 2 baggage areas empty
+    expect(screen.queryByTestId("sheet-station-copilot")).not.toBeInTheDocument()
+    expect(screen.queryByTestId("sheet-station-baggage1")).not.toBeInTheDocument()
+    expect(screen.getByTestId("sheet-omitted-stations")).toHaveTextContent(
+      "5 estaciones sin carga no se listan"
+    )
+  })
+
+  it("lists a negative station so the rows add up to the printed total", () => {
+    const weights = { ...emptyWeightsFor(cessna), pilot: "170", fuel: "240", baggage1: "-10" }
+    const results = /** @type {import("../types").WeightBalanceResult} */ (
+      calculateWeightBalance(cessna, weights)
+    )
+    render(
+      <LoadSheet
+        aircraft={cessna}
+        weights={weights}
+        results={results}
+        safetyChecks={null}
+        phases={calculateFlightPhases(cessna, weights, "0")}
+        landingReport={null}
+        details={details}
+        units="imperial"
+      />
+    )
+
+    expect(cells("sheet-station-baggage1")[1]).toBe("-10.0")
+    const listed = ["empty", "pilot", "baggage1", "fuel"]
+      .map((key) => Number(cells(`sheet-station-${key}`)[1]))
+      .reduce((sum, weight) => sum + weight, 0)
+    expect(cells("sheet-total")[1]).toBe(listed.toFixed(1))
+    expect(screen.getByTestId("sheet-omitted-stations")).toHaveTextContent("4 estaciones")
+  })
+
+  it("does not mention omitted stations when every station is loaded", () => {
+    const props = sheetProps()
+    const weights = Object.fromEntries(cessna.loadStations.map((s) => [s.key, "10"]))
+    render(<LoadSheet {...props} weights={weights} details={details} units="imperial" />)
+
+    expect(screen.queryByTestId("sheet-omitted-stations")).not.toBeInTheDocument()
+  })
+
+  it("prints quick fuel conversions for the aircraft's fuel", () => {
+    render(<LoadSheet {...sheetProps()} details={details} units="imperial" />)
+    // Cessna 172S: AVGAS, 6.0 lb per US gallon
+    const edge = (/** @type {string} */ id) => screen.getByTestId(`fuel-edge-${id}`).textContent
+    expect(edge("usGal-l")).toBe("3.79")
+    expect(edge("usGal-lb")).toBe("6.00")
+    expect(edge("l-kg")).toBe("0.719")
+    expect(edge("kg-lb")).toBe("2.20")
+    expect(screen.getByTestId("fuel-conversions")).toHaveTextContent("AVGAS 0.719 kg/L")
+  })
+
+  it("uses Jet A factors for turbine aircraft", () => {
+    render(<LoadSheet {...sheetProps(aircraftData["king-air-b200"])} details={details} />)
+    expect(screen.getByTestId("fuel-edge-usGal-lb")).toHaveTextContent("6.70")
+    expect(screen.getByTestId("fuel-conversions")).toHaveTextContent("Jet A 0.803 kg/L")
+  })
+
   it("prints the same load in metric units", () => {
     render(<LoadSheet {...sheetProps()} details={details} units="metric" />)
 
     expect(cells("sheet-station-pilot")).toEqual(["Piloto", "77.1", "939.8", "72469"])
     expect(cells("sheet-total")).toEqual(["Total al despegue", "940.3", "1053.7", "990747"])
-    expect(screen.getByText("Unidades: peso kg, brazo mm, momento kg·mm")).toBeInTheDocument()
+    expect(screen.queryByText(/^Unidades:/)).not.toBeInTheDocument() // the column headers carry them
+    expect(screen.getByText("Momento (kg·mm)")).toBeInTheDocument()
     expect(screen.getAllByText("1156.7 kg")).toHaveLength(2) // MTOW and MLW (2550 lbs)
   })
 

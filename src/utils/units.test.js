@@ -1,5 +1,7 @@
 import { describe, it, expect } from "vitest"
 import {
+  JET_A_LB_PER_US_GAL,
+  fuelDensityLbPerGal,
   KG_PER_LB,
   MM_PER_IN,
   L_PER_US_GAL,
@@ -36,6 +38,18 @@ describe("conversion constants", () => {
     expect(AVGAS_LB_PER_US_GAL).toBe(6)
     expect(AVGAS_KG_PER_L).toBeCloseTo(0.719, 3)
     expect(Math.round(AVGAS_KG_PER_L * 100) / 100).toBe(0.72)
+  })
+})
+
+describe("fuel density by fuel type", () => {
+  it("uses AVGAS by default and 6.7 lb/gal for Jet A", () => {
+    expect(fuelDensityLbPerGal()).toBe(AVGAS_LB_PER_US_GAL)
+    expect(fuelDensityLbPerGal("avgas")).toBe(AVGAS_LB_PER_US_GAL)
+    expect(fuelDensityLbPerGal("jet-a")).toBe(JET_A_LB_PER_US_GAL)
+    expect(fuelVolumeToLbs(100, "imperial", JET_A_LB_PER_US_GAL)).toBeCloseTo(670, 9)
+    expect(lbsToFuelVolume(670, "imperial", JET_A_LB_PER_US_GAL)).toBeCloseTo(100, 9)
+    expect(inputToLbsText("100", "imperial", "volume", JET_A_LB_PER_US_GAL)).toBe("670")
+    expect(lbsTextToInput("670", "imperial", "volume", JET_A_LB_PER_US_GAL)).toBe("100")
   })
 })
 

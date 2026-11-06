@@ -12,6 +12,11 @@ export const es = {
     aircraftCardDescription: "Selecciona el tipo de avión e ingresa los pesos",
     aircraftSelectLabel: "Tipo de Aeronave",
     aircraftSelectPlaceholder: "Selecciona una aeronave",
+    aircraftGroups: {
+      light: "Aviones livianos (hasta 5 plazas)",
+      multi: "Aviones de 6 plazas o más",
+      custom: "Mis aeronaves",
+    },
     requestAircraft: "¿No está tu avión? Pedilo en GitHub",
     clearWeights: "Limpiar pesos",
     resultsCardTitle: "Resultados del Cálculo",
@@ -79,6 +84,23 @@ export const es = {
     passenger2: "Pasajero 2",
     passenger3: "Pasajero 3",
     passenger4: "Pasajero 4",
+    passenger5: "Pasajero 5",
+    passenger6: "Pasajero 6",
+    passenger7: "Pasajero 7",
+    passenger8: "Pasajero 8",
+    passenger9: "Pasajero 9",
+    passenger10: "Pasajero 10",
+    passenger11: "Pasajero 11",
+    passenger12: "Pasajero 12",
+    passenger13: "Pasajero 13",
+    passenger14: "Pasajero 14",
+    passenger15: "Pasajero 15",
+    passenger16: "Pasajero 16",
+    passenger17: "Pasajero 17",
+    passenger18: "Pasajero 18",
+    passenger19: "Pasajero 19",
+    patient: "Paciente (camilla)",
+    medicalEquipment: "Equipo médico",
     rearPassenger1: "Pasajero trasero 1",
     rearPassenger2: "Pasajero trasero 2",
     baggage: "Equipaje",
@@ -88,6 +110,50 @@ export const es = {
     baggageArea2: "Equipaje área 2",
     baggageExtension: "Extensión de equipaje",
     fuel: "Combustible",
+  },
+
+  fuelConversions: {
+    title: "Conversiones rápidas de combustible",
+    boxes: {
+      l: "LITROS",
+      usGal: "GAL US",
+      impGal: "GAL IMP.",
+      lb: "LIBRAS",
+      kg: "KILOS",
+    },
+    diagramNote: (/** @type {string} */ fuel, /** @type {string} */ density) =>
+      `${fuel} ${density} kg/L · con la flecha ×, en contra ÷`,
+    fuelDependent:
+      "Los factores resaltados dependen del combustible; el resto son conversiones de unidades fijas.",
+    units: {
+      usGal: "gal US",
+      impGal: "gal imp.",
+      l: "L",
+      lb: "lb",
+      kg: "kg",
+    },
+    fuels: {
+      avgas: "AVGAS (6,0 lb/gal US)",
+      "jet-a": "Jet A (6,7 lb/gal US)",
+    },
+    amount: "Cantidad",
+    unit: "Unidad",
+    fuel: "Combustible",
+    result: "Equivale a",
+  },
+
+  standardWeights: {
+    title: "Pesos estándar",
+    description:
+      "Valores para los botones rápidos de tripulación y pasajeros. Usá los del manual de operaciones de tu operador.",
+    crew: "Tripulante",
+    adult: "Adulto",
+    child: "Niño",
+    apply: (
+      /** @type {string} */ kind,
+      /** @type {string} */ weight,
+      /** @type {string} */ station
+    ) => `Cargar ${kind} (${weight}): ${station}`,
   },
 
   units: {
@@ -104,7 +170,8 @@ export const es = {
     byWeight: "Peso",
     byVolume: "Volumen",
     fuelEquivalent: (/** @type {string} */ value) => `Equivale a ${value}`,
-    fuelDensityNote: (/** @type {string} */ density) => `Densidad AVGAS: ${density}`,
+    fuelDensityNote: (/** @type {string} */ fuel, /** @type {string} */ density) =>
+      `Densidad ${fuel}: ${density}`,
     millimeters: "milímetros",
     kilograms: "kilogramos",
     axisNoteMetric: "Brazo C.G. - mm detrás del Datum STA 0.0",
@@ -137,9 +204,12 @@ export const es = {
   },
 
   flightPhases: {
-    title: "Aterrizaje y peso sin combustible",
+    title: "Fases del vuelo",
     fuelBurnLabel: "Combustible a consumir en vuelo",
     fuelBurnPlaceholder: "800",
+    taxiFuelLabel: "Combustible de puesta en marcha y rodaje",
+    taxiFuelPlaceholder: "0",
+    taxiFuelHint: "Se descuenta del combustible cargado (peso y momento) para obtener el despegue.",
     fuelLoaded: (/** @type {string|number} */ value, unit = "lbs") =>
       `Combustible cargado: ${value} ${unit}`,
     noFuelStation: "Esta aeronave no tiene estación de combustible definida",
@@ -147,6 +217,7 @@ export const es = {
     weight: "Peso",
     cg: "CG",
     status: "Estado",
+    ramp: "Rampa (antes del rodaje)",
     takeoff: "Despegue",
     landing: "Aterrizaje",
     zeroFuel: "Sin combustible (ZFW)",
@@ -161,12 +232,20 @@ export const es = {
       `Peso sin combustible excede el máximo (${value} ${unit})`,
     landingOutOfEnvelope: "Centro de gravedad al aterrizar fuera de la envolvente",
     zeroFuelOutOfEnvelope: "Centro de gravedad sin combustible fuera de la envolvente",
+    overMaxRampWeight: (/** @type {string|number} */ value, unit = "lbs") =>
+      `Peso en rampa excede el máximo (${value} ${unit})`,
+    taxiExceedsFuel: (
+      /** @type {string|number} */ taxi,
+      /** @type {string|number} */ loaded,
+      unit = "lbs"
+    ) =>
+      `El combustible de rodaje (${taxi} ${unit}) supera el combustible cargado (${loaded} ${unit})`,
     burnExceedsFuel: (
       /** @type {string|number} */ burn,
       /** @type {string|number} */ loaded,
       unit = "lbs"
     ) =>
-      `El consumo planificado (${burn} ${unit}) supera el combustible cargado (${loaded} ${unit})`,
+      `El consumo planificado (${burn} ${unit}) supera el combustible a bordo al despegue (${loaded} ${unit})`,
     chartLanding: "Aterrizaje",
     chartZeroFuel: "Sin combustible",
     chartBurnPath: "Consumo de combustible",
@@ -280,12 +359,11 @@ export const es = {
     aircraft: "Aeronave",
     tcds: "TCDS",
     route: "Ruta",
-    units: (
-      /** @type {string} */ weight,
-      /** @type {string} */ arm,
-      /** @type {string} */ moment
-    ) => `Unidades: peso ${weight}, brazo ${arm}, momento ${moment}`,
     stationsTitle: "Distribución de la carga",
+    emptyStationsOmitted: (/** @type {number} */ count) =>
+      count === 1
+        ? "1 estación sin carga no se lista"
+        : `${count} estaciones sin carga no se listan`,
     station: "Estación",
     weight: "Peso",
     arm: "Brazo",
@@ -299,10 +377,13 @@ export const es = {
     inEnvelope: "DENTRO",
     outOfEnvelope: "FUERA",
     plannedBurn: "Consumo previsto",
+    rampTotal: "Total en rampa",
+    taxiFuel: "Combustible de rodaje",
     limitsTitle: "Límites",
     maxTakeoffWeight: "Peso máximo de despegue",
     maxLandingWeight: "Peso máximo de aterrizaje",
     maxZeroFuelWeight: "Peso máximo sin combustible",
+    maxRampWeight: "Peso máximo de rampa",
     cgLimits: "Límites de CG (del. / tras.)",
     takeoffOk: "Despegue dentro de límites",
     takeoffNotOk: "DESPEGUE FUERA DE LÍMITES",
