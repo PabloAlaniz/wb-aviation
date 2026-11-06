@@ -4,6 +4,9 @@
  */
 import { messages as m } from "../i18n"
 
+/** Fuel amounts this close (lbs) are equal: absorbs floating-point leftovers. */
+const FUEL_TOLERANCE_LBS = 1e-6
+
 /**
  * Check if a point (CG, weight) is inside the CG envelope
  * Uses ray casting algorithm
@@ -330,8 +333,11 @@ export function applyTaxiFuel(aircraft, weights, taxiFuel = 0) {
   /** @type {import('../types').StationWeights} */
   const takeoffWeights = { ...weights }
   if (effectiveTaxi > 0) {
-    const remaining = 1 - effectiveTaxi / rampFuel
-    for (const key of fuelKeys) takeoffWeights[key] = String(fuelOf(key) * remaining)
+    // fuel - share of the taxi (not fuel × (1 − taxi/ramp)): a whole-station
+    // taxi leaves exactly what is left, e.g. 100 − 90 = 10, not 9.999…98
+    for (const key of fuelKeys) {
+      takeoffWeights[key] = String(fuelOf(key) - (effectiveTaxi * fuelOf(key)) / rampFuel)
+    }
   }
 
   return {
@@ -378,7 +384,8 @@ export function calculateFlightPhases(aircraft, weights, fuelBurn, taxiFuel = 0)
   const fuelMoment = fuelByStation.reduce((sum, s) => sum + calculateMoment(s.weight, s.arm), 0)
 
   const requestedBurn = Math.max(0, Number.parseFloat(String(fuelBurn)) || 0)
-  const burnExceedsFuel = requestedBurn > fuelLoaded
+  // tolerance for floating-point leftovers (fuel after taxi is computed)
+  const burnExceedsFuel = requestedBurn > fuelLoaded + FUEL_TOLERANCE_LBS
   const effectiveBurn = Math.min(requestedBurn, fuelLoaded)
 
   // Quema proporcional: el momento quemado sigue el brazo medio del combustible cargado

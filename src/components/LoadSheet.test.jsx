@@ -154,6 +154,32 @@ describe("LoadSheet", () => {
     )
   })
 
+  it("lists a negative station so the rows add up to the printed total", () => {
+    const weights = { ...emptyWeightsFor(cessna), pilot: "170", fuel: "240", baggage1: "-10" }
+    const results = /** @type {import("../types").WeightBalanceResult} */ (
+      calculateWeightBalance(cessna, weights)
+    )
+    render(
+      <LoadSheet
+        aircraft={cessna}
+        weights={weights}
+        results={results}
+        safetyChecks={null}
+        phases={calculateFlightPhases(cessna, weights, "0")}
+        landingReport={null}
+        details={details}
+        units="imperial"
+      />
+    )
+
+    expect(cells("sheet-station-baggage1")[1]).toBe("-10.0")
+    const listed = ["empty", "pilot", "baggage1", "fuel"]
+      .map((key) => Number(cells(`sheet-station-${key}`)[1]))
+      .reduce((sum, weight) => sum + weight, 0)
+    expect(cells("sheet-total")[1]).toBe(listed.toFixed(1))
+    expect(screen.getByTestId("sheet-omitted-stations")).toHaveTextContent("4 estaciones")
+  })
+
   it("does not mention omitted stations when every station is loaded", () => {
     const props = sheetProps()
     const weights = Object.fromEntries(cessna.loadStations.map((s) => [s.key, "10"]))

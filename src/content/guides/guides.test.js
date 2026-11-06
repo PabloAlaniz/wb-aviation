@@ -154,6 +154,11 @@ describe("fuel conversions guide", () => {
       const sep = locale === "en" ? "." : ","
       const rows = tableRows(locale)
       expect(rows).toHaveLength(2 * FUEL_UNITS.length)
+      // header + separator + one row per unit, per table: nothing else
+      const tableLines = body(readGuide(locale, findGuide("fuel-conversions").slugs[locale]))
+        .split("\n")
+        .filter((line) => line.startsWith("|"))
+      expect(tableLines).toHaveLength(2 * (FUEL_UNITS.length + 2))
       ;["avgas", "jet-a"].forEach((fuel, index) => {
         const table = fuelConversionTable(fuel)
         FUEL_UNITS.forEach((from, row) => {

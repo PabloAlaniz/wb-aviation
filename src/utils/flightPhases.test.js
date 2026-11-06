@@ -258,6 +258,17 @@ describe("taxi fuel and ramp condition", () => {
     expect(buildRampIssues(e90, phases).map((issue) => issue.type)).toEqual(["taxi-exceeds-fuel"])
   })
 
+  it("accepts a planned burn equal to the fuel left after taxi", () => {
+    // 100 − 90 used to leave 9.999…98 lbs and flag a 10 lbs burn as too large
+    const phases = calculateFlightPhases(e90, { pilot: "200", fuel: "100" }, "10", "90")
+    expect(phases.fuelLoaded).toBe(10)
+    expect(phases.burnExceedsFuel).toBe(false)
+    expect(phases.fuelBurn).toBe(10)
+    expect(buildLandingReport(e90, phases).errors.map((issue) => issue.type)).not.toContain(
+      "burn-exceeds-fuel"
+    )
+  })
+
   it("ignores negative or invalid taxi fuel", () => {
     for (const taxi of ["-90", "abc", ""]) {
       const phases = calculateFlightPhases(e90, weights, "0", taxi)
