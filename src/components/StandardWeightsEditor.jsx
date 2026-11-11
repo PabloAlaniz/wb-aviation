@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Input, Label } from "./Input"
 import { messages as m } from "../i18n"
-import { STANDARD_WEIGHT_KEYS } from "../utils/standardWeights"
+import { MAX_PERSON_LBS, STANDARD_WEIGHT_KEYS } from "../utils/standardWeights"
 import { trimNumber, unitSymbols, weightFromDisplay, weightToDisplay } from "../utils/units"
 
 /**
@@ -41,7 +41,7 @@ export function StandardWeightsEditor({ value, onChange, units = "imperial" }) {
                 const typed = e.target.value
                 setDrafts({ units, text: { ...text, [key]: typed } })
                 const lbs = weightFromDisplay(Number(typed), units)
-                if (typed !== "" && Number.isFinite(lbs) && lbs > 0 && lbs <= 1000) {
+                if (typed !== "" && Number.isFinite(lbs) && lbs > 0 && lbs <= MAX_PERSON_LBS) {
                   onChange({ ...value, [key]: lbs })
                 }
               }}

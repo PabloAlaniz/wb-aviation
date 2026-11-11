@@ -89,6 +89,15 @@ describe("StationForm", () => {
     expect(onWeightChange).toHaveBeenCalledWith("fuel", "500")
   })
 
+  it("does not store a typed negative weight", () => {
+    const onWeightChange = vi.fn()
+    render(<StationForm aircraft={aircraft} weights={{}} onWeightChange={onWeightChange} />)
+
+    fireEvent.change(screen.getByLabelText("Combustible (lbs)"), { target: { value: "-50" } })
+
+    expect(onWeightChange).toHaveBeenCalledWith("fuel", "")
+  })
+
   it("renders empty string for stations without value", () => {
     render(<StationForm aircraft={aircraft} weights={{}} onWeightChange={() => {}} />)
 

@@ -13,7 +13,7 @@ import { KG_PER_LB, trimNumber } from "./units"
 export const STANDARD_WEIGHTS_STORAGE_KEY = "wb-standard-weights"
 
 /** Upper bound for a standard person weight (lbs). */
-const MAX_PERSON_LBS = 1000
+export const MAX_PERSON_LBS = 1000
 
 /** @type {StandardWeights} */
 export const DEFAULT_STANDARD_WEIGHTS = {

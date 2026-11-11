@@ -143,7 +143,9 @@ export function StationForm({ aircraft, weights, onWeightChange, units = "imperi
           onChange={(e) => {
             const text = e.target.value
             setDrafts((prev) => ({ ...prev, [station.key]: text }))
-            onWeightChange(station.key, inputToLbsText(text, units, mode, lbPerGal))
+            // min="0" does not stop a typed negative; never store one
+            const lbsText = inputToLbsText(text, units, mode, lbPerGal)
+            onWeightChange(station.key, Number(lbsText) < 0 ? "" : lbsText)
           }}
         />
         {seat && (

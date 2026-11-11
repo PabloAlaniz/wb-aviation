@@ -121,6 +121,15 @@ describe("isPointInEnvelope", () => {
 })
 
 describe("calculateWeightBalance", () => {
+  it("counts a negative station load as no load (it must not lower the gross weight)", () => {
+    const loaded = calculateWeightBalance(sampleAircraft, { pilot: "180", baggage1: "-50" })
+    const reference = calculateWeightBalance(sampleAircraft, { pilot: "180" })
+
+    expect(loaded.totalWeight).toBe(6682 + 180)
+    expect(loaded.totalMoment).toBe(reference.totalMoment)
+    expect(loaded.centerOfGravity).toBe(reference.centerOfGravity)
+  })
+
   it("should calculate weight balance with pilot only", () => {
     const weights = {
       pilot: 180,

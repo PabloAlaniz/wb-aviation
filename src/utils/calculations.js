@@ -89,6 +89,17 @@ export function calculateCG(totalMoment, totalWeight) {
 }
 
 /**
+ * Load of a station in lbs from its raw input. Empty, invalid and negative
+ * values count as no load: a negative load would lower the gross weight and
+ * hide an overweight or out-of-envelope condition.
+ * @param {string | number | undefined} value
+ * @returns {number}
+ */
+export function parseStationWeight(value) {
+  return Math.max(0, Number.parseFloat(String(value)) || 0)
+}
+
+/**
  * Calculate total weight and balance for an aircraft.
  * Iterates over every numeric station defined in aircraft.stations, so it
  * works for any aircraft regardless of its cabin configuration.
@@ -99,14 +110,12 @@ export function calculateCG(totalMoment, totalWeight) {
 export function calculateWeightBalance(aircraft, weights) {
   if (!aircraft || !weights) return null
 
-  const parseWeight = (/** @type {string} */ val) => Number.parseFloat(val) || 0
-
   let totalWeight = aircraft.emptyWeight
   let totalMoment = calculateMoment(aircraft.emptyWeight, aircraft.emptyArm)
 
   for (const [station, arm] of Object.entries(aircraft.stations)) {
     if (typeof arm !== "number") continue // skip non-station entries like "notes"
-    const weight = parseWeight(weights[station])
+    const weight = parseStationWeight(weights[station])
     totalWeight += weight
     totalMoment += calculateMoment(weight, arm)
   }
