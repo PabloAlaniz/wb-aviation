@@ -1,5 +1,5 @@
 ---
-title: "The CG envelope explained: forward and aft limits"
+title: "Aircraft CG envelope explained: how to read forward and aft limits"
 description: "What the center of gravity envelope is, why forward and aft limits matter, why the CG moves by landing and what to do when your loading is out of limits."
 lang: en
 translationKey: cg-envelope

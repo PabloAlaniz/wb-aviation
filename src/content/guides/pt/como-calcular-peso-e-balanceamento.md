@@ -1,5 +1,5 @@
 ---
-title: "Como calcular peso e balanceamento de um avião, passo a passo"
+title: "Como calcular o peso e balanceamento e o CG de um avião, passo a passo"
 description: "O procedimento completo de peso e balanceamento: peso vazio, braços, momentos, CG, peso máximo, envelope e CG de pouso. Com calculadora grátis."
 lang: pt
 translationKey: how-to-calculate

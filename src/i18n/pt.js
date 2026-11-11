@@ -360,9 +360,9 @@ export const pt = {
     appDescription:
       "Calculadora gratuita de peso e balanceamento (Weight & Balance) de aeronaves: centro de gravidade, envelope de CG e folha de carga. Funciona offline e sem cadastro.",
     home: {
-      title: "Calculadora de peso e balanceamento de aeronaves | CheckCG",
+      title: "Calculadora grátis de peso e balanceamento de aeronaves: CG e envelope | CheckCG",
       description:
-        "Calcule o peso e balanceamento (Weight & Balance) e o centro de gravidade da sua aeronave com dados do TCDS e do POH. Grátis, offline e sem cadastro.",
+        "Calcule o peso e balanceamento (Weight & Balance) do seu avião em segundos: centro de gravidade, envelope de CG na decolagem e no pouso, e folha de carga para imprimir. Grátis, offline e sem cadastro.",
       h1: "Calculadora de peso e balanceamento de aeronaves",
       intro1:
         "O peso e balanceamento (Weight & Balance) verifica, antes de cada voo, que a aeronave não ultrapasse o peso máximo e que o centro de gravidade (CG) fique dentro do envelope aprovado. Um CG fora dos limites afeta a estabilidade e o controle, mesmo com o peso total correto.",
@@ -373,9 +373,9 @@ export const pt = {
     },
     aircraft: {
       title: (/** @type {string} */ name) =>
-        `Peso e balanceamento ${name}: calculadora de CG | CheckCG`,
+        `Peso e balanceamento ${name}: calculadora grátis e folha de carga | CheckCG`,
       description: (/** @type {string} */ name, /** @type {string} */ maxWeight) =>
-        `Calculadora de peso e balanceamento do ${name}: peso máximo ${maxWeight}, braços das estações, limites e envelope de CG. Grátis e offline.`,
+        `Calcule o peso e balanceamento do ${name} grátis: confira o peso máximo (${maxWeight}) e o CG no envelope na decolagem e no pouso, e imprima a folha de carga. Sem cadastro.`,
       h1: (/** @type {string} */ name) => `Peso e balanceamento ${name}`,
       intro: (/** @type {string} */ name, /** @type {string} */ tcds) =>
         `Calcule o peso total e o centro de gravidade do ${name} com os dados de referência de ${tcds}. Informe o peso de cada estação e a calculadora verifica o peso máximo e o envelope de CG na decolagem e no pouso.`,

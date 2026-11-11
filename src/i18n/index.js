@@ -62,6 +62,8 @@ export function setLocale(locale, href) {
   } catch {
     // ignore: localized pages pin their own locale; otherwise it re-resolves
   }
+  // Mirrored in a cookie so the server-side redirect of "/" honors it.
+  document.cookie = `${STORAGE_KEY}=${locale}; Path=/; Max-Age=31536000; SameSite=Lax`
   if (href) window.location.assign(href)
   else window.location.reload()
 }
