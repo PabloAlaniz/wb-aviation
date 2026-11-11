@@ -359,9 +359,9 @@ export const it = {
     appDescription:
       "Calcolatore gratuito di massa e centraggio per aeromobili: centro di gravità, inviluppo del CG e foglio di carico. Funziona offline, senza registrazione.",
     home: {
-      title: "Calcolatore di massa e centraggio per aeromobili | CheckCG",
+      title: "Calcolatore gratuito di massa e centraggio: CG e inviluppo | CheckCG",
       description:
-        "Calcola massa e centraggio e il centro di gravità del tuo aeromobile con i dati del TCDS e del POH. Gratis, offline e senza registrazione.",
+        "Calcola massa e centraggio del tuo aereo in pochi secondi: centro di gravità, inviluppo del CG al decollo e all'atterraggio e foglio di carico da stampare. Gratis, offline e senza registrazione.",
       h1: "Calcolatore di massa e centraggio per aeromobili",
       intro1:
         "Il calcolo di massa e centraggio verifica, prima di ogni volo, che l'aeromobile non superi la massa massima e che il suo centro di gravità (CG) resti all'interno dell'inviluppo approvato. Un CG fuori limiti compromette stabilità e controllo anche quando la massa totale è corretta.",
@@ -372,9 +372,9 @@ export const it = {
     },
     aircraft: {
       title: (/** @type {string} */ name) =>
-        `Massa e centraggio ${name}: calcolatore del CG | CheckCG`,
+        `Massa e centraggio ${name}: calcolatore gratuito e foglio di carico | CheckCG`,
       description: (/** @type {string} */ name, /** @type {string} */ maxWeight) =>
-        `Calcolatore di massa e centraggio per ${name}: massa massima ${maxWeight}, bracci delle stazioni, limiti e inviluppo del CG. Gratis e offline.`,
+        `Calcola massa e centraggio del ${name} gratis: verifica la massa massima (${maxWeight}) e il CG nell'inviluppo al decollo e all'atterraggio e stampa il foglio di carico. Senza registrazione.`,
       h1: (/** @type {string} */ name) => `Massa e centraggio ${name}`,
       intro: (/** @type {string} */ name, /** @type {string} */ tcds) =>
         `Calcola la massa totale e il centro di gravità del ${name} con i dati di riferimento di ${tcds}. Inserisci la massa in ogni stazione e il calcolatore verifica la massa massima e l'inviluppo del CG al decollo e all'atterraggio.`,

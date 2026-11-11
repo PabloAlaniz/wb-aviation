@@ -1,6 +1,8 @@
 ---
 /**
- * Root page (/). x-default of the localized homes.
+ * Root page (/). x-default of the localized homes. In production plain
+ * visits get a server-side 302 from functions/_middleware.js; this inline
+ * redirect covers offline (service worker) and local dev.
  * - Plain visits redirect (inline, before render) to the stored or browser
  *   language: /es/, /en/ or /pt/.
  * - Shared links (/?s=..., /?fleet=...) stay here and the calculator

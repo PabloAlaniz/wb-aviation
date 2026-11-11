@@ -1,5 +1,5 @@
 ---
-title: "L'inviluppo del CG: limiti anteriore e posteriore"
+title: "Inviluppo del CG: cos'è e come leggere i limiti dell'aereo"
 description: "Cos'è l'inviluppo del centro di gravità, perché contano i limiti anteriore e posteriore, perché il CG si sposta all'atterraggio e cosa fare se il carico è fuori limiti."
 lang: it
 translationKey: cg-envelope

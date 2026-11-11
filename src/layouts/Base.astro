@@ -63,6 +63,9 @@ const siteName = locales[lang].seo.siteName
           try {
             localStorage.setItem("wb-locale", pinnedLocale)
           } catch (e) {}
+          // Mirrored in a cookie so the server-side redirect of "/" honors it.
+          document.cookie =
+            "wb-locale=" + pinnedLocale + "; Path=/; Max-Age=31536000; SameSite=Lax"
         </script>
       )
     }

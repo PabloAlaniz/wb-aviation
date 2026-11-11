@@ -359,9 +359,9 @@ export const en = {
     appDescription:
       "Free aircraft weight and balance calculator: center of gravity, CG envelope and load sheet. Works offline, no sign-up.",
     home: {
-      title: "Aircraft weight and balance calculator | CheckCG",
+      title: "Free aircraft weight and balance calculator: CG and envelope | CheckCG",
       description:
-        "Calculate your aircraft's weight and balance and center of gravity with TCDS and POH data. Free, offline and no sign-up.",
+        "Work out your aircraft's weight and balance in seconds: center of gravity, CG envelope for takeoff and landing, and a printable load sheet. Free, offline and no sign-up.",
       h1: "Aircraft weight and balance calculator",
       intro1:
         "Weight and balance checks, before every flight, that the aircraft does not exceed its maximum weight and that its center of gravity (CG) stays inside the approved envelope. An out-of-limits CG affects stability and control even when the total weight is fine.",
@@ -371,9 +371,10 @@ export const en = {
       aircraftLink: (/** @type {string} */ name) => `${name} weight and balance`,
     },
     aircraft: {
-      title: (/** @type {string} */ name) => `${name} weight and balance: CG calculator | CheckCG`,
+      title: (/** @type {string} */ name) =>
+        `${name} weight and balance calculator and load sheet | CheckCG`,
       description: (/** @type {string} */ name, /** @type {string} */ maxWeight) =>
-        `${name} weight and balance calculator: ${maxWeight} max weight, station arms, CG limits and envelope. Free and offline.`,
+        `Free ${name} weight and balance calculator: check max weight (${maxWeight}) and CG against the envelope for takeoff and landing, then print a load sheet. No sign-up.`,
       h1: (/** @type {string} */ name) => `${name} weight and balance`,
       intro: (/** @type {string} */ name, /** @type {string} */ tcds) =>
         `Calculate the total weight and center of gravity of the ${name} using reference data from ${tcds}. Enter the weight at each station and the calculator checks maximum weight and the CG envelope for takeoff and landing.`,

@@ -1,5 +1,5 @@
 ---
-title: "Come calcolare massa e centraggio di un aereo, passo dopo passo"
+title: "Come calcolare massa, centraggio e CG di un aereo, passo dopo passo"
 description: "La procedura completa di massa e centraggio: massa a vuoto, bracci, momenti, baricentro, massa massima, inviluppo e CG all'atterraggio. Con calcolatore gratuito."
 lang: it
 translationKey: how-to-calculate

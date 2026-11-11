@@ -1,5 +1,5 @@
 ---
-title: "How to calculate aircraft weight and balance, step by step"
+title: "How to calculate aircraft weight and balance and CG, step by step"
 description: "The full weight and balance procedure: empty weight, arms, moments, center of gravity, max weight, CG envelope and landing CG. With a free calculator."
 lang: en
 translationKey: how-to-calculate

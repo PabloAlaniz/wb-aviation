@@ -1,5 +1,5 @@
 ---
-title: "O envelope de CG: limites dianteiro e traseiro, explicados"
+title: "Envelope de CG: o que é e como ler os limites do avião"
 description: "O que é o envelope de centro de gravidade, por que os limites dianteiro e traseiro importam, por que o CG muda no pouso e o que fazer se você ficar fora."
 lang: pt
 translationKey: cg-envelope

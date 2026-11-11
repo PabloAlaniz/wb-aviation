@@ -364,9 +364,9 @@ export const es = {
     appDescription:
       "Calculadora gratuita de peso y balance (Weight & Balance) de aeronaves: centro de gravedad, envolvente de CG y hoja de carga. Funciona offline y sin registro.",
     home: {
-      title: "Calculadora de peso y balance de aeronaves | CheckCG",
+      title: "Calculadora de peso y balance de aeronaves gratis: CG y envolvente | CheckCG",
       description:
-        "Calculá peso y balance (Weight & Balance) y centro de gravedad de tu aeronave con datos del TCDS y el POH. Gratis, offline y sin registro.",
+        "Calculá el peso y balance (Weight & Balance) de tu avión en segundos: centro de gravedad, envolvente de CG al despegue y aterrizaje, y hoja de carga para imprimir. Gratis, offline y sin registro.",
       h1: "Calculadora de peso y balance de aeronaves",
       intro1:
         "El peso y balance (Weight & Balance) verifica antes de cada vuelo que la aeronave no supere su peso máximo y que su centro de gravedad (CG) quede dentro de la envolvente aprobada. Un CG fuera de límites afecta la estabilidad y el control, aunque el peso total sea correcto.",
@@ -376,9 +376,10 @@ export const es = {
       aircraftLink: (/** @type {string} */ name) => `Peso y balance ${name}`,
     },
     aircraft: {
-      title: (/** @type {string} */ name) => `Peso y balance ${name}: calculadora de CG | CheckCG`,
+      title: (/** @type {string} */ name) =>
+        `Peso y balance ${name}: calculadora gratis y hoja de carga | CheckCG`,
       description: (/** @type {string} */ name, /** @type {string} */ maxWeight) =>
-        `Calculadora de peso y balance del ${name}: peso máximo ${maxWeight}, brazos de las estaciones, límites y envolvente de CG. Gratis y offline.`,
+        `Calculá el peso y balance del ${name} gratis: verificá el peso máximo (${maxWeight}) y el CG contra la envolvente al despegue y aterrizaje, e imprimí la hoja de carga. Sin registro.`,
       h1: (/** @type {string} */ name) => `Peso y balance ${name}`,
       intro: (/** @type {string} */ name, /** @type {string} */ tcds) =>
         `Calculá el peso total y el centro de gravedad del ${name} con los datos de referencia de ${tcds}. Ingresá los pesos de cada estación y la calculadora verifica el peso máximo y la envolvente de CG al despegue y al aterrizaje.`,

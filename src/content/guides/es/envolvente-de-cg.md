@@ -1,5 +1,5 @@
 ---
-title: "La envolvente de CG: límites delantero y trasero, explicados"
+title: "Envolvente de CG: qué es y cómo leer los límites del avión"
 description: "Qué es la envolvente de centro de gravedad, por qué importan los límites delantero y trasero, por qué cambia el CG al aterrizar y qué hacer si quedás fuera."
 lang: es
 translationKey: cg-envelope
