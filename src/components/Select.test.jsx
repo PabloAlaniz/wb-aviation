@@ -69,4 +69,30 @@ describe("SimpleSelect", () => {
 
     expect(screen.queryByRole("listbox")).not.toBeInTheDocument()
   })
+
+  it("lists grouped options under their group heading", () => {
+    render(
+      <SimpleSelect
+        id="aircraft"
+        value="c172"
+        onValueChange={() => {}}
+        options={[
+          { value: "c152", label: "Cessna 152", group: "Livianos" },
+          { value: "c172", label: "Cessna 172", group: "Livianos" },
+          { value: "e90", label: "King Air E90", group: "6 plazas o más" },
+        ]}
+      />
+    )
+    fireEvent.click(screen.getByRole("button"))
+
+    const groups = screen.getAllByRole("group")
+    expect(groups.map((group) => group.getAttribute("aria-label"))).toEqual([
+      "Livianos",
+      "6 plazas o más",
+    ])
+    expect(groups[0]).toHaveTextContent("Cessna 152")
+    expect(groups[0]).toHaveTextContent("Cessna 172")
+    expect(groups[1]).toHaveTextContent("King Air E90")
+    expect(screen.getAllByRole("option")).toHaveLength(3)
+  })
 })

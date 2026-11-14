@@ -41,6 +41,7 @@ function sameWeighingData(a, b) {
  *   setSelectedAircraft: (id: string) => void,
  *   setWeights: (weights: import("../types").StationWeights) => void,
  *   setFuelBurn: (fuelBurn: string) => void,
+ *   setTaxiFuel: (taxiFuel: string) => void,
  *   setUnits: (units: import("../types").UnitSystem) => void,
  * }} actions
  * @returns {{ status: SharedCalculationStatus | null, dismiss: () => void }}
@@ -59,8 +60,15 @@ export function useSharedCalculation(actions) {
     const param = readShareParam(window.location.search)
     if (param === null) return
 
-    const { records, saveCustomAircraft, setSelectedAircraft, setWeights, setFuelBurn, setUnits } =
-      actionsRef.current
+    const {
+      records,
+      saveCustomAircraft,
+      setSelectedAircraft,
+      setWeights,
+      setFuelBurn,
+      setTaxiFuel,
+      setUnits,
+    } = actionsRef.current
     const shared = decodeSharedCalculation(param)
     const clearParam = () => {
       try {
@@ -98,6 +106,7 @@ export function useSharedCalculation(actions) {
     setSelectedAircraft(shared.aircraftId)
     setWeights({ ...emptyWeightsFor(aircraft), ...shared.weights })
     setFuelBurn(shared.fuelBurn)
+    setTaxiFuel(shared.taxiFuel)
     if (shared.units) setUnits(shared.units)
     trackEvent("shared_link_opened", { status: "loaded" })
     setStatus("loaded")

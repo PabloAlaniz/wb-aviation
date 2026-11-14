@@ -9,7 +9,7 @@ import { AircraftInfo } from "./components/AircraftInfo"
 import { ResultsPanel, TakeoffVerdict } from "./components/ResultsPanel"
 import { SafetyAlerts } from "./components/SafetyAlerts"
 import { DataSources } from "./components/DataSources"
-import { FuelBurnInput } from "./components/FuelBurnInput"
+import { FuelBurnInput, TaxiFuelInput } from "./components/FuelBurnInput"
 import { FlightPhasesPanel } from "./components/FlightPhasesPanel"
 import { CustomAircraftManager } from "./components/CustomAircraftManager"
 import { UnitToggle } from "./components/UnitToggle"
@@ -27,6 +27,8 @@ import {
   buildSafetyReport,
   calculateFlightPhases,
   buildLandingReport,
+  applyTaxiFuel,
+  buildRampIssues,
 } from "./utils/calculations"
 import { trackEvent } from "./analytics"
 import { useLocalStorage } from "./hooks/useLocalStorage"
@@ -74,6 +76,12 @@ export default function App({ initialAircraft, locale } = {}) {
     (value) => typeof value === "string"
   )
 
+  const [taxiFuel, setTaxiFuel] = useLocalStorage(
+    "wb-taxi-fuel",
+    "",
+    (value) => typeof value === "string"
+  )
+
   // Aircraft pages preselect their aircraft once, unless a shared link wins.
   // Read the param during the first render: useSharedCalculation removes it.
   const [hasShareParam] = useState(
@@ -94,6 +102,7 @@ export default function App({ initialAircraft, locale } = {}) {
     setSelectedAircraft,
     setWeights,
     setFuelBurn,
+    setTaxiFuel,
     setUnits,
   })
 
@@ -112,12 +121,17 @@ export default function App({ initialAircraft, locale } = {}) {
     setWeights(emptyWeightsFor(next))
   }
 
-  const results = calculateWeightBalance(aircraft, weights)
+  // `weights` is the load at the ramp; the takeoff condition excludes the taxi fuel
+  const results = calculateWeightBalance(
+    aircraft,
+    applyTaxiFuel(aircraft, weights, taxiFuel).weights
+  )
   const safetyChecks = results
     ? buildSafetyReport(aircraft, results.totalWeight, results.centerOfGravity)
     : null
-  const phases = calculateFlightPhases(aircraft, weights, fuelBurn)
+  const phases = calculateFlightPhases(aircraft, weights, fuelBurn, taxiFuel)
   const landingReport = phases ? buildLandingReport(aircraft, phases) : null
+  const rampIssues = phases ? buildRampIssues(aircraft, phases) : []
 
   return (
     <div className="p-4 print:hidden">
@@ -181,7 +195,16 @@ export default function App({ initialAircraft, locale } = {}) {
                   value={selectedAircraft}
                   onValueChange={handleAircraftChange}
                   placeholder={m.app.aircraftSelectPlaceholder}
-                  options={[...aircraftOptions, ...custom.options]}
+                  options={[
+                    ...aircraftOptions.map((option) => ({
+                      ...option,
+                      group: m.app.aircraftGroups[option.category],
+                    })),
+                    ...custom.options.map((option) => ({
+                      ...option,
+                      group: m.app.aircraftGroups.custom,
+                    })),
+                  ]}
                 />
                 <a
                   href={AIRCRAFT_REQUEST_URL}
@@ -219,6 +242,13 @@ export default function App({ initialAircraft, locale } = {}) {
                 units={units}
               />
 
+              <TaxiFuelInput
+                value={taxiFuel}
+                onChange={setTaxiFuel}
+                hasFuelStation={phases?.hasFuelStation ?? false}
+                units={units}
+              />
+
               <FuelBurnInput
                 value={fuelBurn}
                 onChange={setFuelBurn}
@@ -248,6 +278,7 @@ export default function App({ initialAircraft, locale } = {}) {
                     aircraftId: selectedAircraft,
                     weights,
                     fuelBurn,
+                    taxiFuel,
                     units,
                     customRecords: custom.records,
                   })}
@@ -275,12 +306,22 @@ export default function App({ initialAircraft, locale } = {}) {
 
                   <Separator />
 
-                  <TakeoffVerdict results={results} />
+                  <TakeoffVerdict
+                    results={results}
+                    rampIssues={rampIssues}
+                    phases={phases ?? undefined}
+                    units={units}
+                  />
 
                   <Separator />
 
                   {phases && landingReport && (
-                    <FlightPhasesPanel phases={phases} report={landingReport} units={units} />
+                    <FlightPhasesPanel
+                      phases={phases}
+                      report={landingReport}
+                      maxRampWeight={aircraft.maxRampWeight}
+                      units={units}
+                    />
                   )}
 
                   <Separator />

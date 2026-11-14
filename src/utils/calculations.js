@@ -4,6 +4,9 @@
  */
 import { messages as m } from "../i18n"
 
+/** Fuel amounts this close (lbs) are equal: absorbs floating-point leftovers. */
+const FUEL_TOLERANCE_LBS = 1e-6
+
 /**
  * Check if a point (CG, weight) is inside the CG envelope
  * Uses ray casting algorithm
@@ -86,6 +89,17 @@ export function calculateCG(totalMoment, totalWeight) {
 }
 
 /**
+ * Load of a station in lbs from its raw input. Empty, invalid and negative
+ * values count as no load: a negative load would lower the gross weight and
+ * hide an overweight or out-of-envelope condition.
+ * @param {string | number | undefined} value
+ * @returns {number}
+ */
+export function parseStationWeight(value) {
+  return Math.max(0, Number.parseFloat(String(value)) || 0)
+}
+
+/**
  * Calculate total weight and balance for an aircraft.
  * Iterates over every numeric station defined in aircraft.stations, so it
  * works for any aircraft regardless of its cabin configuration.
@@ -96,14 +110,12 @@ export function calculateCG(totalMoment, totalWeight) {
 export function calculateWeightBalance(aircraft, weights) {
   if (!aircraft || !weights) return null
 
-  const parseWeight = (/** @type {string} */ val) => Number.parseFloat(val) || 0
-
   let totalWeight = aircraft.emptyWeight
   let totalMoment = calculateMoment(aircraft.emptyWeight, aircraft.emptyArm)
 
   for (const [station, arm] of Object.entries(aircraft.stations)) {
     if (typeof arm !== "number") continue // skip non-station entries like "notes"
-    const weight = parseWeight(weights[station])
+    const weight = parseStationWeight(weights[station])
     totalWeight += weight
     totalMoment += calculateMoment(weight, arm)
   }
@@ -308,33 +320,81 @@ function buildPhase(aircraft, totalWeight, totalMoment) {
 }
 
 /**
- * Takeoff, landing and zero-fuel conditions for a planned fuel burn.
+ * Station weights at takeoff: the ramp load minus the fuel burned for start
+ * and taxi, taken from the fuel stations in proportion to the fuel loaded in
+ * each one. Removing the fuel's weight *and* its moment keeps the takeoff CG
+ * right (subtracting only the weight would shift it aft).
+ * The taxi fuel is clamped to [0, loaded fuel]; `taxiExceedsFuel` flags when
+ * the requested amount was larger than the fuel on board.
+ * @param {import('../types').Aircraft} aircraft
+ * @param {import('../types').StationWeights} weights - Ramp station weights (raw strings)
+ * @param {number | string} [taxiFuel] - Start and taxi fuel (lbs)
+ * @returns {import('../types').TaxiFuelResult}
+ */
+export function applyTaxiFuel(aircraft, weights, taxiFuel = 0) {
+  const fuelKeys = getFuelStationKeys(aircraft)
+  const fuelOf = (/** @type {string} */ key) => Math.max(0, Number.parseFloat(weights[key]) || 0)
+  const rampFuel = fuelKeys.reduce((sum, key) => sum + fuelOf(key), 0)
+
+  const requestedTaxiFuel = Math.max(0, Number.parseFloat(String(taxiFuel)) || 0)
+  const effectiveTaxi = Math.min(requestedTaxiFuel, rampFuel)
+
+  /** @type {import('../types').StationWeights} */
+  const takeoffWeights = { ...weights }
+  if (effectiveTaxi > 0) {
+    // fuel - share of the taxi (not fuel × (1 − taxi/ramp)): a whole-station
+    // taxi leaves exactly what is left, e.g. 100 − 90 = 10, not 9.999…98
+    for (const key of fuelKeys) {
+      takeoffWeights[key] = String(fuelOf(key) - (effectiveTaxi * fuelOf(key)) / rampFuel)
+    }
+  }
+
+  return {
+    weights: takeoffWeights,
+    rampFuel,
+    taxiFuel: effectiveTaxi,
+    requestedTaxiFuel,
+    taxiExceedsFuel: requestedTaxiFuel > rampFuel,
+  }
+}
+
+/**
+ * Ramp, takeoff, landing and zero-fuel conditions for the loaded weights.
+ * - ramp = the weights as loaded (before start and taxi);
+ * - takeoff = ramp minus the taxi fuel (see applyTaxiFuel);
  * - landing = takeoff minus the burned fuel, removed from the fuel stations
  *   proportionally to the fuel loaded in each one (at each station's arm);
- * - zero-fuel = takeoff minus all the loaded fuel.
- * The burn is clamped to [0, loaded fuel]; `burnExceedsFuel` flags when the
- * requested burn was larger than the fuel on board.
+ * - zero-fuel = takeoff minus all the remaining fuel.
+ * The burn is clamped to [0, fuel at takeoff]; `burnExceedsFuel` flags when
+ * the requested burn was larger than the fuel on board at takeoff.
  * @param {import('../types').Aircraft} aircraft
- * @param {import('../types').StationWeights} weights - Station weights (raw strings)
+ * @param {import('../types').StationWeights} weights - Ramp station weights (raw strings)
  * @param {number | string} fuelBurn - Planned fuel burn (lbs)
+ * @param {number | string} [taxiFuel] - Start and taxi fuel (lbs)
  * @returns {import('../types').FlightPhasesResult | null}
  */
-export function calculateFlightPhases(aircraft, weights, fuelBurn) {
-  const base = calculateWeightBalance(aircraft, weights)
-  if (!base) return null
+export function calculateFlightPhases(aircraft, weights, fuelBurn, taxiFuel = 0) {
+  const rampBase = calculateWeightBalance(aircraft, weights)
+  if (!rampBase) return null
 
+  const taxi = applyTaxiFuel(aircraft, weights, taxiFuel)
+  const ramp = buildPhase(aircraft, rampBase.totalWeight, rampBase.totalMoment)
+  const base = /** @type {import('../types').WeightBalanceResult} */ (
+    calculateWeightBalance(aircraft, taxi.weights)
+  )
   const takeoff = buildPhase(aircraft, base.totalWeight, base.totalMoment)
 
   const fuelKeys = getFuelStationKeys(aircraft)
   const fuelByStation = fuelKeys.map((key) => ({
     arm: /** @type {number} */ (aircraft.stations[key]),
-    weight: Math.max(0, Number.parseFloat(weights[key]) || 0),
+    weight: Math.max(0, Number.parseFloat(taxi.weights[key]) || 0),
   }))
   const fuelLoaded = fuelByStation.reduce((sum, s) => sum + s.weight, 0)
   const fuelMoment = fuelByStation.reduce((sum, s) => sum + calculateMoment(s.weight, s.arm), 0)
 
   const requestedBurn = Math.max(0, Number.parseFloat(String(fuelBurn)) || 0)
-  const burnExceedsFuel = requestedBurn > fuelLoaded
+  // tolerance for floating-point leftovers (fuel after taxi is computed)
+  const burnExceedsFuel = requestedBurn > fuelLoaded + FUEL_TOLERANCE_LBS
   const effectiveBurn = Math.min(requestedBurn, fuelLoaded)
 
   // Quema proporcional: el momento quemado sigue el brazo medio del combustible cargado
@@ -351,9 +411,14 @@ export function calculateFlightPhases(aircraft, weights, fuelBurn) {
   )
 
   return {
+    ramp,
     takeoff,
     landing,
     zeroFuel,
+    rampFuel: taxi.rampFuel,
+    taxiFuel: taxi.taxiFuel,
+    requestedTaxiFuel: taxi.requestedTaxiFuel,
+    taxiExceedsFuel: taxi.taxiExceedsFuel,
     fuelLoaded,
     fuelBurn: effectiveBurn,
     requestedBurn,
@@ -426,4 +491,37 @@ export function buildLandingReport(aircraft, phases) {
   }
 
   return { isLandingOk: errors.length === 0, errors, warnings }
+}
+
+/**
+ * Start/taxi checks shown with the takeoff verdict: max ramp weight (only when
+ * the aircraft data declares it) and a taxi fuel larger than the fuel loaded.
+ * @param {import('../types').Aircraft} aircraft
+ * @param {import('../types').FlightPhasesResult} phases
+ * @returns {import('../types').SafetyIssue[]} errors
+ */
+export function buildRampIssues(aircraft, phases) {
+  /** @type {import('../types').SafetyIssue[]} */
+  const errors = []
+  const fp = m.flightPhases
+
+  if (aircraft.maxRampWeight !== undefined && phases.ramp.totalWeight > aircraft.maxRampWeight) {
+    errors.push({
+      type: "ramp-weight",
+      message: fp.overMaxRampWeight(aircraft.maxRampWeight),
+      value: phases.ramp.totalWeight,
+      limit: aircraft.maxRampWeight,
+      severity: "high",
+    })
+  }
+  if (phases.taxiExceedsFuel) {
+    errors.push({
+      type: "taxi-exceeds-fuel",
+      message: fp.taxiExceedsFuel(phases.requestedTaxiFuel, phases.rampFuel),
+      value: phases.requestedTaxiFuel,
+      limit: phases.rampFuel,
+      severity: "high",
+    })
+  }
+  return errors
 }

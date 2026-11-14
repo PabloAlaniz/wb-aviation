@@ -2,6 +2,8 @@
  * Helpers for the printable load sheet (hoja de carga).
  */
 
+import { parseStationWeight } from "./calculations"
+
 export const LOAD_SHEET_STORAGE_KEY = "wb-load-sheet"
 export const APP_URL = "https://checkcg.com"
 
@@ -75,8 +77,12 @@ export function normalizeIcao(value) {
  */
 
 /**
- * Rows of the stations table: the empty aircraft first, then every load
+ * Rows of the stations table: the empty aircraft first, then every loaded
  * station in form order (weights in lbs, arms in inches, moments in lb-in).
+ * Stations without load (exactly 0) are left out so a 19-seat cabin fits on
+ * one page; they add nothing to the totals. Weights are read like the
+ * calculation does (negative input counts as no load), so the rows add up to
+ * the printed total.
  * @param {import("../types").Aircraft} aircraft
  * @param {import("../types").StationWeights} weights
  * @param {(station: import("../types").LoadStation) => string} labelFor
@@ -97,7 +103,8 @@ export function buildLoadSheetRows(aircraft, weights, labelFor, emptyLabel) {
   for (const station of aircraft.loadStations) {
     const arm = aircraft.stations[station.key]
     if (typeof arm !== "number") continue
-    const weight = Number.parseFloat(weights[station.key]) || 0
+    const weight = parseStationWeight(weights[station.key])
+    if (weight === 0) continue
     rows.push({ key: station.key, label: labelFor(station), weight, arm, moment: weight * arm })
   }
   return rows

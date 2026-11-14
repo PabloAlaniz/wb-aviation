@@ -87,6 +87,9 @@ export interface LoadStation {
   isFuel?: boolean
 }
 
+/** Fuel burned by the aircraft; sets the density for volume entry. */
+export type FuelType = "avgas" | "jet-a"
+
 /** Display unit system. Calculations always stay in imperial units. */
 export type UnitSystem = "imperial" | "metric"
 
@@ -104,6 +107,10 @@ export interface Aircraft {
   maxLandingWeight?: number
   /** Max zero-fuel weight (lbs). Optional: only checked when declared. */
   maxZeroFuelWeight?: number
+  /** Max ramp (taxi) weight (lbs). Optional: only checked when declared. */
+  maxRampWeight?: number
+  /** Fuel type, for volume <-> weight conversion. Defaults to AVGAS. */
+  fuelType?: FuelType
   cgLimits: CgLimits
   stations: Record<string, number | string>
   loadStations: LoadStation[]
@@ -118,10 +125,14 @@ export interface Aircraft {
 /** Weights entered in the form, keyed by station (raw string values). */
 export type StationWeights = Record<string, string>
 
-/** Option for the aircraft selector. */
+/** Light aircraft (up to 5 seats, crew included) or larger ("multi"). */
+export type AircraftCategory = "light" | "multi"
+
+/** Option for a select; consecutive options with the same `group` are listed under it. */
 export interface SelectOption {
   value: string
   label: string
+  group?: string
 }
 
 export interface WeightBalanceResult {
@@ -171,13 +182,36 @@ export interface FlightPhase {
   inEnvelope: boolean
 }
 
+/** Takeoff station weights after removing the start and taxi fuel. */
+export interface TaxiFuelResult {
+  /** Station weights at takeoff (raw strings, like the form's). */
+  weights: StationWeights
+  /** Fuel loaded at the ramp, across fuel stations (lbs). */
+  rampFuel: number
+  /** Effective taxi fuel, clamped to [0, rampFuel] (lbs). */
+  taxiFuel: number
+  /** Taxi fuel as requested by the user, before clamping (lbs, >= 0). */
+  requestedTaxiFuel: number
+  taxiExceedsFuel: boolean
+}
+
 export interface FlightPhasesResult {
+  /** As loaded, before start and taxi. */
+  ramp: FlightPhase
+  /** Ramp minus the (clamped) taxi fuel. */
   takeoff: FlightPhase
   /** Takeoff minus the (clamped) planned fuel burn. */
   landing: FlightPhase
   /** Takeoff minus all the loaded fuel. */
   zeroFuel: FlightPhase
-  /** Total fuel loaded across fuel stations (lbs). */
+  /** Fuel loaded at the ramp, across fuel stations (lbs). */
+  rampFuel: number
+  /** Effective start and taxi fuel, clamped to [0, rampFuel] (lbs). */
+  taxiFuel: number
+  /** Taxi fuel as requested by the user, before clamping (lbs, >= 0). */
+  requestedTaxiFuel: number
+  taxiExceedsFuel: boolean
+  /** Fuel on board at takeoff, across fuel stations (lbs). */
   fuelLoaded: number
   /** Effective burn used for landing, clamped to [0, fuelLoaded] (lbs). */
   fuelBurn: number

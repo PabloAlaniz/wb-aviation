@@ -2,6 +2,7 @@ import { AlertTriangle, CheckCircle } from "lucide-react"
 import { Badge } from "./Badge"
 import { messages as m } from "../i18n"
 import { formatArm, formatWeight } from "../utils/units"
+import { localizeLandingIssue as issueText } from "../utils/safetyDisplay"
 
 /**
  * Total weight / CG rows with OK / out-of-limits badges, plus the final
@@ -54,13 +55,19 @@ export function ResultsPanel({ results, units = "imperial" }) {
 }
 
 /**
- * Final go / no-go verdict box based on weight and CG checks.
- * @param {{ results: import("../types").WeightBalanceResult }} props
+ * Final go / no-go verdict box based on weight and CG checks, plus the ramp
+ * issues (max ramp weight, taxi fuel larger than the fuel loaded).
+ * @param {{
+ *   results: import("../types").WeightBalanceResult,
+ *   rampIssues?: import("../types").SafetyIssue[],
+ *   phases?: import("../types").FlightPhasesResult,
+ *   units?: import("../types").UnitSystem,
+ * }} props
  */
-export function TakeoffVerdict({ results }) {
+export function TakeoffVerdict({ results, rampIssues = [], phases, units = "imperial" }) {
   return (
     <div className="text-center" role="status">
-      {results.isWeightOk && results.isCgOk ? (
+      {results.isWeightOk && results.isCgOk && rampIssues.length === 0 ? (
         <div className="bg-green-50 border border-green-200 rounded-lg p-4">
           <CheckCircle className="h-8 w-8 text-green-600 mx-auto mb-2" />
           <p className="text-green-800 font-semibold">{m.results.readyForTakeoff}</p>
@@ -74,6 +81,13 @@ export function TakeoffVerdict({ results }) {
             {!results.isWeightOk && m.results.overweightDetail}
             {!results.isCgOk && m.results.cgOutDetail}
           </p>
+          {rampIssues.length > 0 && (
+            <ul className="text-red-600 text-sm mt-1">
+              {rampIssues.map((issue) => (
+                <li key={issue.type}>{issueText(issue, units, phases)}</li>
+              ))}
+            </ul>
+          )}
         </div>
       )}
     </div>

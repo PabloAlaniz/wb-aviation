@@ -44,6 +44,15 @@ export const GUIDES = [
       it: "inviluppo-del-cg",
     },
   },
+  {
+    key: "fuel-conversions",
+    slugs: {
+      es: "conversiones-de-combustible",
+      en: "fuel-conversions",
+      pt: "conversoes-de-combustivel",
+      it: "conversioni-di-carburante",
+    },
+  },
 ]
 
 /**

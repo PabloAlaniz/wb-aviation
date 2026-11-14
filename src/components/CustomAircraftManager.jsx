@@ -94,7 +94,10 @@ export function CustomAircraftManager({ records, onSave, onRemove, units = "impe
               id="custom-baseModelId"
               value={form.baseModelId}
               onValueChange={(value) => update("baseModelId", value)}
-              options={aircraftOptions}
+              options={aircraftOptions.map((option) => ({
+                ...option,
+                group: m.app.aircraftGroups[option.category],
+              }))}
             />
             {errorFor("baseModelId")}
           </div>

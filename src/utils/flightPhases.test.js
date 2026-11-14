@@ -4,6 +4,8 @@ import {
   buildLandingReport,
   getFuelStationKeys,
   calculateWeightBalance,
+  applyTaxiFuel,
+  buildRampIssues,
 } from "./calculations"
 import { aircraftData } from "../data/aircraft"
 
@@ -195,5 +197,97 @@ describe("buildLandingReport", () => {
     const report = buildLandingReport(aircraft, phases)
     expect(report.errors.map((e) => e.type)).toContain("landing-cg")
     expect(report.warnings.map((e) => e.type)).toContain("zero-fuel-cg")
+  })
+})
+
+describe("taxi fuel and ramp condition", () => {
+  const weights = { pilot: "200", copilot: "180", fuel: "1500" }
+  const fuelArm = /** @type {number} */ (e90.stations.fuel)
+
+  it("ramp equals takeoff when there is no taxi fuel", () => {
+    const phases = calculateFlightPhases(e90, weights, "800")
+    expect(phases.taxiFuel).toBe(0)
+    expect(phases.ramp).toEqual(phases.takeoff)
+    expect(phases.rampFuel).toBe(1500)
+    expect(phases.fuelLoaded).toBe(1500)
+  })
+
+  it("removes the taxi fuel's weight and moment for takeoff", () => {
+    const ramp = calculateWeightBalance(e90, weights)
+    const phases = calculateFlightPhases(e90, weights, "0", "90")
+
+    expect(phases.ramp.totalWeight).toBe(ramp.totalWeight)
+    expect(phases.takeoff.totalWeight).toBeCloseTo(ramp.totalWeight - 90, 6)
+    expect(phases.takeoff.totalMoment).toBeCloseTo(ramp.totalMoment - 90 * fuelArm, 6)
+    // keeping the ramp moment (dropping only the weight) would move the CG aft
+    expect(phases.takeoff.centerOfGravity).not.toBeCloseTo(
+      ramp.totalMoment / (ramp.totalWeight - 90),
+      2
+    )
+    expect(phases.fuelLoaded).toBeCloseTo(1410, 6)
+  })
+
+  it("burns and zero-fuels from the fuel left after taxi", () => {
+    const ramp = calculateWeightBalance(e90, weights)
+    const phases = calculateFlightPhases(e90, weights, "2000", "90")
+
+    expect(phases.fuelBurn).toBeCloseTo(1410, 6)
+    expect(phases.burnExceedsFuel).toBe(true)
+    expect(phases.zeroFuel.totalWeight).toBeCloseTo(ramp.totalWeight - 1500, 6)
+    expect(phases.zeroFuel.totalMoment).toBeCloseTo(ramp.totalMoment - 1500 * fuelArm, 6)
+  })
+
+  it("takes the taxi fuel from each fuel station in proportion", () => {
+    const aircraft = {
+      ...e90,
+      stations: { ...e90.stations, fuelAux: 170 },
+      loadStations: [...e90.loadStations, { key: "fuelAux", label: "Aux", isFuel: true }],
+    }
+    const taxi = applyTaxiFuel(aircraft, { fuel: "300", fuelAux: "100" }, "40")
+    expect(Number(taxi.weights.fuel)).toBeCloseTo(270, 6)
+    expect(Number(taxi.weights.fuelAux)).toBeCloseTo(90, 6)
+    expect(taxi.taxiFuel).toBe(40)
+  })
+
+  it("clamps a taxi fuel larger than the fuel loaded and flags it", () => {
+    const phases = calculateFlightPhases(e90, { pilot: "200", fuel: "50" }, "0", "90")
+    expect(phases.taxiFuel).toBe(50)
+    expect(phases.requestedTaxiFuel).toBe(90)
+    expect(phases.taxiExceedsFuel).toBe(true)
+    expect(phases.fuelLoaded).toBe(0)
+    expect(buildRampIssues(e90, phases).map((issue) => issue.type)).toEqual(["taxi-exceeds-fuel"])
+  })
+
+  it("accepts a planned burn equal to the fuel left after taxi", () => {
+    // 100 − 90 used to leave 9.999…98 lbs and flag a 10 lbs burn as too large
+    const phases = calculateFlightPhases(e90, { pilot: "200", fuel: "100" }, "10", "90")
+    expect(phases.fuelLoaded).toBe(10)
+    expect(phases.burnExceedsFuel).toBe(false)
+    expect(phases.fuelBurn).toBe(10)
+    expect(buildLandingReport(e90, phases).errors.map((issue) => issue.type)).not.toContain(
+      "burn-exceeds-fuel"
+    )
+  })
+
+  it("ignores negative or invalid taxi fuel", () => {
+    for (const taxi of ["-90", "abc", ""]) {
+      const phases = calculateFlightPhases(e90, weights, "0", taxi)
+      expect(phases.taxiFuel).toBe(0)
+      expect(phases.taxiExceedsFuel).toBe(false)
+    }
+  })
+
+  it("checks the max ramp weight only when the aircraft declares it", () => {
+    const heavy = { pilot: "200", copilot: "200", fuel: "3000" }
+    const phases = calculateFlightPhases(e90, heavy, "0", "90")
+    expect(buildRampIssues(e90, phases)).toEqual([])
+
+    const withRamp = { ...e90, maxRampWeight: phases.ramp.totalWeight - 1 }
+    const issues = buildRampIssues(withRamp, calculateFlightPhases(withRamp, heavy, "0", "90"))
+    expect(issues).toHaveLength(1)
+    expect(issues[0]).toMatchObject({ type: "ramp-weight", limit: withRamp.maxRampWeight })
+
+    const atLimit = { ...e90, maxRampWeight: phases.ramp.totalWeight }
+    expect(buildRampIssues(atLimit, calculateFlightPhases(atLimit, heavy, "0", "90"))).toEqual([])
   })
 })

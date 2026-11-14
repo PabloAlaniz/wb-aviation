@@ -29,6 +29,7 @@ function sharedActions() {
     setSelectedAircraft: vi.fn(),
     setWeights: vi.fn(),
     setFuelBurn: vi.fn(),
+    setTaxiFuel: vi.fn(),
     setUnits: vi.fn(),
   }
 }

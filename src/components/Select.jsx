@@ -102,6 +102,24 @@ export function SelectItem({ value, children, onSelect, isSelected }) {
 }
 
 /**
+ * Split options into runs of consecutive options sharing the same `group`.
+ * @param {import("../types").SelectOption[]} options
+ * @returns {{ group: string | undefined, items: import("../types").SelectOption[] }[]}
+ */
+function groupOptions(options) {
+  /** @type {{ group: string | undefined, items: import("../types").SelectOption[] }[]} */
+  const runs = []
+  for (const option of options) {
+    const last = runs.at(-1)
+    if (last && last.group === option.group) last.items.push(option)
+    else runs.push({ group: option.group, items: [option] })
+  }
+  return runs
+}
+
+/**
+ * Select with optional group headings: consecutive options with the same
+ * `group` are listed under it.
  * @param {{
  *   id?: string,
  *   value: string,
@@ -136,19 +154,34 @@ export function SimpleSelect({ id, value, onValueChange, placeholder, options })
         <SelectValue placeholder={placeholder} value={value} options={options} />
       </SelectTrigger>
       <SelectContent isOpen={isOpen}>
-        {options.map((option) => (
-          <SelectItem
-            key={option.value}
-            value={option.value}
-            isSelected={option.value === value}
-            onSelect={(val) => {
-              onValueChange(val)
-              close()
-            }}
-          >
-            {option.label}
-          </SelectItem>
-        ))}
+        {groupOptions(options).map(({ group, items }, index) => {
+          const rendered = items.map((option) => (
+            <SelectItem
+              key={option.value}
+              value={option.value}
+              isSelected={option.value === value}
+              onSelect={(val) => {
+                onValueChange(val)
+                close()
+              }}
+            >
+              {option.label}
+            </SelectItem>
+          ))
+          return group === undefined ? (
+            rendered
+          ) : (
+            <div key={`${group}-${index}`} role="group" aria-label={group}>
+              <div
+                aria-hidden="true"
+                className="px-3 pt-2 pb-1 text-xs font-semibold uppercase tracking-wide text-gray-500"
+              >
+                {group}
+              </div>
+              {rendered}
+            </div>
+          )
+        })}
       </SelectContent>
     </div>
   )

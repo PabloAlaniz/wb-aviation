@@ -5,16 +5,21 @@ import { armSuffix, armToDisplay, unitSymbols, weightToDisplay } from "../utils/
 import { localizeLandingIssue as issueText } from "../utils/safetyDisplay"
 
 /**
- * Takeoff / landing / zero-fuel table plus the landing verdict.
+ * Ramp (when there is taxi fuel) / takeoff / landing / zero-fuel table plus
+ * the landing verdict. The ramp row is checked against the max ramp weight,
+ * not the envelope (which applies in flight); "—" when the aircraft data has
+ * no max ramp weight.
  * @param {{
  *   phases: import("../types").FlightPhasesResult,
  *   report: import("../types").LandingReport,
+ *   maxRampWeight?: number,
  *   units?: import("../types").UnitSystem,
  * }} props
  */
-export function FlightPhasesPanel({ phases, report, units = "imperial" }) {
+export function FlightPhasesPanel({ phases, report, maxRampWeight, units = "imperial" }) {
   const fp = m.flightPhases
   const rows = [
+    ...(phases.taxiFuel > 0 ? [{ key: "ramp", label: fp.ramp, phase: phases.ramp }] : []),
     { key: "takeoff", label: fp.takeoff, phase: phases.takeoff },
     { key: "landing", label: fp.landing, phase: phases.landing },
     { key: "zeroFuel", label: fp.zeroFuel, phase: phases.zeroFuel },
@@ -45,7 +50,9 @@ export function FlightPhasesPanel({ phases, report, units = "imperial" }) {
                 <span className="text-gray-500">{armSuffix(units)}</span>
               </td>
               <td className="py-1 text-right">
-                {phase.inEnvelope ? (
+                {key === "ramp" ? (
+                  <RampStatus weight={phase.totalWeight} maxRampWeight={maxRampWeight} />
+                ) : phase.inEnvelope ? (
                   <Badge variant="default" className="bg-green-500">
                     {fp.inEnvelope}
                   </Badge>
@@ -60,6 +67,20 @@ export function FlightPhasesPanel({ phases, report, units = "imperial" }) {
 
       <LandingVerdict report={report} units={units} phases={phases} />
     </div>
+  )
+}
+
+/**
+ * @param {{ weight: number, maxRampWeight?: number }} props
+ */
+function RampStatus({ weight, maxRampWeight }) {
+  if (maxRampWeight === undefined) return <span className="text-gray-500">—</span>
+  return weight <= maxRampWeight ? (
+    <Badge variant="default" className="bg-green-500">
+      {m.results.ok}
+    </Badge>
+  ) : (
+    <Badge variant="destructive">{m.results.overweight}</Badge>
   )
 }
 
