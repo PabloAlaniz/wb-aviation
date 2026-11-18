@@ -87,7 +87,8 @@ export function StationForm({ aircraft, weights, onWeightChange, units = "imperi
     const name = resolveStationLabel(station, m)
     const label =
       station.max !== undefined
-        ? m.units.stationLabelMax(name, unit, trimNumber(toDisplay(station.max, mode), 0))
+        ? // rounded down: typing the shown maximum never exceeds the real one
+          m.units.stationLabelMax(name, unit, Math.floor(toDisplay(station.max, mode) + 1e-6))
         : m.units.stationLabel(name, unit)
 
     const placeholderLbs = Number(station.placeholder)

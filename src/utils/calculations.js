@@ -3,6 +3,8 @@
  * Extracted for testing and reusability
  */
 import { messages as m } from "../i18n"
+import { resolveStationLabel } from "./stationLabel"
+import { trimNumber } from "./units"
 
 /** Fuel amounts this close (lbs) are equal: absorbs floating-point leftovers. */
 const FUEL_TOLERANCE_LBS = 1e-6
@@ -65,6 +67,30 @@ export function isPointOnEnvelopeEdge(cg, weight, envelopePoints, tolerance = 1e
     if (distance <= tolerance) return true
   }
   return false
+}
+
+/**
+ * Forward and aft CG limits of the envelope at a given weight: where the
+ * horizontal line at that weight crosses the polygon. Envelopes narrow with
+ * weight, so these are tighter than the absolute `cgLimits` near max weight.
+ * @param {import('../types').EnvelopePoint[] | undefined} envelopePoints
+ * @param {number} weight - lbs
+ * @returns {{ forward: number, aft: number } | null} null when the weight is
+ *   above or below the envelope (or there is no envelope)
+ */
+export function envelopeCgRangeAt(envelopePoints, weight) {
+  if (!envelopePoints || envelopePoints.length < 3) return null
+  /** @type {number[]} */
+  const arms = []
+  for (let i = 0, j = envelopePoints.length - 1; i < envelopePoints.length; j = i++) {
+    const a = envelopePoints[j]
+    const b = envelopePoints[i]
+    if (weight < Math.min(a.weight, b.weight) || weight > Math.max(a.weight, b.weight)) continue
+    if (a.weight === b.weight) arms.push(a.arm, b.arm)
+    else arms.push(a.arm + ((weight - a.weight) / (b.weight - a.weight)) * (b.arm - a.arm))
+  }
+  if (arms.length === 0) return null
+  return { forward: Math.min(...arms), aft: Math.max(...arms) }
 }
 
 /**
@@ -233,9 +259,11 @@ export function buildSafetyReport(aircraft, totalWeight, centerOfGravity) {
     })
   }
 
-  // Verificar CG cerca de límites
-  const cgForwardMargin = centerOfGravity - aircraft.cgLimits.forward
-  const cgAftMargin = aircraft.cgLimits.aft - centerOfGravity
+  // Verificar CG cerca de límites: los de la envolvente al peso actual (se
+  // estrecha con el peso); los absolutos si el peso queda fuera de ella
+  const cgRange = envelopeCgRangeAt(aircraft.cgEnvelope?.points, totalWeight) ?? aircraft.cgLimits
+  const cgForwardMargin = centerOfGravity - cgRange.forward
+  const cgAftMargin = cgRange.aft - centerOfGravity
 
   if (cgForwardMargin < safetyFactors.cgMargin) {
     warnings.push({
@@ -493,14 +521,48 @@ export function buildLandingReport(aircraft, phases) {
   return { isLandingOk: errors.length === 0, errors, warnings }
 }
 
+/** Loads this close (lbs) to a station maximum still count as within it. */
+const STATION_MAX_TOLERANCE_LBS = 0.01
+
 /**
- * Start/taxi checks shown with the takeoff verdict: max ramp weight (only when
- * the aircraft data declares it) and a taxi fuel larger than the fuel loaded.
+ * Stations loaded above their declared maximum (baggage compartment limit,
+ * usable fuel capacity). One error per station; stations without `max` are
+ * not checked.
  * @param {import('../types').Aircraft} aircraft
- * @param {import('../types').FlightPhasesResult} phases
+ * @param {import('../types').StationWeights} weights - Ramp station weights (raw strings)
  * @returns {import('../types').SafetyIssue[]} errors
  */
-export function buildRampIssues(aircraft, phases) {
+export function buildStationLimitIssues(aircraft, weights) {
+  /** @type {import('../types').SafetyIssue[]} */
+  const errors = []
+  for (const station of aircraft.loadStations) {
+    if (station.max === undefined) continue
+    const weight = parseStationWeight(weights[station.key])
+    if (weight <= station.max + STATION_MAX_TOLERANCE_LBS) continue
+    const label = resolveStationLabel(station, m)
+    errors.push({
+      type: "station-max",
+      station: station.key,
+      label,
+      message: m.margins.stationOverMax(label, trimNumber(weight, 1), trimNumber(station.max, 1)),
+      value: weight,
+      limit: station.max,
+      severity: "high",
+    })
+  }
+  return errors
+}
+
+/**
+ * Start/taxi checks shown with the takeoff verdict: max ramp weight (only when
+ * the aircraft data declares it), a taxi fuel larger than the fuel loaded and,
+ * when the ramp `weights` are given, stations loaded above their maximum.
+ * @param {import('../types').Aircraft} aircraft
+ * @param {import('../types').FlightPhasesResult} phases
+ * @param {import('../types').StationWeights} [weights] - Ramp station weights
+ * @returns {import('../types').SafetyIssue[]} errors
+ */
+export function buildRampIssues(aircraft, phases, weights) {
   /** @type {import('../types').SafetyIssue[]} */
   const errors = []
   const fp = m.flightPhases
@@ -523,5 +585,6 @@ export function buildRampIssues(aircraft, phases) {
       severity: "high",
     })
   }
+  if (weights) errors.push(...buildStationLimitIssues(aircraft, weights))
   return errors
 }

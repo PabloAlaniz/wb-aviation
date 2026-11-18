@@ -50,6 +50,30 @@ describe("App (integración)", () => {
     expect(screen.getByText("EXCESO")).toBeInTheDocument()
   })
 
+  it("rejects takeoff when a station is loaded above its maximum", () => {
+    render(<App initialAircraft="cessna-172s" />)
+
+    // área de equipaje 2 del 172S: máx 50 lbs
+    fireEvent.change(screen.getByLabelText("Equipaje área 2 (lbs, máx 50)"), {
+      target: { value: "60" },
+    })
+
+    expect(screen.getByText(/NO APTO PARA DESPEGUE/)).toBeInTheDocument()
+    expect(
+      screen.getByText(/60 lbs supera el máximo de la estación \(50 lbs\)/)
+    ).toBeInTheDocument()
+  })
+
+  it("shows the payload and the fuel that can still be loaded", () => {
+    render(<App initialAircraft="cessna-172s" />)
+
+    fireEvent.change(screen.getByLabelText(/^Combustible \(lbs/), { target: { value: "118" } })
+
+    // tanques del 172S: 318 lbs usables
+    expect(screen.getByTestId("margin-extra-fuel")).toHaveTextContent("200 lbs (33 gal)")
+    expect(screen.getByTestId("margin-extra-fuel")).toHaveTextContent("capacidad del tanque")
+  })
+
   it("shows safety warning when weight approaches the limit", () => {
     render(<App />)
 

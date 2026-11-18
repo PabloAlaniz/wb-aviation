@@ -84,7 +84,9 @@ export function TakeoffVerdict({ results, rampIssues = [], phases, units = "impe
           {rampIssues.length > 0 && (
             <ul className="text-red-600 text-sm mt-1">
               {rampIssues.map((issue) => (
-                <li key={issue.type}>{issueText(issue, units, phases)}</li>
+                <li key={`${issue.type}:${issue.station ?? ""}`}>
+                  {issueText(issue, units, phases)}
+                </li>
               ))}
             </ul>
           )}

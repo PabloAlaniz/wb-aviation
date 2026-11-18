@@ -20,6 +20,11 @@ import { FleetImportDialog } from "./components/FleetImportDialog"
 import { AIRCRAFT_REQUEST_URL, Footer } from "./components/Footer"
 import { useFleetImport } from "./hooks/useFleetImport"
 import { LoadSheetPanel } from "./components/LoadSheetPanel"
+import { LoadMarginsPanel } from "./components/LoadMarginsPanel"
+import { SavedLoads } from "./components/SavedLoads"
+import { LoadAdvice } from "./components/LoadAdvice"
+import { useSavedLoads } from "./hooks/useSavedLoads"
+import { loadsForAircraft, savedLoadWeights } from "./utils/savedLoads"
 import { Plane, Calculator, RotateCcw } from "lucide-react"
 import { aircraftData, aircraftOptions, emptyWeightsFor } from "./data/aircraft"
 import {
@@ -30,6 +35,9 @@ import {
   applyTaxiFuel,
   buildRampIssues,
 } from "./utils/calculations"
+import { buildLoadMargins } from "./utils/loadMargins"
+import { buildLoadAdvice } from "./utils/loadAdvice"
+import { KG_PER_LB } from "./utils/units"
 import { trackEvent } from "./analytics"
 import { useLocalStorage } from "./hooks/useLocalStorage"
 import { useCustomAircraft } from "./hooks/useCustomAircraft"
@@ -69,6 +77,7 @@ export default function App({ initialAircraft, locale } = {}) {
   )
 
   const [units, setUnits] = useUnits()
+  const savedLoads = useSavedLoads()
 
   const [fuelBurn, setFuelBurn] = useLocalStorage(
     "wb-fuel-burn",
@@ -131,7 +140,16 @@ export default function App({ initialAircraft, locale } = {}) {
     : null
   const phases = calculateFlightPhases(aircraft, weights, fuelBurn, taxiFuel)
   const landingReport = phases ? buildLandingReport(aircraft, phases) : null
-  const rampIssues = phases ? buildRampIssues(aircraft, phases) : []
+  const rampIssues = phases ? buildRampIssues(aircraft, phases, weights) : []
+  const margins = buildLoadMargins(aircraft, weights, fuelBurn, taxiFuel)
+  // suggested amounts in whole lbs or whole kg, matching the display units
+  const advice = buildLoadAdvice(
+    aircraft,
+    weights,
+    fuelBurn,
+    taxiFuel,
+    units === "metric" ? 1 / KG_PER_LB : 1
+  )
 
   return (
     <div className="p-4 print:hidden">
@@ -227,6 +245,7 @@ export default function App({ initialAircraft, locale } = {}) {
                 }}
                 onRemove={(id) => {
                   custom.remove(id)
+                  savedLoads.removeForAircraft(id)
                   if (id === selectedAircraft) handleAircraftChange(DEFAULT_AIRCRAFT)
                 }}
               />
@@ -254,6 +273,26 @@ export default function App({ initialAircraft, locale } = {}) {
                 onChange={setFuelBurn}
                 fuelLoaded={phases?.fuelLoaded ?? 0}
                 hasFuelStation={phases?.hasFuelStation ?? false}
+                units={units}
+              />
+
+              <SavedLoads
+                loads={loadsForAircraft(savedLoads.loads, selectedAircraft)}
+                onSave={(name) =>
+                  savedLoads.save({
+                    aircraftId: selectedAircraft,
+                    name,
+                    weights,
+                    fuelBurn,
+                    taxiFuel,
+                  })
+                }
+                onApply={(load) => {
+                  setWeights(savedLoadWeights(load, aircraft))
+                  setFuelBurn(load.fuelBurn)
+                  setTaxiFuel(load.taxiFuel)
+                }}
+                onRemove={(name) => savedLoads.remove(selectedAircraft, name)}
                 units={units}
               />
 
@@ -300,6 +339,8 @@ export default function App({ initialAircraft, locale } = {}) {
 
                   <ResultsPanel results={results} units={units} />
 
+                  <LoadMarginsPanel margins={margins} fuelType={aircraft.fuelType} units={units} />
+
                   <Separator />
 
                   <SafetyAlerts safetyChecks={safetyChecks} units={units} />
@@ -312,6 +353,8 @@ export default function App({ initialAircraft, locale } = {}) {
                     phases={phases ?? undefined}
                     units={units}
                   />
+
+                  <LoadAdvice advice={advice} aircraft={aircraft} units={units} />
 
                   <Separator />
 

@@ -77,7 +77,7 @@ export function LoadSheet({
         },
       ]
 
-  const rampIssues = phases ? buildRampIssues(aircraft, phases) : []
+  const rampIssues = phases ? buildRampIssues(aircraft, phases, weights) : []
   const takeoffOk = results.isWeightOk && results.isCgOk && rampIssues.length === 0
   const taxiFuel = phases?.taxiFuel ?? 0
   const warnings = [
