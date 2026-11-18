@@ -21,6 +21,9 @@ import { AIRCRAFT_REQUEST_URL, Footer } from "./components/Footer"
 import { useFleetImport } from "./hooks/useFleetImport"
 import { LoadSheetPanel } from "./components/LoadSheetPanel"
 import { LoadMarginsPanel } from "./components/LoadMarginsPanel"
+import { SavedLoads } from "./components/SavedLoads"
+import { useSavedLoads } from "./hooks/useSavedLoads"
+import { loadsForAircraft, savedLoadWeights } from "./utils/savedLoads"
 import { Plane, Calculator, RotateCcw } from "lucide-react"
 import { aircraftData, aircraftOptions, emptyWeightsFor } from "./data/aircraft"
 import {
@@ -71,6 +74,7 @@ export default function App({ initialAircraft, locale } = {}) {
   )
 
   const [units, setUnits] = useUnits()
+  const savedLoads = useSavedLoads()
 
   const [fuelBurn, setFuelBurn] = useLocalStorage(
     "wb-fuel-burn",
@@ -230,6 +234,7 @@ export default function App({ initialAircraft, locale } = {}) {
                 }}
                 onRemove={(id) => {
                   custom.remove(id)
+                  savedLoads.removeForAircraft(id)
                   if (id === selectedAircraft) handleAircraftChange(DEFAULT_AIRCRAFT)
                 }}
               />
@@ -257,6 +262,26 @@ export default function App({ initialAircraft, locale } = {}) {
                 onChange={setFuelBurn}
                 fuelLoaded={phases?.fuelLoaded ?? 0}
                 hasFuelStation={phases?.hasFuelStation ?? false}
+                units={units}
+              />
+
+              <SavedLoads
+                loads={loadsForAircraft(savedLoads.loads, selectedAircraft)}
+                onSave={(name) =>
+                  savedLoads.save({
+                    aircraftId: selectedAircraft,
+                    name,
+                    weights,
+                    fuelBurn,
+                    taxiFuel,
+                  })
+                }
+                onApply={(load) => {
+                  setWeights(savedLoadWeights(load, aircraft))
+                  setFuelBurn(load.fuelBurn)
+                  setTaxiFuel(load.taxiFuel)
+                }}
+                onRemove={(name) => savedLoads.remove(selectedAircraft, name)}
                 units={units}
               />
 
