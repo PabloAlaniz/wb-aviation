@@ -249,6 +249,75 @@ export const pt = {
     chartBurnPath: "Consumo de combustível",
   },
 
+  margins: {
+    title: "Margens de carga",
+    payloadAvailable: "Carga ainda disponível:",
+    overBy: (/** @type {string|number} */ value, /** @type {string} */ unit = "lbs") =>
+      `Excedido em ${value} ${unit}`,
+    extraFuel: "Combustível que você ainda pode abastecer:",
+    limitedByNote: (/** @type {string} */ limit) => `limitado por ${limit}`,
+    limitedBy: {
+      tank: "capacidade do tanque",
+      weight: "peso máximo de decolagem",
+      ramp: "peso máximo de rampa",
+      landing: "peso máximo de pouso",
+      envelope: "envelope de CG",
+    },
+    fuelAtLanding: "Combustível no pouso:",
+    stationOverMax: (
+      /** @type {string} */ station,
+      /** @type {string|number} */ value,
+      /** @type {string|number} */ max,
+      /** @type {string} */ unit = "lbs"
+    ) => `${station}: ${value} ${unit} excede o máximo da estação (${max} ${unit})`,
+  },
+
+  savedLoads: {
+    title: "Cargas salvas",
+    description:
+      "Salve as cargas que você voa com frequência (solo, duplo comando, cabine cheia) e aplique com um toque. Revise cada item antes de cada voo.",
+    nameLabel: "Nome da carga",
+    namePlaceholder: "Instrução duplo comando",
+    save: "Salvar carga atual",
+    empty: "Você ainda não salvou cargas para esta aeronave.",
+    listLabel: "Cargas salvas desta aeronave",
+    detail: (/** @type {string} */ weight) => `${weight} carregados`,
+    apply: (/** @type {string} */ name) => `Aplicar ${name}`,
+    remove: (/** @type {string} */ name) => `Excluir ${name}`,
+    errors: {
+      nameRequired: "Informe um nome para a carga.",
+      nothingToSave: "Informe pelo menos um peso antes de salvar.",
+    },
+  },
+
+  advice: {
+    title: "Como voltar aos limites",
+    cgForward: (/** @type {string|number} */ value, /** @type {string} */ unit = '"') =>
+      `O CG está ${value}${unit} à frente do limite para este peso.`,
+    cgAft: (/** @type {string|number} */ value, /** @type {string} */ unit = '"') =>
+      `O CG está ${value}${unit} atrás do limite para este peso.`,
+    overweight: (/** @type {string|number} */ value, /** @type {string} */ unit = "lbs") =>
+      `O peso de decolagem excede o máximo em ${value} ${unit}.`,
+    remove: (
+      /** @type {string|number} */ value,
+      /** @type {string} */ unit,
+      /** @type {string} */ station
+    ) => `Retirar ${value} ${unit} de ${station}`,
+    add: (
+      /** @type {string|number} */ value,
+      /** @type {string} */ unit,
+      /** @type {string} */ station
+    ) => `Adicionar ${value} ${unit} em ${station}`,
+    move: (
+      /** @type {string|number} */ value,
+      /** @type {string} */ unit,
+      /** @type {string} */ from,
+      /** @type {string} */ to
+    ) => `Mover ${value} ${unit} de ${from} para ${to}`,
+    none: "Nenhuma mudança única de bagagem ou combustível resolve: redistribua a carga e verifique de novo.",
+    note: "Cada opção sozinha traz a decolagem de volta aos limites. São apenas aritméticas: verifique o pouso e o seu POH.",
+  },
+
   customAircraft: {
     title: "Minhas aeronaves (por matrícula)",
     description:

@@ -20,6 +20,7 @@ import { FleetImportDialog } from "./components/FleetImportDialog"
 import { AIRCRAFT_REQUEST_URL, Footer } from "./components/Footer"
 import { useFleetImport } from "./hooks/useFleetImport"
 import { LoadSheetPanel } from "./components/LoadSheetPanel"
+import { LoadMarginsPanel } from "./components/LoadMarginsPanel"
 import { Plane, Calculator, RotateCcw } from "lucide-react"
 import { aircraftData, aircraftOptions, emptyWeightsFor } from "./data/aircraft"
 import {
@@ -30,6 +31,7 @@ import {
   applyTaxiFuel,
   buildRampIssues,
 } from "./utils/calculations"
+import { buildLoadMargins } from "./utils/loadMargins"
 import { trackEvent } from "./analytics"
 import { useLocalStorage } from "./hooks/useLocalStorage"
 import { useCustomAircraft } from "./hooks/useCustomAircraft"
@@ -131,7 +133,8 @@ export default function App({ initialAircraft, locale } = {}) {
     : null
   const phases = calculateFlightPhases(aircraft, weights, fuelBurn, taxiFuel)
   const landingReport = phases ? buildLandingReport(aircraft, phases) : null
-  const rampIssues = phases ? buildRampIssues(aircraft, phases) : []
+  const rampIssues = phases ? buildRampIssues(aircraft, phases, weights) : []
+  const margins = buildLoadMargins(aircraft, weights, fuelBurn, taxiFuel)
 
   return (
     <div className="p-4 print:hidden">
@@ -299,6 +302,8 @@ export default function App({ initialAircraft, locale } = {}) {
                   <Separator />
 
                   <ResultsPanel results={results} units={units} />
+
+                  <LoadMarginsPanel margins={margins} fuelType={aircraft.fuelType} units={units} />
 
                   <Separator />
 

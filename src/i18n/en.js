@@ -248,6 +248,75 @@ export const en = {
     chartBurnPath: "Fuel burn",
   },
 
+  margins: {
+    title: "Load margins",
+    payloadAvailable: "Payload still available:",
+    overBy: (/** @type {string|number} */ value, /** @type {string} */ unit = "lbs") =>
+      `Over by ${value} ${unit}`,
+    extraFuel: "Fuel you can still add:",
+    limitedByNote: (/** @type {string} */ limit) => `limited by ${limit}`,
+    limitedBy: {
+      tank: "tank capacity",
+      weight: "max takeoff weight",
+      ramp: "max ramp weight",
+      landing: "max landing weight",
+      envelope: "the CG envelope",
+    },
+    fuelAtLanding: "Fuel at landing:",
+    stationOverMax: (
+      /** @type {string} */ station,
+      /** @type {string|number} */ value,
+      /** @type {string|number} */ max,
+      /** @type {string} */ unit = "lbs"
+    ) => `${station}: ${value} ${unit} exceeds the station maximum (${max} ${unit})`,
+  },
+
+  savedLoads: {
+    title: "Saved loads",
+    description:
+      "Save the loads you fly often (solo, dual, full cabin) and apply them in one tap. Review every item before each flight.",
+    nameLabel: "Load name",
+    namePlaceholder: "Dual instruction",
+    save: "Save current load",
+    empty: "No saved loads for this aircraft yet.",
+    listLabel: "Saved loads for this aircraft",
+    detail: (/** @type {string} */ weight) => `${weight} loaded`,
+    apply: (/** @type {string} */ name) => `Apply ${name}`,
+    remove: (/** @type {string} */ name) => `Delete ${name}`,
+    errors: {
+      nameRequired: "Enter a name for the load.",
+      nothingToSave: "Enter at least one weight before saving.",
+    },
+  },
+
+  advice: {
+    title: "How to get back within limits",
+    cgForward: (/** @type {string|number} */ value, /** @type {string} */ unit = '"') =>
+      `The CG is ${value}${unit} forward of the limit for this weight.`,
+    cgAft: (/** @type {string|number} */ value, /** @type {string} */ unit = '"') =>
+      `The CG is ${value}${unit} aft of the limit for this weight.`,
+    overweight: (/** @type {string|number} */ value, /** @type {string} */ unit = "lbs") =>
+      `The takeoff weight is ${value} ${unit} over the maximum.`,
+    remove: (
+      /** @type {string|number} */ value,
+      /** @type {string} */ unit,
+      /** @type {string} */ station
+    ) => `Remove ${value} ${unit} from ${station}`,
+    add: (
+      /** @type {string|number} */ value,
+      /** @type {string} */ unit,
+      /** @type {string} */ station
+    ) => `Add ${value} ${unit} to ${station}`,
+    move: (
+      /** @type {string|number} */ value,
+      /** @type {string} */ unit,
+      /** @type {string} */ from,
+      /** @type {string} */ to
+    ) => `Move ${value} ${unit} from ${from} to ${to}`,
+    none: "No single change to baggage or fuel fixes it: redistribute the load and check again.",
+    note: "Each option alone brings the takeoff back within limits. They are arithmetic only: check the landing and your POH.",
+  },
+
   customAircraft: {
     title: "My aircraft (by registration)",
     description:

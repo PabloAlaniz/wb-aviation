@@ -68,6 +68,15 @@ export function localizeLandingIssue(issue, units, phases) {
       return issue.limit === undefined
         ? issue.message
         : fp.overMaxZeroFuelWeight(kg(issue.limit), unit)
+    case "station-max":
+      return issue.label === undefined || issue.value === undefined || issue.limit === undefined
+        ? issue.message
+        : m.margins.stationOverMax(
+            issue.label,
+            trimNumber(weightToDisplay(issue.value, units), 1),
+            trimNumber(weightToDisplay(issue.limit, units), 1),
+            unit
+          )
     case "ramp-weight":
       return issue.limit === undefined ? issue.message : fp.overMaxRampWeight(kg(issue.limit), unit)
     case "taxi-exceeds-fuel":

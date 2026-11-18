@@ -148,6 +148,10 @@ export interface WeightBalanceResult {
 export interface SafetyIssue {
   type: string
   message: string
+  /** Station key the issue refers to ("station-max"). */
+  station?: string
+  /** Localized station name, to rebuild the message in other units. */
+  label?: string
   value?: number
   limit?: number
   severity?: "low" | "medium" | "high"
@@ -225,4 +229,22 @@ export interface LandingReport {
   isLandingOk: boolean
   errors: SafetyIssue[]
   warnings: SafetyIssue[]
+}
+
+/** What caps the fuel that can still be loaded. */
+export type FuelLimit = "tank" | "weight" | "ramp" | "landing" | "envelope"
+
+/** Room left in the current loading (weights in lbs). */
+export interface LoadMargins {
+  /** Max takeoff weight minus the takeoff weight; negative when overweight. */
+  payloadAvailable: number
+  /**
+   * Fuel that can still be loaded with every takeoff and landing limit met.
+   * null when the aircraft has no fuel station or the loading is already
+   * out of limits.
+   */
+  extraFuel: { amount: number; limitedBy: FuelLimit } | null
+  /** Fuel on board at landing (takeoff fuel minus the planned burn). */
+  fuelAtLanding: number
+  hasFuelStation: boolean
 }
