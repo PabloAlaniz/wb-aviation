@@ -14,6 +14,14 @@ Lo que viene, sin fechas. Las sugerencias son bienvenidas en
 - Gráfico de conversiones rápidas de combustible (AVGAS y Jet A) en la hoja de carga y guía con conversor.
 - Hoja de carga imprimible / PDF, link y QR para compartir, import de flota para escuelas.
 - Página por aeronave e idioma y guías de peso y balance.
+- Márgenes de carga: carga disponible, combustible que todavía se puede cargar (y qué
+  límite lo frena) y combustible al aterrizar.
+- Máximo por estación (equipaje, combustible utilizable) validado en el veredicto, y
+  márgenes de CG medidos contra la envolvente al peso actual.
+- Cargas guardadas por aeronave (solo, doble comando, cabina completa) para aplicar con
+  un toque.
+- Sugerencias para volver a los límites: cuánto sobra o cuánto se corrió el CG, y el
+  cambio mínimo de equipaje o combustible que lo corrige.
 - 12 aeronaves: King Air E90, King Air B200 (ejecutivo y sanitario), Beech 1900D,
   Cessna 172S y 152, Piper PA-28-161 y PA-38, Tecnam P2008 JC y P2002 JF,
   Diamond DA20-C1 y DA40.
@@ -25,3 +33,14 @@ Lo que viene, sin fechas. Las sugerencias son bienvenidas en
 - Confirmar MLW/MZFW del King Air E90.
 - Manifest PWA multilenguaje.
 - Más aeronaves de escuela, según pedidos y disponibilidad de datos verificables.
+
+## Más adelante
+
+Ideas que surgen de comparar con lo que ya es habitual en este tipo de calculadoras:
+
+- Envolvente de categoría utilitaria además de la normal, en los modelos que la tienen.
+- Aeronave propia desde cero (estaciones y envolvente cargadas por el usuario), para
+  modelos que no están en el catálogo.
+- Secuencia de consumo por tanque y recorrido del CG durante el vuelo.
+- Historial de hojas de carga generadas en el dispositivo.
+- Márgenes y sugerencias también en la hoja de carga impresa.

@@ -26,6 +26,9 @@ El sistema incluye:
 - ✅ Hoja de carga imprimible / PDF, link y QR para compartir, modo escuela
 - ✅ Validación contra envolvente de CG oficial
 - ✅ Sistema de alertas de seguridad y advertencias
+- ✅ Márgenes de carga: carga disponible, combustible que todavía se puede cargar y combustible al aterrizar
+- ✅ Sugerencias para volver a los límites (cuánto sobra y el cambio mínimo de equipaje o combustible)
+- ✅ Cargas guardadas por aeronave para aplicar con un toque
 - ✅ Visualización gráfica del envolvente de CG
 - ✅ Datos verificados con documentación oficial
 - ✅ Persistencia local de los datos cargados y la aeronave seleccionada

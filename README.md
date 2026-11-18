@@ -26,6 +26,9 @@ CheckCG does the math, draws your loading on the official CG envelope and warns 
 - **Printable load sheet / PDF**, plus a link and QR code to share a calculation.
 - **School mode**: instructors share their whole fleet with students in one link.
 - **Safety alerts** near max weight and CG limits, with a data-reliability badge per aircraft.
+- **Load margins**: payload still available, how much fuel you can still add and which limit caps it, and fuel at landing.
+- **Advice to get back within limits**: how far off the weight or CG is, and the smallest change to baggage or fuel that fixes it.
+- **Saved loads** per aircraft (solo, dual, full cabin), applied in one tap.
 - **Offline PWA**, installable on phone or tablet.
 - **lbs/kg and gal/L**, in **English, Spanish and Portuguese**.
 - **Free guides** on [how to calculate weight & balance](https://checkcg.com/en/guides/) with worked examples.
