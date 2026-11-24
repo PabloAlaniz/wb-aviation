@@ -201,6 +201,16 @@ export const de = {
     operatingPoint: "Betriebspunkt",
     xUnit: "Zoll",
     yUnit: "Pfund",
+    loadingPath: "Beladungspfad",
+    loadingPathToggle: "Beladungspfad anzeigen",
+    loadingPathHint:
+      "Die graue Linie zeigt, wie sich der Schwerpunkt mit jeder hinzugefügten Station verschiebt, vom Leergewicht bis zum Start. Die orange Linie ist der im Flug verbrauchte Kraftstoff.",
+    emptyPoint: "Leergewicht",
+    addedStation: (
+      /** @type {string} */ label,
+      /** @type {string|number} */ weight,
+      /** @type {string} */ unit = "lbs"
+    ) => `+ ${label} (${weight} ${unit})`,
   },
 
   flightPhases: {
@@ -249,6 +259,8 @@ export const de = {
     chartLanding: "Landung",
     chartZeroFuel: "Ohne Kraftstoff",
     chartBurnPath: "Kraftstoffverbrauch",
+    cgLeavesEnvelopeInFlight: (/** @type {string|number} */ burned, unit = "lbs") =>
+      `Der Schwerpunkt verlässt im Flug die Grenzen, nachdem etwa ${burned} ${unit} Kraftstoff verbraucht wurden`,
   },
 
   margins: {

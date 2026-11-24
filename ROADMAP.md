@@ -26,6 +26,11 @@ Lo que viene, sin fechas. Las sugerencias son bienvenidas en
   un toque.
 - Sugerencias para volver a los límites: cuánto sobra o cuánto se corrió el CG, y el
   cambio mínimo de equipaje o combustible que lo corrige.
+- Recorrido del CG en el gráfico de la envolvente: carga estación por estación, curva real
+  de consumo hasta sin combustible, líneas de MLW/MZFW y chequeo de que el CG no salga de
+  la envolvente en vuelo.
+- Headers de seguridad (CSP, HSTS y demás) en todas las respuestas, y actualizaciones de
+  dependencias agrupadas con Dependabot.
 - 12 aeronaves: King Air E90, King Air B200 (ejecutivo y sanitario), Beech 1900D,
   Cessna 172S y 152, Piper PA-28-161 y PA-38, Tecnam P2008 JC y P2002 JF,
   Diamond DA20-C1 y DA40.
@@ -44,6 +49,7 @@ Ideas que surgen de comparar con lo que ya es habitual en este tipo de calculado
 - Envolvente de categoría utilitaria además de la normal, en los modelos que la tienen.
 - Aeronave propia desde cero (estaciones y envolvente cargadas por el usuario), para
   modelos que no están en el catálogo.
-- Secuencia de consumo por tanque y recorrido del CG durante el vuelo.
+- Secuencia de consumo por tanque (hoy el consumo es proporcional entre tanques).
+- Content Security Policy sin `'unsafe-inline'` (hashes de los scripts que inyecta Astro).
 - Historial de hojas de carga generadas en el dispositivo.
 - Márgenes y sugerencias también en la hoja de carga impresa.

@@ -28,6 +28,7 @@ CheckCG does the math, draws your loading on the official CG envelope and warns 
 - **Safety alerts** near max weight and CG limits, with a data-reliability badge per aircraft.
 - **Load margins**: payload still available, how much fuel you can still add and which limit caps it, and fuel at landing.
 - **Advice to get back within limits**: how far off the weight or CG is, and the smallest change to baggage or fuel that fixes it.
+- **CG travel on the envelope chart**: how the CG moves as each station is loaded, the real fuel-burn curve down to zero fuel, and a check that it never leaves the envelope in flight.
 - **Saved loads** per aircraft (solo, dual, full cabin), applied in one tap.
 - **Offline PWA**, installable on phone or tablet.
 - **lbs/kg and gal/L**, in **Spanish, English, Portuguese, Italian, French and German**.
@@ -60,7 +61,7 @@ The B200 and 1900D profiles come from operator load sheets and are pending verif
 
 - **Data-driven**: each aircraft is a single object in [`src/data/aircraft.js`](src/data/aircraft.js) (stations, arms, limits, envelope, sources). The form, calculations, alerts and chart are generated from it.
 - **Envelope check**: the CG point is tested against the envelope polygon with ray casting (point in polygon), so irregular envelopes work and points on the edge count as within limits.
-- **Stack**: [Astro](https://astro.build) static pages (one per aircraft and language, for SEO) with a React 19 island, Tailwind CSS 4, Recharts, and vite-plugin-pwa for offline support. Tested with Vitest and Testing Library, and deployed on Cloudflare Pages.
+- **Stack**: [Astro](https://astro.build) static pages (one per aircraft and language, for SEO) with a React 19 island, Tailwind CSS 4, Recharts, and @vite-pwa/astro for offline support. Tested with Vitest and Testing Library, and deployed on Cloudflare Pages.
 
 ## Run it locally
 

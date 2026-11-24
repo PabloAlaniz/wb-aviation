@@ -37,6 +37,7 @@ import {
 } from "./utils/calculations"
 import { buildLoadMargins } from "./utils/loadMargins"
 import { buildLoadAdvice } from "./utils/loadAdvice"
+import { buildCgTravel } from "./utils/cgTravel"
 import { KG_PER_LB } from "./utils/units"
 import { trackEvent } from "./analytics"
 import { useLocalStorage } from "./hooks/useLocalStorage"
@@ -85,6 +86,12 @@ export default function App({ initialAircraft, locale } = {}) {
     (value) => typeof value === "string"
   )
 
+  const [showLoadingPath, setShowLoadingPath] = useLocalStorage(
+    "wb-show-loading-path",
+    true,
+    (value) => typeof value === "boolean"
+  )
+
   const [taxiFuel, setTaxiFuel] = useLocalStorage(
     "wb-taxi-fuel",
     "",
@@ -131,15 +138,14 @@ export default function App({ initialAircraft, locale } = {}) {
   }
 
   // `weights` is the load at the ramp; the takeoff condition excludes the taxi fuel
-  const results = calculateWeightBalance(
-    aircraft,
-    applyTaxiFuel(aircraft, weights, taxiFuel).weights
-  )
+  const takeoffWeights = applyTaxiFuel(aircraft, weights, taxiFuel).weights
+  const results = calculateWeightBalance(aircraft, takeoffWeights)
   const safetyChecks = results
     ? buildSafetyReport(aircraft, results.totalWeight, results.centerOfGravity)
     : null
   const phases = calculateFlightPhases(aircraft, weights, fuelBurn, taxiFuel)
   const landingReport = phases ? buildLandingReport(aircraft, phases) : null
+  const travel = buildCgTravel(aircraft, takeoffWeights, phases)
   const rampIssues = phases ? buildRampIssues(aircraft, phases, weights) : []
   const margins = buildLoadMargins(aircraft, weights, fuelBurn, taxiFuel)
   // suggested amounts in whole lbs or whole kg, matching the display units
@@ -379,9 +385,23 @@ export default function App({ initialAircraft, locale } = {}) {
                       landingWeight={phases?.fuelBurn ? phases.landing.totalWeight : undefined}
                       zeroFuelCG={phases?.fuelLoaded ? phases.zeroFuel.centerOfGravity : undefined}
                       zeroFuelWeight={phases?.fuelLoaded ? phases.zeroFuel.totalWeight : undefined}
+                      travel={travel}
+                      showLoadingPath={showLoadingPath}
                       units={units}
                     />
-                    <p className="text-xs text-gray-500 text-center">{m.app.envelopeCaption}</p>
+                    <label className="flex items-center justify-center gap-2 text-sm text-gray-700">
+                      <input
+                        type="checkbox"
+                        checked={showLoadingPath}
+                        onChange={(e) => setShowLoadingPath(e.target.checked)}
+                        className="h-4 w-4 rounded border-gray-300"
+                      />
+                      {m.chart.loadingPathToggle}
+                    </label>
+                    <p className="text-xs text-gray-500 text-center">
+                      {m.app.envelopeCaption}
+                      {showLoadingPath && ` ${m.chart.loadingPathHint}`}
+                    </p>
                   </div>
 
                   <LoadSheetPanel

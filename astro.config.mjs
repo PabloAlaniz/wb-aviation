@@ -2,7 +2,7 @@
 import { defineConfig } from "astro/config"
 import react from "@astrojs/react"
 import sitemap from "@astrojs/sitemap"
-import AstroPWA from "@vite-pwa/astro"
+import { AstroPWAIntegration } from "@vite-pwa/astro"
 import tailwindcss from "@tailwindcss/vite"
 import {
   SITE_URL,
@@ -78,8 +78,13 @@ export default defineConfig({
         }
       },
     }),
-    AstroPWA({
+    AstroPWAIntegration({
       registerType: "autoUpdate",
+      // Registered from Base.astro through virtual:pwa-register.
+      injectRegister: false,
+      // pwa-512.png is listed twice in the manifest (any + maskable): precache
+      // the icons through globPatterns instead, once each.
+      includeManifestIcons: false,
       // Default manifest (root page). Localized pages link their own
       // /{lang}/manifest.webmanifest (src/pages/[lang]/manifest.webmanifest.js).
       manifest: pwaManifest({
@@ -91,7 +96,9 @@ export default defineConfig({
       }),
       workbox: {
         // Precache every page so all localized calculators work offline.
-        globPatterns: ["**/*.{js,css,html,svg,ico,webmanifest}", "pwa-*.png"],
+        // The root web manifest is added to the precache by the plugin; the
+        // localized ones (/{lang}/manifest.webmanifest) are matched here.
+        globPatterns: ["**/*.{js,css,html,svg,ico}", "*/manifest.webmanifest", "pwa-*.png"],
         // Offline navigations to an unknown URL fall back to the root
         // calculator (it redirects to the preferred language).
         navigateFallback: "/index.html",

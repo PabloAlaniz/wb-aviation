@@ -4,6 +4,7 @@ import { messages as m } from "../i18n"
 import { resolveStationLabel } from "../utils/stationLabel"
 import { localizeLandingIssue, localizeSafetyMessage } from "../utils/safetyDisplay"
 import { buildRampIssues } from "../utils/calculations"
+import { buildCgTravel } from "../utils/cgTravel"
 import { APP_URL, buildLoadSheetRows } from "../utils/loadSheet"
 import { armToDisplay, momentToDisplay, unitSymbols, weightToDisplay } from "../utils/units"
 
@@ -245,6 +246,7 @@ export function LoadSheet({
               landingWeight={phases?.fuelBurn ? phases.landing.totalWeight : undefined}
               zeroFuelCG={phases?.fuelLoaded ? phases.zeroFuel.centerOfGravity : undefined}
               zeroFuelWeight={phases?.fuelLoaded ? phases.zeroFuel.totalWeight : undefined}
+              travel={phases ? buildCgTravel(aircraft, weights, phases) : undefined}
               units={units}
               size={PRINT_CHART_SIZE}
             />

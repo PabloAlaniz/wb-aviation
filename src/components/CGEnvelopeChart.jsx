@@ -6,11 +6,20 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
+  ReferenceLine,
   ResponsiveContainer,
+  useXAxisScale,
+  useYAxisScale,
 } from "recharts"
 import { messages as m } from "../i18n"
 import { niceScale } from "../utils/chartScale"
-import { armSuffix, armToDisplay, unitSymbols, weightToDisplay } from "../utils/units"
+import { resolveStationLabel } from "../utils/stationLabel"
+import { armSuffix, armToDisplay, trimNumber, unitSymbols, weightToDisplay } from "../utils/units"
+
+const ENVELOPE_COLOR = "#8884d8"
+const BURN_COLOR = "#f97316"
+const LOADING_COLOR = "#64748b"
+const LIMIT_COLOR = "#9ca3af"
 
 /** Space reserved above the plot for the legend in fixed-size (print) mode. */
 const PRINT_LEGEND_HEIGHT = 24
@@ -24,10 +33,14 @@ const PRINT_LEGEND_HEIGHT = 24
  *   landingWeight?: number,
  *   zeroFuelCG?: number,
  *   zeroFuelWeight?: number,
+ *   travel?: ReturnType<typeof import("../utils/cgTravel").buildCgTravel>,
+ *   showLoadingPath?: boolean,
  *   units?: import("../types").UnitSystem,
  *   size?: { width: number, height: number },
  * }} props - `size` renders at a fixed size without animation (e.g. for
- *   printing, where ResponsiveContainer can't measure a hidden parent)
+ *   printing, where ResponsiveContainer can't measure a hidden parent).
+ *   `travel` adds the real (curved) fuel burn path and, with
+ *   `showLoadingPath`, the station-by-station loading path.
  */
 export function CGEnvelopeChart({
   aircraft,
@@ -37,6 +50,8 @@ export function CGEnvelopeChart({
   landingWeight,
   zeroFuelCG,
   zeroFuelWeight,
+  travel,
+  showLoadingPath = false,
   units = "imperial",
   size,
 }) {
@@ -67,16 +82,43 @@ export function CGEnvelopeChart({
   // Fases de vuelo opcionales (aterrizaje y peso sin combustible)
   const hasLanding = landingCG !== undefined && landingWeight !== undefined
   const hasZeroFuel = zeroFuelCG !== undefined && zeroFuelWeight !== undefined
-  const burnPathData = hasLanding
-    ? [
-        { x: x(currentCG), y: y(currentWeight) },
-        { x: x(landingCG), y: y(landingWeight) },
-      ]
-    : []
+  const toPoint = (/** @type {{ cg: number, weight: number }} */ point) => ({
+    x: x(point.cg),
+    y: y(point.weight),
+  })
+  // Curva real de consumo (el CG no se mueve en línea recta); sin `travel`,
+  // el tramo recto despegue -> aterrizaje
+  const burnPathData = !hasLanding
+    ? []
+    : travel && travel.burn.length > 1
+      ? travel.burn.map(toPoint)
+      : [
+          { x: x(currentCG), y: y(currentWeight) },
+          { x: x(landingCG), y: y(landingWeight) },
+        ]
+  // Combustible restante: aterrizaje -> sin combustible
+  const reservePathData = hasZeroFuel && travel ? travel.reserve.map(toPoint) : []
+  // Recorrido de carga: peso vacío + cada estación cargada
+  const weightUnit = unitSymbols(units).weight
+  const loadingPathData =
+    showLoadingPath && travel && travel.loading.length > 1
+      ? travel.loading.map((step, index) => ({
+          ...toPoint(step),
+          // the last step is the operating point, drawn on its own
+          last: index === travel.loading.length - 1,
+          label: step.station
+            ? m.chart.addedStation(
+                resolveStationLabel(step.station, m),
+                trimNumber(weightToDisplay(step.added, units), 1),
+                weightUnit
+              )
+            : m.chart.emptyPoint,
+        }))
+      : []
 
   // Escalas "lindas" (pasos 1/2/5 × 10^n) en la unidad mostrada, derivadas de
   // la envolvente y de los puntos graficados para que todo quede visible
-  const plotted = [...envelopeData, ...currentPointData]
+  const plotted = [...envelopeData, ...currentPointData, ...loadingPathData]
   if (hasLanding) plotted.push({ x: x(landingCG), y: y(landingWeight) })
   if (hasZeroFuel) plotted.push({ x: x(zeroFuelCG), y: y(zeroFuelWeight) })
   const xScale = niceScale(
@@ -88,14 +130,26 @@ export function CGEnvelopeChart({
     { count: 6 }
   )
 
+  // Pesos máximos de aterrizaje y sin combustible, si caen dentro del gráfico
+  const weightLimits = [
+    { label: "MLW", value: aircraft.maxLandingWeight },
+    { label: "MZFW", value: aircraft.maxZeroFuelWeight },
+  ]
+    .filter(
+      /** @returns {limit is { label: string, value: number }} */
+      (limit) => limit.value !== undefined && limit.value < aircraft.maxWeight
+    )
+    .map((limit) => ({ label: limit.label, y: y(limit.value) }))
+    .filter((limit) => limit.y > yScale.domain[0] && limit.y < yScale.domain[1])
+
   // Tooltip personalizado
-  /** @param {{ active?: boolean, payload?: Array<{ payload: { x: number, y: number } }> }} props */
+  /** @param {{ active?: boolean, payload?: Array<{ payload: { x: number, y: number, label?: string } }> }} props */
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload
       return (
         <div className="bg-white border-2 border-black p-2 shadow-lg">
-          <p className="font-bold text-xs">{m.chart.tooltipTitle}</p>
+          <p className="font-bold text-xs">{data.label ?? m.chart.tooltipTitle}</p>
           <p className="text-xs">{m.chart.tooltipCg(data.x?.toFixed(1), armSuffix(units))}</p>
           <p className="text-xs">
             {m.chart.tooltipWeight(
@@ -190,25 +244,61 @@ export function CGEnvelopeChart({
               }
             />
 
+            {/* Área permitida sombreada, debajo de todo lo demás */}
+            <EnvelopeArea points={envelopeData} />
+
+            {weightLimits.map((limit) => (
+              <ReferenceLine
+                key={limit.label}
+                y={limit.y}
+                stroke={LIMIT_COLOR}
+                strokeDasharray="2 4"
+                label={{
+                  value: limit.label,
+                  position: "insideBottomRight",
+                  fontSize: 9,
+                  fill: "#6b7280",
+                }}
+              />
+            ))}
+
             {/* Polígono del envolvente como línea conectada */}
             <Scatter
               isAnimationActive={animate}
               name={m.chart.envelopeLimit}
               data={envelopeData}
-              line={{ stroke: "#8884d8", strokeWidth: 2 }}
-              fill="#8884d8"
+              line={{ stroke: ENVELOPE_COLOR, strokeWidth: 2 }}
+              fill={ENVELOPE_COLOR}
               shape={() => null}
               legendType="plainline"
             />
 
-            {/* Punto de operación actual */}
-            <Scatter
-              isAnimationActive={animate}
-              name={m.chart.operatingPoint}
-              data={currentPointData}
-              fill="#ff0000"
-              shape="circle"
-            />
+            {/* Recorrido de carga: peso vacío -> despegue, estación por estación */}
+            {loadingPathData.length > 0 && (
+              <Scatter
+                isAnimationActive={animate}
+                name={m.chart.loadingPath}
+                data={loadingPathData}
+                line={{ stroke: LOADING_COLOR, strokeWidth: 1.5 }}
+                fill={LOADING_COLOR}
+                shape={LoadingDot}
+                legendType="plainline"
+              />
+            )}
+
+            {/* Combustible restante: aterrizaje -> sin combustible */}
+            {reservePathData.length > 1 && (
+              <Scatter
+                isAnimationActive={animate}
+                name={m.flightPhases.chartZeroFuel}
+                data={reservePathData}
+                line={{ stroke: LIMIT_COLOR, strokeWidth: 1.5, strokeDasharray: "2 3" }}
+                fill="transparent"
+                shape={() => null}
+                legendType="none"
+                tooltipType="none"
+              />
+            )}
 
             {/* Trayectoria de consumo: despegue -> aterrizaje */}
             {hasLanding && (
@@ -216,10 +306,11 @@ export function CGEnvelopeChart({
                 isAnimationActive={animate}
                 name={m.flightPhases.chartBurnPath}
                 data={burnPathData}
-                line={{ stroke: "#f97316", strokeWidth: 2, strokeDasharray: "5 3" }}
+                line={{ stroke: BURN_COLOR, strokeWidth: 2, strokeDasharray: "5 3" }}
                 fill="transparent"
                 shape={() => null}
                 legendType="none"
+                tooltipType="none"
               />
             )}
             {hasLanding && (
@@ -227,7 +318,7 @@ export function CGEnvelopeChart({
                 isAnimationActive={animate}
                 name={m.flightPhases.chartLanding}
                 data={[{ x: x(landingCG), y: y(landingWeight) }]}
-                fill="#f97316"
+                fill={BURN_COLOR}
                 shape="triangle"
               />
             )}
@@ -240,11 +331,50 @@ export function CGEnvelopeChart({
                 shape="square"
               />
             )}
+
+            {/* Punto de operación actual, encima de los recorridos */}
+            <Scatter
+              isAnimationActive={animate}
+              name={m.chart.operatingPoint}
+              data={currentPointData}
+              fill="#ff0000"
+              shape="circle"
+            />
           </ScatterChart>
         </ChartFrame>
       </div>
     </div>
   )
+}
+
+/**
+ * The allowed area, shaded. Recharts has no polygon area for scatter charts,
+ * so it is drawn from the axis scales.
+ * @param {{ points: Array<{ x: number, y: number }> }} props
+ */
+function EnvelopeArea({ points }) {
+  const xScale = useXAxisScale()
+  const yScale = useYAxisScale()
+  if (!xScale || !yScale) return null
+  const path = points.map((point) => `${xScale(point.x)},${yScale(point.y)}`).join(" ")
+  return (
+    <polygon
+      data-testid="envelope-area"
+      points={path}
+      fill={ENVELOPE_COLOR}
+      fillOpacity={0.1}
+      stroke="none"
+    />
+  )
+}
+
+/**
+ * Small dot for each step of the loading path.
+ * @param {{ cx?: number, cy?: number, payload?: { last?: boolean } }} props
+ */
+function LoadingDot({ cx, cy, payload }) {
+  if (cx === undefined || cy === undefined || payload?.last) return null
+  return <circle cx={cx} cy={cy} r={2.5} fill="#fff" stroke={LOADING_COLOR} strokeWidth={1.5} />
 }
 
 /**

@@ -200,6 +200,16 @@ export const it = {
     operatingPoint: "Punto operativo",
     xUnit: "pollici",
     yUnit: "libbre",
+    loadingPath: "Percorso di carico",
+    loadingPathToggle: "Mostra il percorso di carico",
+    loadingPathHint:
+      "La linea grigia mostra come si sposta il CG aggiungendo ogni stazione, dalla massa a vuoto al decollo. La linea arancione è il consumo di carburante in volo.",
+    emptyPoint: "Massa a vuoto",
+    addedStation: (
+      /** @type {string} */ label,
+      /** @type {string|number} */ weight,
+      /** @type {string} */ unit = "lbs"
+    ) => `+ ${label} (${weight} ${unit})`,
   },
 
   flightPhases: {
@@ -249,6 +259,8 @@ export const it = {
     chartLanding: "Atterraggio",
     chartZeroFuel: "Senza carburante",
     chartBurnPath: "Consumo carburante",
+    cgLeavesEnvelopeInFlight: (/** @type {string|number} */ burned, unit = "lbs") =>
+      `Il CG esce dall'inviluppo in volo, dopo aver consumato circa ${burned} ${unit} di carburante`,
   },
 
   margins: {
