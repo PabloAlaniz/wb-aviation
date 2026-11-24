@@ -24,6 +24,8 @@ export const GUIDES = [
       en: "how-to-calculate-weight-and-balance",
       pt: "como-calcular-peso-e-balanceamento",
       it: "come-calcolare-massa-e-centraggio",
+      fr: "comment-calculer-masse-et-centrage",
+      de: "masse-und-schwerpunkt-berechnen",
     },
   },
   {
@@ -33,6 +35,8 @@ export const GUIDES = [
       en: "weight-arm-and-moment",
       pt: "peso-braco-e-momento",
       it: "massa-braccio-e-momento",
+      fr: "masse-bras-de-levier-et-moment",
+      de: "masse-hebelarm-und-moment",
     },
   },
   {
@@ -42,6 +46,8 @@ export const GUIDES = [
       en: "cg-envelope-explained",
       pt: "envelope-de-cg",
       it: "inviluppo-del-cg",
+      fr: "enveloppe-de-centrage",
+      de: "schwerpunkt-envelope",
     },
   },
   {
@@ -51,6 +57,8 @@ export const GUIDES = [
       en: "fuel-conversions",
       pt: "conversoes-de-combustivel",
       it: "conversioni-di-carburante",
+      fr: "conversions-de-carburant",
+      de: "kraftstoff-umrechnungen",
     },
   },
 ]

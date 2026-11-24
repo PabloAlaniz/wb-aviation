@@ -322,7 +322,7 @@ export function LoadSheet({
             </>
           )}
         </p>
-        <ul className="list-disc pl-5">
+        <ul className="list-disc pl-5 wrap-anywhere">
           {metadata.sourceDocuments.map((doc, index) => (
             <li key={index}>{doc}</li>
           ))}

@@ -1,0 +1,121 @@
+---
+/**
+ * Glossary of one language (/es/glosario/, /en/glossary/...): one anchored
+ * definition per term, linked to the guide that covers it, with
+ * DefinedTermSet / BreadcrumbList JSON-LD.
+ */
+import Base from "../../layouts/Base.astro"
+import LanguageNav from "../LanguageNav.astro"
+import GuidesFooter from "../guides/GuidesFooter.astro"
+import { guidesFor } from "../guides/collection"
+import { locales } from "../../i18n"
+import { findGuide } from "../../content/guides/registry"
+import { GLOSSARY_TERMS, pagesContent } from "../../content/pages"
+import {
+  absoluteUrl,
+  alternateLinks,
+  glossaryPath,
+  guidePath,
+  localePath,
+  type RouteLocale,
+} from "../../utils/routes"
+import { breadcrumbJsonLd, definedTermSetJsonLd } from "../../utils/seoContent"
+
+interface Props {
+  lang: RouteLocale
+}
+
+const { lang } = Astro.props
+const m = locales[lang]
+const c = pagesContent[lang].glossary
+const path = glossaryPath(lang)
+const url = absoluteUrl(path)
+const { titles } = await guidesFor(lang)
+
+const terms = GLOSSARY_TERMS.map(({ id, guide }) => {
+  const entry = guide ? findGuide(guide) : undefined
+  return {
+    id,
+    ...c.terms[id],
+    guide: entry ? { title: titles[entry.key], path: guidePath(lang, entry.slugs[lang]) } : null,
+  }
+})
+
+const jsonLd = [
+  definedTermSetJsonLd({ name: c.h1, description: c.description, url, locale: lang, terms }),
+  breadcrumbJsonLd([
+    { name: m.guides.breadcrumbHome, url: absoluteUrl(localePath(lang)) },
+    { name: c.navLabel, url },
+  ]),
+]
+---
+
+<Base
+  lang={lang}
+  title={c.title}
+  description={c.description}
+  path={path}
+  alternates={alternateLinks(glossaryPath, glossaryPath("es"))}
+  pinLocale
+  jsonLd={jsonLd}
+>
+  <div class="mx-auto max-w-3xl space-y-6 px-4 py-4">
+    <LanguageNav current={lang} pathFor={glossaryPath} label={m.seo.languageLabel} />
+    <p class="text-sm">
+      <a href={localePath(lang)} class="text-blue-700 hover:underline">{m.guides.breadcrumbHome}</a>
+    </p>
+
+    <main class="space-y-6">
+      <header class="space-y-2">
+        <h1 class="text-3xl font-bold text-gray-900">{c.h1}</h1>
+        <p class="text-gray-700">{c.intro}</p>
+      </header>
+
+      <nav aria-label={c.h1} class="rounded-xl bg-white/60 p-4 text-sm">
+        <ul class="flex flex-wrap gap-x-4 gap-y-1">
+          {
+            terms.map((term) => (
+              <li>
+                <a href={`#${term.id}`} class="text-blue-700 hover:underline">
+                  {term.term}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <dl class="space-y-4">
+        {
+          terms.map((term) => (
+            <div id={term.id} class="scroll-mt-4 rounded-xl bg-white/80 p-5 shadow-sm">
+              <dt class="text-lg font-semibold text-gray-900">{term.term}</dt>
+              <dd class="mt-1 text-gray-800">
+                <p>{term.text}</p>
+                {term.guide && (
+                  <p class="mt-2 text-sm text-gray-600">
+                    {c.guideLink}{" "}
+                    <a href={term.guide.path} class="font-medium text-blue-700 hover:underline">
+                      {term.guide.title}
+                    </a>
+                  </p>
+                )}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <p>
+        <a
+          href={localePath(lang)}
+          class="inline-block rounded-md bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700"
+        >
+          {m.guides.ctaButton}
+        </a>
+      </p>
+    </main>
+
+    <GuidesFooter lang={lang} />
+  </div>
+</Base>

@@ -4,6 +4,7 @@ description: "Qué son el datum, el brazo y el momento en peso y balance, con un
 lang: es
 translationKey: weight-arm-moment
 slug: peso-brazo-y-momento
+published: 2026-10-15
 updated: 2026-10-15
 faq:
   - q: "¿Qué es el momento en peso y balance?"

@@ -5,7 +5,10 @@ import {
   GUIDES_DIR,
   SITE_URL,
   guidePath,
+  aboutPath,
+  glossaryPath,
   guidesIndexPath,
+  localizedPageGroups,
   absoluteUrl,
   aircraftPath,
   alternateLinks,
@@ -25,7 +28,7 @@ describe("route locales", () => {
 
   it("recognizes supported locales only", () => {
     expect(isRouteLocale("en")).toBe(true)
-    expect(isRouteLocale("fr")).toBe(false)
+    expect(isRouteLocale("ja")).toBe(false)
     expect(isRouteLocale(undefined)).toBe(false)
   })
 })
@@ -40,7 +43,7 @@ describe("paths", () => {
     expect(localeFromPath("/en/cessna-172s/")).toBe("en")
     expect(localeFromPath("/es")).toBe("es")
     expect(localeFromPath("/")).toBeNull()
-    expect(localeFromPath("/fr/x/")).toBeNull()
+    expect(localeFromPath("/ja/x/")).toBeNull()
   })
 
   it("builds absolute URLs on the production site", () => {
@@ -57,6 +60,8 @@ describe("alternateLinks", () => {
       { hreflang: "en", href: `${SITE_URL}/en/cessna-172s/` },
       { hreflang: "pt", href: `${SITE_URL}/pt/cessna-172s/` },
       { hreflang: "it", href: `${SITE_URL}/it/cessna-172s/` },
+      { hreflang: "fr", href: `${SITE_URL}/fr/cessna-172s/` },
+      { hreflang: "de", href: `${SITE_URL}/de/cessna-172s/` },
       { hreflang: "x-default", href: `${SITE_URL}/es/cessna-172s/` },
     ])
   })
@@ -82,7 +87,7 @@ describe("rootRedirectTarget", () => {
   it("prefers the stored language, then the browser's, then the default", () => {
     expect(rootRedirectTarget("", "pt", "en-US", ROUTE_LOCALES)).toBe("/pt/")
     expect(rootRedirectTarget("", null, "en-GB", ROUTE_LOCALES)).toBe("/en/")
-    expect(rootRedirectTarget("", "fr", "de-DE", ROUTE_LOCALES)).toBe("/es/")
+    expect(rootRedirectTarget("", "ja", "nl-NL", ROUTE_LOCALES)).toBe("/es/")
     expect(rootRedirectTarget("", null, undefined, ROUTE_LOCALES)).toBe("/es/")
   })
 
@@ -104,5 +109,23 @@ describe("guide paths", () => {
     expect(guidesIndexPath("pt")).toBe("/pt/guias/")
     expect(guidePath("en", "weight-arm-and-moment")).toBe("/en/guides/weight-arm-and-moment/")
     expect(Object.keys(GUIDES_DIR).sort()).toEqual([...ROUTE_LOCALES].sort())
+  })
+})
+
+describe("glossary and methodology paths", () => {
+  it("builds localized paths", () => {
+    expect(glossaryPath("es")).toBe("/es/glosario/")
+    expect(glossaryPath("de")).toBe("/de/glossar/")
+    expect(aboutPath("en")).toBe("/en/methodology/")
+    expect(aboutPath("fr")).toBe("/fr/methodologie/")
+  })
+
+  it("groups the translations of each page, without clashing with aircraft pages", () => {
+    const groups = localizedPageGroups()
+    expect(groups).toHaveLength(2)
+    expect(Object.keys(groups[0])).toEqual([...ROUTE_LOCALES])
+    expect(groups[1].it).toBe("/it/metodologia/")
+    const paths = groups.flatMap((group) => Object.values(group))
+    expect(new Set(paths).size).toBe(paths.length)
   })
 })

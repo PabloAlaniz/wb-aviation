@@ -31,7 +31,7 @@ CheckCG does the math, draws your loading on the official CG envelope and warns 
 - **CG travel on the envelope chart**: how the CG moves as each station is loaded, the real fuel-burn curve down to zero fuel, and a check that it never leaves the envelope in flight.
 - **Saved loads** per aircraft (solo, dual, full cabin), applied in one tap.
 - **Offline PWA**, installable on phone or tablet.
-- **lbs/kg and gal/L**, in **English, Spanish and Portuguese**.
+- **lbs/kg and gal/L**, in **Spanish, English, Portuguese, Italian, French and German**.
 - **Free guides** on [how to calculate weight & balance](https://checkcg.com/en/guides/) with worked examples.
 
 ## Supported aircraft

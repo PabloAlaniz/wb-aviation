@@ -4,6 +4,7 @@ description: "Procedimiento completo de peso y balance: peso vacío, brazos, mom
 lang: es
 translationKey: how-to-calculate
 slug: como-calcular-peso-y-balance
+published: 2026-10-15
 updated: 2026-10-15
 steps:
   - name: "Buscá el peso vacío y su brazo"

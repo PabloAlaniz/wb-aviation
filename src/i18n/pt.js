@@ -524,10 +524,10 @@ export const pt = {
     home: {
       title: "Calculadora grátis de peso e balanceamento de aeronaves: CG e envelope | CheckCG",
       description:
-        "Calcule o peso e balanceamento (Weight & Balance) do seu avião em segundos: centro de gravidade, envelope de CG na decolagem e no pouso, e folha de carga para imprimir. Grátis, offline e sem cadastro.",
+        "Calcule o peso e balanceamento (massa e centragem) do seu avião em segundos: centro de gravidade, envelope de CG na decolagem e no pouso, e folha de carga para imprimir. Grátis, offline e sem cadastro.",
       h1: "Calculadora de peso e balanceamento de aeronaves",
       intro1:
-        "O peso e balanceamento (Weight & Balance) verifica, antes de cada voo, que a aeronave não ultrapasse o peso máximo e que o centro de gravidade (CG) fique dentro do envelope aprovado. Um CG fora dos limites afeta a estabilidade e o controle, mesmo com o peso total correto.",
+        "O peso e balanceamento (Weight & Balance; em Portugal, massa e centragem) verifica, antes de cada voo, que a aeronave não ultrapasse o peso máximo e que o centro de gravidade (CG) fique dentro do envelope aprovado. Um CG fora dos limites afeta a estabilidade e o controle, mesmo com o peso total correto.",
       intro2:
         "O CheckCG soma o peso vazio e cada estação de carga (tripulação, passageiros, bagagem e combustível), calcula o momento e o CG resultantes e os compara com o envelope do fabricante, inclusive no pouso e sem combustível. Funciona no navegador, sem cadastro e offline.",
       aircraftListTitle: "Aeronaves disponíveis",

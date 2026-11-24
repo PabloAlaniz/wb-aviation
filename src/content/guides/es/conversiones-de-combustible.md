@@ -4,6 +4,7 @@ description: "Tablas de conversión de AVGAS y Jet A entre litros, galones US e 
 lang: es
 translationKey: fuel-conversions
 slug: conversiones-de-combustible
+published: 2026-11-05
 updated: 2026-11-05
 tool: fuel-converter
 faq:

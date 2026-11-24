@@ -34,7 +34,7 @@ El sistema incluye:
 - ✅ Datos verificados con documentación oficial
 - ✅ Persistencia local de los datos cargados y la aeronave seleccionada
 - ✅ Uso offline (PWA instalable)
-- ✅ Trilingüe español/inglés/portugués con selector y detección de idioma del navegador
+- ✅ En español, inglés, portugués, italiano, francés y alemán, con selector y detección de idioma del navegador
 - ✅ Accesibilidad y manejo global de errores
 
 ## 🚀 Características Principales
@@ -81,7 +81,7 @@ El sistema incluye:
 - **Vitest 4.x + Testing Library** - Tests unitarios y de componentes
 - **ESLint 9.33.0 + Prettier** - Linter y formateo de código
 
-La interfaz usa un módulo de i18n (`src/i18n/`) para centralizar los textos; disponible en **español, inglés y portugués**, con resolución automática por idioma del navegador y selector manual persistido. Para sumar un idioma: crear `src/i18n/<locale>.js` y registrarlo en `src/i18n/index.js`.
+La interfaz usa un módulo de i18n (`src/i18n/`) para centralizar los textos; disponible en **español, inglés, portugués, italiano, francés y alemán**, con resolución automática por idioma del navegador y selector manual persistido. Para sumar un idioma: crear `src/i18n/<locale>.js` y registrarlo en `src/i18n/index.js`.
 
 ## 📦 Instalación
 

@@ -4,8 +4,13 @@ import { es } from "../i18n/es"
 import { en } from "../i18n/en"
 import {
   aircraftFaq,
+  AUTHOR_ID,
+  WEBSITE_ID,
+  aboutPageJsonLd,
+  aircraftDatasetJsonLd,
   articleJsonLd,
   breadcrumbJsonLd,
+  definedTermSetJsonLd,
   howToJsonLd,
   envelopeRows,
   faqPageJsonLd,
@@ -16,6 +21,7 @@ import {
   serializeJsonLd,
   softwareApplicationJsonLd,
   stationRows,
+  webSiteJsonLd,
 } from "./seoContent"
 
 const cessna = aircraftData["cessna-172s"]
@@ -107,6 +113,34 @@ describe("JSON-LD", () => {
     })
     expect(data["@type"]).toBe("SoftwareApplication")
     expect(data.offers).toEqual({ "@type": "Offer", price: "0", priceCurrency: "USD" })
+    expect(data["@id"]).toBe("https://example.com/en/#app")
+    expect(data.isPartOf).toEqual({ "@id": WEBSITE_ID })
+    expect(data.author["@id"]).toBe(AUTHOR_ID)
+    expect(data).not.toHaveProperty("image")
+  })
+
+  it("describes the site once, with a stable @id", () => {
+    const data = webSiteJsonLd({ name: "CheckCG", description: "d", locales: ["es", "en"] })
+    expect(data["@id"]).toBe(WEBSITE_ID)
+    expect(data.url).toBe("https://checkcg.com/")
+    expect(data.inLanguage).toEqual(["es", "en"])
+    expect(data.publisher["@id"]).toBe(AUTHOR_ID)
+  })
+
+  it("describes the aircraft reference data as a Dataset with its sources", () => {
+    const data = aircraftDatasetJsonLd({
+      aircraft: cessna,
+      name: "Cessna 172S weight and balance data",
+      description: "d",
+      url: "https://checkcg.com/en/cessna-172s/",
+      locale: "en",
+      variables: ["Arm (in)"],
+    })
+    expect(data["@type"]).toBe("Dataset")
+    expect(data["@id"]).toBe("https://checkcg.com/en/cessna-172s/#data")
+    expect(data.isBasedOn).toEqual(cessna.metadata.sourceDocuments)
+    expect(data.dateModified).toBe(cessna.dataValidation.lastUpdated)
+    expect(data.keywords).toContain(cessna.tcds)
   })
 
   it("maps the FAQ to a FAQPage", () => {
@@ -130,19 +164,19 @@ describe("guide JSON-LD", () => {
       description: "D",
       url: "https://checkcg.com/en/guides/x/",
       locale: "en",
+      datePublished: new Date("2026-10-01"),
       dateModified: new Date("2026-10-15"),
-      siteName: "CheckCG",
-      siteUrl: "https://checkcg.com/",
+      image: "https://checkcg.com/og/en/index.png",
     })
     expect(data["@type"]).toBe("Article")
     expect(data.inLanguage).toBe("en")
+    expect(data.datePublished).toBe("2026-10-01")
     expect(data.dateModified).toBe("2026-10-15")
+    expect(data.image).toBe("https://checkcg.com/og/en/index.png")
     expect(data.author.name).toBe("Pablo Alaniz")
-    expect(data.publisher).toEqual({
-      "@type": "Organization",
-      name: "CheckCG",
-      url: "https://checkcg.com/",
-    })
+    expect(data.author["@id"]).toBe(AUTHOR_ID)
+    expect(data.publisher["@id"]).toBe(AUTHOR_ID)
+    expect(data.isPartOf).toEqual({ "@id": WEBSITE_ID })
     expect(data.mainEntityOfPage["@id"]).toBe("https://checkcg.com/en/guides/x/")
   })
 
@@ -173,5 +207,42 @@ describe("guide JSON-LD", () => {
       [1, "Home", "https://checkcg.com/en/"],
       [2, "Guides", "https://checkcg.com/en/guides/"],
     ])
+  })
+})
+
+describe("glossary and methodology JSON-LD", () => {
+  it("anchors every glossary term to its definition", () => {
+    const data = definedTermSetJsonLd({
+      name: "Glossary",
+      description: "d",
+      url: "https://checkcg.com/en/glossary/",
+      locale: "en",
+      terms: [{ id: "arm", term: "Arm", text: "Distance from the datum." }],
+    })
+    expect(data["@type"]).toBe("DefinedTermSet")
+    expect(data.hasDefinedTerm).toEqual([
+      {
+        "@type": "DefinedTerm",
+        "@id": "https://checkcg.com/en/glossary/#arm",
+        name: "Arm",
+        description: "Distance from the datum.",
+        url: "https://checkcg.com/en/glossary/#arm",
+        inDefinedTermSet: "https://checkcg.com/en/glossary/#glossary",
+      },
+    ])
+  })
+
+  it("ties the methodology page to the site and its author", () => {
+    const data = aboutPageJsonLd({
+      name: "Methodology",
+      description: "d",
+      url: "https://checkcg.com/en/methodology/",
+      locale: "en",
+      dateModified: "2026-11-24",
+    })
+    expect(data["@type"]).toBe("AboutPage")
+    expect(data.about).toEqual({ "@id": WEBSITE_ID })
+    expect(data.author["@id"]).toBe(AUTHOR_ID)
+    expect(data.dateModified).toBe("2026-11-24")
   })
 })

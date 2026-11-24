@@ -14,7 +14,7 @@ interface Props {
 const { current, pathFor, label } = Astro.props
 ---
 
-<nav aria-label={label} class="flex justify-end gap-3 text-sm">
+<nav aria-label={label} class="flex flex-wrap justify-end gap-x-3 gap-y-1 text-sm">
   {
     ROUTE_LOCALES.map((locale) => (
       <a

@@ -55,6 +55,8 @@ describe("guides registry", () => {
       en: "/en/guides/",
       pt: "/pt/guias/",
       it: "/it/guide/",
+      fr: "/fr/guides/",
+      de: "/de/ratgeber/",
     })
     expect(groups[2].en).toBe("/en/guides/weight-arm-and-moment/")
   })
@@ -68,7 +70,7 @@ describe("guides content", () => {
 
       it(`${locale}/${guide.slugs[locale]} ends with the POH/AFM disclaimer`, () => {
         const last = text.trim().split("\n").pop() ?? ""
-        expect(last).toMatch(/^> \*\*Important[e]?:\*\*/)
+        expect(last).toMatch(/^> \*\*(Important[e]?|Wichtig):\*\*/)
         expect(last).toContain("POH/AFM")
       })
 
