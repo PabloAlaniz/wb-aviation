@@ -1,0 +1,48 @@
+---
+/**
+ * Static links from the calculator pages to the reference content of a
+ * language: guides (with their titles), glossary and methodology.
+ */
+import { guidesFor } from "./guides/collection"
+import { locales } from "../i18n"
+import { pagesContent } from "../content/pages"
+import {
+  aboutPath,
+  glossaryPath,
+  guidePath,
+  guidesIndexPath,
+  type RouteLocale,
+} from "../utils/routes"
+
+interface Props {
+  lang: RouteLocale
+}
+
+const { lang } = Astro.props
+const g = locales[lang].guides
+const pages = pagesContent[lang]
+const { entries } = await guidesFor(lang)
+---
+
+<nav aria-label={g.indexH1}>
+  <h2 class="mb-2 text-xl font-semibold text-gray-900">
+    <a href={guidesIndexPath(lang)} class="hover:underline">{g.indexH1}</a>
+  </h2>
+  <ul class="list-disc pl-6">
+    {
+      entries.map((entry) => (
+        <li>
+          <a href={guidePath(lang, entry.data.slug)} class="text-blue-700 hover:underline">
+            {entry.data.title}
+          </a>
+        </li>
+      ))
+    }
+    <li>
+      <a href={glossaryPath(lang)} class="text-blue-700 hover:underline">{pages.glossary.h1}</a>
+    </li>
+    <li>
+      <a href={aboutPath(lang)} class="text-blue-700 hover:underline">{pages.about.h1}</a>
+    </li>
+  </ul>
+</nav>

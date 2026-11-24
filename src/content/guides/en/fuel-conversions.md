@@ -4,6 +4,7 @@ description: "AVGAS and Jet A conversion tables between liters, US and imperial 
 lang: en
 translationKey: fuel-conversions
 slug: fuel-conversions
+published: 2026-11-05
 updated: 2026-11-05
 tool: fuel-converter
 faq:

@@ -510,10 +510,10 @@ export const en = {
     home: {
       title: "Free aircraft weight and balance calculator: CG and envelope | CheckCG",
       description:
-        "Work out your aircraft's weight and balance in seconds: center of gravity, CG envelope for takeoff and landing, and a printable load sheet. Free, offline and no sign-up.",
+        "Work out your aircraft's weight and balance (mass and balance) in seconds: center of gravity, CG envelope for takeoff and landing, and a printable load sheet. Free, offline and no sign-up.",
       h1: "Aircraft weight and balance calculator",
       intro1:
-        "Weight and balance checks, before every flight, that the aircraft does not exceed its maximum weight and that its center of gravity (CG) stays inside the approved envelope. An out-of-limits CG affects stability and control even when the total weight is fine.",
+        "Weight and balance (mass and balance in EASA and UK training) checks, before every flight, that the aircraft does not exceed its maximum weight and that its center of gravity (CG) stays inside the approved envelope. An out-of-limits CG affects stability and control even when the total weight is fine.",
       intro2:
         "CheckCG adds the empty weight and every loading station (crew, passengers, baggage and fuel), computes the resulting moment and CG and checks them against the manufacturer's envelope, including landing and zero-fuel conditions. It runs in your browser, with no sign-up and offline.",
       aircraftListTitle: "Supported aircraft",

@@ -4,7 +4,8 @@ description: "La procedura completa di massa e centraggio: massa a vuoto, bracci
 lang: it
 translationKey: how-to-calculate
 slug: come-calcolare-massa-e-centraggio
-updated: 2026-10-30
+published: 2026-11-02
+updated: 2026-11-02
 steps:
   - name: "Ricava massa a vuoto e braccio"
     text: "Prendi la massa a vuoto base e il suo braccio (o momento) dal rapporto di massa e centraggio aggiornato del tuo aereo, non dall'esempio del POH."

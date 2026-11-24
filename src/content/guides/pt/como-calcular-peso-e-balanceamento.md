@@ -4,6 +4,7 @@ description: "O procedimento completo de peso e balanceamento: peso vazio, braç
 lang: pt
 translationKey: how-to-calculate
 slug: como-calcular-peso-e-balanceamento
+published: 2026-10-15
 updated: 2026-10-15
 steps:
   - name: "Pegue o peso vazio e o braço"

@@ -27,7 +27,9 @@ import {
   breadcrumbJsonLd,
   faqPageJsonLd,
   howToJsonLd,
+  isoDate,
 } from "../../utils/seoContent"
+import { ogImagePath } from "../../utils/ogImage"
 
 interface Props {
   entry: CollectionEntry<"guides">
@@ -47,6 +49,7 @@ if (!guide) throw new Error(`Guide ${entry.id}: unknown translationKey ${data.tr
 const path = guidePath(lang, data.slug)
 const url = absoluteUrl(path)
 const pathFor = (locale: RouteLocale) => guidePath(locale, guide.slugs[locale])
+const published = data.published ?? data.updated
 const faq = (data.faq ?? []).map(({ q, a }) => ({ question: q, answer: a }))
 const updated = new Intl.DateTimeFormat(lang, { dateStyle: "long", timeZone: "UTC" }).format(
   data.updated
@@ -64,9 +67,9 @@ const jsonLd = [
     description: data.description,
     url,
     locale: lang,
+    datePublished: published,
     dateModified: data.updated,
-    siteName: m.seo.siteName,
-    siteUrl: absoluteUrl("/"),
+    image: absoluteUrl(ogImagePath(lang)),
   }),
   breadcrumbJsonLd(breadcrumb.map(({ name, path }) => ({ name, url: absoluteUrl(path) }))),
   ...(faq.length > 0 ? [faqPageJsonLd(faq)] : []),
@@ -94,6 +97,7 @@ const otherGuides = GUIDES.filter((other) => other.key !== guide.key)
   alternates={alternateLinks(pathFor, pathFor("es"))}
   pinLocale
   jsonLd={jsonLd}
+  article={{ published: isoDate(published), modified: isoDate(data.updated) }}
 >
   <div class="mx-auto max-w-3xl space-y-6 px-4 py-4">
     <LanguageNav current={lang} pathFor={pathFor} label={m.seo.languageLabel} />
@@ -122,7 +126,7 @@ const otherGuides = GUIDES.filter((other) => other.key !== guide.key)
         <header class="mb-6 space-y-2">
           <h1 class="text-3xl font-bold leading-tight text-gray-900">{data.title}</h1>
           <p class="text-sm text-gray-600">
-            {g.updated} <time datetime={data.updated.toISOString().slice(0, 10)}>{updated}</time> ·
+            {g.updated} <time datetime={isoDate(data.updated)}>{updated}</time> ·
             Pablo Alaniz
           </p>
         </header>

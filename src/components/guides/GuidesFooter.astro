@@ -1,7 +1,14 @@
 ---
 /** Static footer of the guide pages (they don't load the calculator island). */
 import { locales } from "../../i18n"
-import { guidesIndexPath, localePath, type RouteLocale } from "../../utils/routes"
+import { pagesContent } from "../../content/pages"
+import {
+  aboutPath,
+  glossaryPath,
+  guidesIndexPath,
+  localePath,
+  type RouteLocale,
+} from "../../utils/routes"
 import { AUTHOR_NAME, AUTHOR_URL, REPO_URL } from "../Footer.jsx"
 
 interface Props {
@@ -23,8 +30,16 @@ const m = locales[lang]
       >{m.guides.footerLink}</a
     >
     <span aria-hidden="true">·</span>
+    <a href={glossaryPath(lang)} class="font-medium text-blue-700 hover:underline"
+      >{pagesContent[lang].glossary.navLabel}</a
+    >
+    <span aria-hidden="true">·</span>
+    <a href={aboutPath(lang)} class="font-medium text-blue-700 hover:underline"
+      >{pagesContent[lang].about.navLabel}</a
+    >
+    <span aria-hidden="true">·</span>
     <span
-      >{m.footer.madeBy}
+      >{m.footer.madeBy}{" "}
       <a href={AUTHOR_URL} rel="noopener noreferrer" class="font-medium text-gray-800 hover:underline"
         >{AUTHOR_NAME}</a
       ></span

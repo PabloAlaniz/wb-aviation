@@ -14,7 +14,7 @@ describe("readCookie", () => {
 
 describe("preferredLanguage", () => {
   it("picks the highest-quality supported language", () => {
-    expect(preferredLanguage("fr-FR,fr;q=0.9,pt-BR;q=0.8,en;q=0.7")).toBe("pt")
+    expect(preferredLanguage("ja-JP,ja;q=0.9,pt-BR;q=0.8,en;q=0.7")).toBe("pt")
   })
 
   it("respects explicit q ordering", () => {
@@ -22,7 +22,7 @@ describe("preferredLanguage", () => {
   })
 
   it("ignores q=0 and unsupported languages", () => {
-    expect(preferredLanguage("en;q=0,de")).toBeNull()
+    expect(preferredLanguage("en;q=0,nl")).toBeNull()
     expect(preferredLanguage("")).toBeNull()
   })
 })

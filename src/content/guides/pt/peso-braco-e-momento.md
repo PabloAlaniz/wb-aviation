@@ -4,6 +4,7 @@ description: "O que são datum, braço e momento em peso e balanceamento, com um
 lang: pt
 translationKey: weight-arm-moment
 slug: peso-braco-e-momento
+published: 2026-10-15
 updated: 2026-10-15
 faq:
   - q: "O que é momento em peso e balanceamento?"

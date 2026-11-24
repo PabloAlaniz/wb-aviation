@@ -4,6 +4,7 @@ description: "What datum, arm and moment mean in weight and balance, with a comp
 lang: en
 translationKey: weight-arm-moment
 slug: weight-arm-and-moment
+published: 2026-10-15
 updated: 2026-10-15
 faq:
   - q: "What is a moment in weight and balance?"

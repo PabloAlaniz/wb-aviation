@@ -4,7 +4,7 @@
  * visits get a server-side 302 from functions/_middleware.js; this inline
  * redirect covers offline (service worker) and local dev.
  * - Plain visits redirect (inline, before render) to the stored or browser
- *   language: /es/, /en/ or /pt/.
+ *   language (/es/, /en/, /fr/...).
  * - Shared links (/?s=..., /?fleet=...) stay here and the calculator
  *   consumes the params, so every link published before the Astro
  *   migration keeps working. The UI keeps the visitor's own language.

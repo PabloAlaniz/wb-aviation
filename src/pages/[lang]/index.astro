@@ -7,16 +7,19 @@ import { locales } from "../../i18n"
 import { aircraftData, aircraftGroups } from "../../data/aircraft"
 import {
   ROUTE_LOCALES,
+  aboutPath,
   absoluteUrl,
   aircraftPath,
+  glossaryPath,
   alternateLinks,
   guidePath,
   guidesIndexPath,
   localePath,
   type RouteLocale,
 } from "../../utils/routes"
-import { softwareApplicationJsonLd } from "../../utils/seoContent"
+import { softwareApplicationJsonLd, webSiteJsonLd } from "../../utils/seoContent"
 import { ogImagePath } from "../../utils/ogImage"
+import { pagesContent } from "../../content/pages"
 import { guidesFor } from "../../components/guides/collection"
 
 export function getStaticPaths() {
@@ -26,6 +29,7 @@ export function getStaticPaths() {
 const lang = Astro.params.lang as RouteLocale
 const m = locales[lang]
 const s = m.seo
+const pages = pagesContent[lang]
 const path = localePath(lang)
 const { entries: guides } = await guidesFor(lang)
 const jsonLd = [
@@ -34,7 +38,9 @@ const jsonLd = [
     description: s.appDescription,
     url: absoluteUrl(path),
     locale: lang,
+    image: absoluteUrl(ogImagePath(lang)),
   }),
+  webSiteJsonLd({ name: s.siteName, description: s.appDescription, locales: ROUTE_LOCALES }),
 ]
 ---
 
@@ -99,6 +105,12 @@ const jsonLd = [
             </li>
           ))
         }
+        <li>
+          <a href={glossaryPath(lang)} class="text-blue-700 hover:underline">{pages.glossary.h1}</a>
+        </li>
+        <li>
+          <a href={aboutPath(lang)} class="text-blue-700 hover:underline">{pages.about.h1}</a>
+        </li>
       </ul>
     </section>
   </main>

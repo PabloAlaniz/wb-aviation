@@ -4,6 +4,7 @@ description: "Tabelle di conversione di AVGAS e Jet A tra litri, galloni US e im
 lang: it
 translationKey: fuel-conversions
 slug: conversioni-di-carburante
+published: 2026-11-11
 updated: 2026-11-11
 tool: fuel-converter
 faq:

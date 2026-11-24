@@ -5,6 +5,45 @@
  */
 import { resolveStationLabel } from "./stationLabel"
 import { KG_PER_LB } from "./units"
+import { SITE_URL } from "./routes.js"
+
+/** Stable @id of the site (schema.org WebSite), shared by every page. */
+export const WEBSITE_ID = `${SITE_URL}/#website`
+
+/** Stable @id of the author / publisher (schema.org Person). */
+export const AUTHOR_ID = `${SITE_URL}/#author`
+
+/**
+ * The author and publisher of the site. Carries its @id so every mention on
+ * every page resolves to the same entity.
+ */
+export const AUTHOR = {
+  "@type": "Person",
+  "@id": AUTHOR_ID,
+  name: "Pablo Alaniz",
+  url: "https://github.com/PabloAlaniz",
+}
+
+/** Reference to the WebSite entity from another node. */
+const WEBSITE_REF = { "@id": WEBSITE_ID }
+
+/**
+ * schema.org WebSite (one entity for the whole site; rendered on the home
+ * pages and referenced by @id from everything else).
+ * @param {{ name: string, description: string, locales: readonly string[] }} input
+ */
+export function webSiteJsonLd({ name, description, locales }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": WEBSITE_ID,
+    name,
+    description,
+    url: `${SITE_URL}/`,
+    inLanguage: [...locales],
+    publisher: AUTHOR,
+  }
+}
 
 /** @typedef {import("../types").Aircraft} Aircraft */
 /** @typedef {typeof import("../i18n/es").es} Messages */
@@ -114,21 +153,53 @@ export function aircraftFaq(aircraft, messages, locale) {
 
 /**
  * schema.org SoftwareApplication (free web app).
- * @param {{ name: string, description: string, url: string, locale: string }} input
+ * @param {{ name: string, description: string, url: string, locale: string,
+ *   image?: string }} input - `image`: absolute URL of the social preview
  */
-export function softwareApplicationJsonLd({ name, description, url, locale }) {
+export function softwareApplicationJsonLd({ name, description, url, locale, image }) {
   return {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
+    "@id": `${url}#app`,
     name,
     description,
     url,
+    ...(image ? { image } : {}),
     inLanguage: locale,
     applicationCategory: "UtilitiesApplication",
     operatingSystem: "Any (web browser)",
     isAccessibleForFree: true,
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-    author: { "@type": "Person", name: "Pablo Alaniz", url: "https://github.com/PabloAlaniz" },
+    author: AUTHOR,
+    isPartOf: WEBSITE_REF,
+  }
+}
+
+/**
+ * schema.org Dataset for the reference weight and balance data of one
+ * aircraft (the stations and envelope tables of its page).
+ * @param {{ aircraft: Aircraft, name: string, description: string, url: string,
+ *   locale: string, variables: string[] }} input - `variables`: localized
+ *   names of what the tables hold (arms, maximum loads, envelope points...)
+ */
+export function aircraftDatasetJsonLd({ aircraft, name, description, url, locale, variables }) {
+  const modified = aircraft.dataValidation?.lastUpdated
+  return {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "@id": `${url}#data`,
+    name,
+    description,
+    url,
+    inLanguage: locale,
+    isAccessibleForFree: true,
+    license: "https://opensource.org/license/mit",
+    creator: AUTHOR,
+    ...(modified ? { dateModified: modified } : {}),
+    keywords: [aircraft.name, aircraft.tcds, aircraft.metadata.manufacturer],
+    variableMeasured: variables,
+    isBasedOn: aircraft.metadata.sourceDocuments,
+    includedInDataCatalog: WEBSITE_REF,
   }
 }
 
@@ -157,39 +228,44 @@ export function serializeJsonLd(data) {
   return JSON.stringify(data).replace(/</g, "\\u003c")
 }
 
-/** Author of the guides (schema.org). */
-const GUIDE_AUTHOR = {
-  "@type": "Person",
-  name: "Pablo Alaniz",
-  url: "https://github.com/PabloAlaniz",
+/**
+ * ISO date (YYYY-MM-DD) of a build-time date.
+ * @param {Date} date
+ */
+export function isoDate(date) {
+  return date.toISOString().slice(0, 10)
 }
 
 /**
  * schema.org Article (guides).
  * @param {{ headline: string, description: string, url: string, locale: string,
- *   dateModified: Date, siteName: string, siteUrl: string }} input
+ *   datePublished: Date, dateModified: Date, image: string }} input -
+ *   `image`: absolute URL of the social preview
  */
 export function articleJsonLd({
   headline,
   description,
   url,
   locale,
+  datePublished,
   dateModified,
-  siteName,
-  siteUrl,
+  image,
 }) {
-  const date = dateModified.toISOString().slice(0, 10)
   return {
     "@context": "https://schema.org",
     "@type": "Article",
+    "@id": `${url}#article`,
     headline,
     description,
     url,
+    image,
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
     inLanguage: locale,
-    dateModified: date,
-    author: GUIDE_AUTHOR,
-    publisher: { "@type": "Organization", name: siteName, url: siteUrl },
+    datePublished: isoDate(datePublished),
+    dateModified: isoDate(dateModified),
+    author: AUTHOR,
+    publisher: AUTHOR,
+    isPartOf: WEBSITE_REF,
   }
 }
 
@@ -229,5 +305,54 @@ export function breadcrumbJsonLd(items) {
       name: item.name,
       item: item.url,
     })),
+  }
+}
+
+/**
+ * schema.org DefinedTermSet (glossary). Every term gets its own @id at the
+ * page anchor of its definition.
+ * @param {{ name: string, description: string, url: string, locale: string,
+ *   terms: { id: string, term: string, text: string }[] }} input
+ */
+export function definedTermSetJsonLd({ name, description, url, locale, terms }) {
+  const setId = `${url}#glossary`
+  return {
+    "@context": "https://schema.org",
+    "@type": "DefinedTermSet",
+    "@id": setId,
+    name,
+    description,
+    url,
+    inLanguage: locale,
+    isPartOf: WEBSITE_REF,
+    hasDefinedTerm: terms.map(({ id, term, text }) => ({
+      "@type": "DefinedTerm",
+      "@id": `${url}#${id}`,
+      name: term,
+      description: text,
+      url: `${url}#${id}`,
+      inDefinedTermSet: setId,
+    })),
+  }
+}
+
+/**
+ * schema.org AboutPage (methodology and data sources).
+ * @param {{ name: string, description: string, url: string, locale: string,
+ *   dateModified: string }} input - `dateModified`: ISO date
+ */
+export function aboutPageJsonLd({ name, description, url, locale, dateModified }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "@id": `${url}#page`,
+    name,
+    description,
+    url,
+    inLanguage: locale,
+    dateModified,
+    isPartOf: WEBSITE_REF,
+    about: WEBSITE_REF,
+    author: AUTHOR,
   }
 }

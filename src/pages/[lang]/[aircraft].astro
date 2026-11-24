@@ -7,6 +7,7 @@
 import Base from "../../layouts/Base.astro"
 import LanguageNav from "../../components/LanguageNav.astro"
 import Calculator from "../../components/Calculator.astro"
+import SiteLinks from "../../components/SiteLinks.astro"
 import { locales } from "../../i18n"
 import { aircraftData, aircraftGroups } from "../../data/aircraft"
 import {
@@ -18,7 +19,9 @@ import {
   type RouteLocale,
 } from "../../utils/routes"
 import {
+  aircraftDatasetJsonLd,
   aircraftFaq,
+  breadcrumbJsonLd,
   envelopeRows,
   faqPageJsonLd,
   formatArm,
@@ -66,13 +69,27 @@ const specs = [
   ],
 ]
 
+const url = absoluteUrl(path)
 const jsonLd = [
   softwareApplicationJsonLd({
     name: `${m.seo.siteName}: ${s.h1(name)}`,
     description: s.description(name, maxWeight),
-    url: absoluteUrl(path),
+    url,
     locale: lang,
+    image: absoluteUrl(ogImagePath(lang, id)),
   }),
+  aircraftDatasetJsonLd({
+    aircraft,
+    name: `${name}: ${s.specsTitle}`,
+    description: s.intro(name, aircraft.tcds),
+    url,
+    locale: lang,
+    variables: [s.maxWeight, s.emptyWeight, s.cgLimits, s.stationsTitle, s.envelopeTitle],
+  }),
+  breadcrumbJsonLd([
+    { name: m.guides.breadcrumbHome, url: absoluteUrl(localePath(lang)) },
+    { name: s.h1(name), url },
+  ]),
   faqPageJsonLd(faq),
 ]
 
@@ -260,6 +277,8 @@ const td = "border-b border-gray-200 px-3 py-1.5"
           </nav>
         )
       }
+
+      <SiteLinks lang={lang} />
     </article>
   </main>
 </Base>

@@ -4,6 +4,7 @@ description: "Qué es la envolvente de centro de gravedad, por qué importan los
 lang: es
 translationKey: cg-envelope
 slug: envolvente-de-cg
+published: 2026-10-15
 updated: 2026-10-15
 faq:
   - q: "¿Qué pasa si vuelo con el CG detrás del límite trasero?"

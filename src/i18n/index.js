@@ -2,15 +2,24 @@ import { es } from "./es"
 import { en } from "./en"
 import { pt } from "./pt"
 import { it } from "./it"
+import { fr } from "./fr"
+import { de } from "./de"
 
 /**
  * Available locales. To add one: create the messages file (e.g. fr.js),
  * import it here and add it to `locales` and `localeNames`.
  */
-export const locales = { es, en, pt, it }
+export const locales = { es, en, pt, it, fr, de }
 
 /** Human-readable names for the language selector. */
-export const localeNames = { es: "Español", en: "English", pt: "Português", it: "Italiano" }
+export const localeNames = {
+  es: "Español",
+  en: "English",
+  pt: "Português",
+  it: "Italiano",
+  fr: "Français",
+  de: "Deutsch",
+}
 
 /** @typedef {keyof typeof locales} Locale */
 

@@ -13,7 +13,7 @@
 export const SITE_URL = "https://checkcg.com"
 
 /** Route locales, default first. Must match the i18n catalogs in src/i18n. */
-export const ROUTE_LOCALES = /** @type {const} */ (["es", "en", "pt", "it"])
+export const ROUTE_LOCALES = /** @type {const} */ (["es", "en", "pt", "it", "fr", "de"])
 
 /** @typedef {(typeof ROUTE_LOCALES)[number]} RouteLocale */
 
@@ -124,7 +124,14 @@ export function rootRedirectTarget(search, stored, navigatorLang, locales) {
  * Localized folder of the guides section, e.g. /es/guias/, /en/guides/.
  * @type {Record<RouteLocale, string>}
  */
-export const GUIDES_DIR = { es: "guias", en: "guides", pt: "guias", it: "guide" }
+export const GUIDES_DIR = {
+  es: "guias",
+  en: "guides",
+  pt: "guias",
+  it: "guide",
+  fr: "guides",
+  de: "ratgeber",
+}
 
 /**
  * @param {RouteLocale} locale
@@ -141,4 +148,60 @@ export function guidesIndexPath(locale) {
  */
 export function guidePath(locale, slug) {
   return `${guidesIndexPath(locale)}${encodeURIComponent(slug)}/`
+}
+
+/**
+ * Localized slug of the glossary page, e.g. /es/glosario/, /en/glossary/.
+ * @type {Record<RouteLocale, string>}
+ */
+export const GLOSSARY_SLUG = {
+  es: "glosario",
+  en: "glossary",
+  pt: "glossario",
+  it: "glossario",
+  fr: "glossaire",
+  de: "glossar",
+}
+
+/**
+ * Localized slug of the methodology and data sources page.
+ * @type {Record<RouteLocale, string>}
+ */
+export const ABOUT_SLUG = {
+  es: "metodologia",
+  en: "methodology",
+  pt: "metodologia",
+  it: "metodologia",
+  fr: "methodologie",
+  de: "methodik",
+}
+
+/**
+ * @param {RouteLocale} locale
+ * @returns {string} e.g. "/en/glossary/"
+ */
+export function glossaryPath(locale) {
+  return `/${locale}/${GLOSSARY_SLUG[locale]}/`
+}
+
+/**
+ * @param {RouteLocale} locale
+ * @returns {string} e.g. "/en/methodology/"
+ */
+export function aboutPath(locale) {
+  return `/${locale}/${ABOUT_SLUG[locale]}/`
+}
+
+/**
+ * Groups of equivalent paths across locales for the pages whose path is
+ * localized (glossary, methodology), for the sitemap's hreflang alternates.
+ * @returns {Record<RouteLocale, string>[]}
+ */
+export function localizedPageGroups() {
+  return [glossaryPath, aboutPath].map(
+    (pathFor) =>
+      /** @type {Record<RouteLocale, string>} */ (
+        Object.fromEntries(ROUTE_LOCALES.map((locale) => [locale, pathFor(locale)]))
+      )
+  )
 }
