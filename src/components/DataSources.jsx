@@ -12,7 +12,8 @@ export function DataSources({ aircraft }) {
   return (
     <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
       <h4 className="font-medium text-sm text-blue-900 mb-2">{m.dataSources.title}</h4>
-      <div className="space-y-2 text-xs text-blue-800">
+      {/* Sources carry long URLs: break them anywhere instead of widening the page. */}
+      <div className="space-y-2 text-xs text-blue-800 wrap-anywhere">
         <div>
           <span className="font-medium">{m.dataSources.lastUpdated}</span>
           <span className="ml-1">{dataValidation.lastUpdated}</span>
