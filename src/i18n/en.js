@@ -199,6 +199,16 @@ export const en = {
     operatingPoint: "Operating Point",
     xUnit: "inches",
     yUnit: "pounds",
+    loadingPath: "Loading path",
+    loadingPathToggle: "Show the loading path",
+    loadingPathHint:
+      "The grey line shows how the CG moves as each station is added, from empty weight to takeoff. The orange line is the fuel burned in flight.",
+    emptyPoint: "Empty weight",
+    addedStation: (
+      /** @type {string} */ label,
+      /** @type {string|number} */ weight,
+      /** @type {string} */ unit = "lbs"
+    ) => `+ ${label} (${weight} ${unit})`,
   },
 
   flightPhases: {
@@ -246,6 +256,8 @@ export const en = {
     chartLanding: "Landing",
     chartZeroFuel: "Zero fuel",
     chartBurnPath: "Fuel burn",
+    cgLeavesEnvelopeInFlight: (/** @type {string|number} */ burned, unit = "lbs") =>
+      `The CG leaves the envelope in flight, after burning about ${burned} ${unit} of fuel`,
   },
 
   margins: {

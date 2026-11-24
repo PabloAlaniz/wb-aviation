@@ -68,6 +68,10 @@ export function localizeLandingIssue(issue, units, phases) {
       return issue.limit === undefined
         ? issue.message
         : fp.overMaxZeroFuelWeight(kg(issue.limit), unit)
+    case "inflight-cg":
+      return issue.value === undefined
+        ? issue.message
+        : fp.cgLeavesEnvelopeInFlight(kg(issue.value), unit)
     case "station-max":
       return issue.label === undefined || issue.value === undefined || issue.limit === undefined
         ? issue.message

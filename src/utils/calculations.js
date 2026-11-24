@@ -455,6 +455,48 @@ export function calculateFlightPhases(aircraft, weights, fuelBurn, taxiFuel = 0)
   }
 }
 
+/** Samples of the planned burn checked against the envelope. */
+const BURN_PATH_SAMPLES = 200
+
+/**
+ * Weight and CG after burning `burned` lbs of the takeoff fuel. Fuel is
+ * burned from every tank in proportion to its load (as in
+ * calculateFlightPhases), so the moment removed follows the mean fuel arm.
+ * @param {import('../types').FlightPhasesResult} phases
+ * @param {number} burned - lbs, clamped to [0, fuel at takeoff]
+ * @returns {{ burned: number, weight: number, cg: number }}
+ */
+export function burnPoint(phases, burned) {
+  const { takeoff, zeroFuel, fuelLoaded } = phases
+  const fuel = Math.max(0, Math.min(burned, fuelLoaded))
+  const fuelMoment = takeoff.totalMoment - zeroFuel.totalMoment
+  const weight = takeoff.totalWeight - fuel
+  const moment = takeoff.totalMoment - (fuelLoaded > 0 ? (fuelMoment * fuel) / fuelLoaded : 0)
+  return { burned: fuel, weight, cg: calculateCG(moment, weight) }
+}
+
+/**
+ * First point of the planned burn where the CG is outside the envelope even
+ * though both takeoff and landing are inside it. As fuel burns the CG follows
+ * a curve, not a straight line, so it can cross a sloped limit mid-flight.
+ * @param {import('../types').Aircraft} aircraft
+ * @param {import('../types').FlightPhasesResult} phases
+ * @returns {{ burned: number, weight: number, cg: number } | null} null when
+ *   the whole burn stays inside (or an end of it is already outside, which
+ *   the takeoff and landing checks report)
+ */
+export function findBurnEnvelopeExit(aircraft, phases) {
+  const points = aircraft.cgEnvelope?.points || []
+  if (!(phases.fuelBurn > 0) || !phases.takeoff.inEnvelope || !phases.landing.inEnvelope) {
+    return null
+  }
+  for (let i = 1; i < BURN_PATH_SAMPLES; i++) {
+    const point = burnPoint(phases, (phases.fuelBurn * i) / BURN_PATH_SAMPLES)
+    if (!isPointInEnvelope(point.cg, point.weight, points)) return point
+  }
+  return null
+}
+
 /**
  * Landing / zero-fuel safety checks: CG envelope plus max landing weight and
  * max zero-fuel weight (only when the aircraft data declares them).
@@ -484,6 +526,15 @@ export function buildLandingReport(aircraft, phases) {
       type: "landing-cg",
       message: fp.landingOutOfEnvelope,
       value: landing.centerOfGravity,
+      severity: "high",
+    })
+  }
+  const exit = findBurnEnvelopeExit(aircraft, phases)
+  if (exit) {
+    errors.push({
+      type: "inflight-cg",
+      message: fp.cgLeavesEnvelopeInFlight(trimNumber(exit.burned, 0)),
+      value: exit.burned,
       severity: "high",
     })
   }

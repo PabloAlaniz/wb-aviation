@@ -29,6 +29,7 @@ El sistema incluye:
 - ✅ Márgenes de carga: carga disponible, combustible que todavía se puede cargar y combustible al aterrizar
 - ✅ Sugerencias para volver a los límites (cuánto sobra y el cambio mínimo de equipaje o combustible)
 - ✅ Cargas guardadas por aeronave para aplicar con un toque
+- ✅ Recorrido del CG en el gráfico: carga estación por estación, curva real de consumo y chequeo de que no salga de la envolvente en vuelo
 - ✅ Visualización gráfica del envolvente de CG
 - ✅ Datos verificados con documentación oficial
 - ✅ Persistencia local de los datos cargados y la aeronave seleccionada
@@ -64,6 +65,8 @@ El sistema incluye:
 - Representación del punto operativo actual
 - Líneas de referencia de límites
 - Tooltips informativos
+- Recorrido de carga (peso vacío → despegue, estación por estación) y curva de consumo hasta sin combustible
+- Área permitida sombreada y líneas de MLW / MZFW
 
 ## 🛠️ Tecnologías Utilizadas
 
@@ -73,7 +76,7 @@ El sistema incluye:
 - **Tailwind CSS 4.1.12** - Framework de estilos
 - **Recharts 3.1.2** - Librería de gráficos
 - **Lucide React 0.540.0** - Sistema de iconos
-- **@vite-pwa/astro + vite-plugin-pwa** - Soporte PWA / offline
+- **@vite-pwa/astro** - Soporte PWA / offline
 - **@astrojs/sitemap** - `sitemap-index.xml` con alternates hreflang
 - **Vitest 4.x + Testing Library** - Tests unitarios y de componentes
 - **ESLint 9.33.0 + Prettier** - Linter y formateo de código

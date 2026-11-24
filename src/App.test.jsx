@@ -294,4 +294,18 @@ describe("App: fuel burn, landing and zero-fuel", () => {
 
     expect(screen.getByLabelText(/Combustible a consumir/)).toHaveValue(300)
   })
+
+  it("shows the loading path on the envelope chart and remembers when it is hidden", () => {
+    const { unmount } = render(<App />)
+    const toggle = screen.getByLabelText("Mostrar el recorrido de carga")
+    expect(toggle).toBeChecked()
+    expect(screen.getByText(/La línea gris muestra cómo se mueve el CG/)).toBeInTheDocument()
+
+    fireEvent.click(toggle)
+    expect(screen.queryByText(/La línea gris muestra cómo se mueve el CG/)).not.toBeInTheDocument()
+    unmount()
+
+    render(<App />)
+    expect(screen.getByLabelText("Mostrar el recorrido de carga")).not.toBeChecked()
+  })
 })
