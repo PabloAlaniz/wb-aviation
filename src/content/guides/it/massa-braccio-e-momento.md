@@ -4,7 +4,8 @@ description: "Cosa significano datum, braccio e momento nel calcolo di massa e c
 lang: it
 translationKey: weight-arm-moment
 slug: massa-braccio-e-momento
-updated: 2026-10-30
+published: 2026-11-02
+updated: 2026-11-02
 faq:
   - q: "Cos'è il momento nel calcolo di massa e centraggio?"
     a: "È la massa di un elemento moltiplicata per il suo braccio (la distanza dal datum), espresso per esempio in libbre-pollici (lb-in). Sommando tutti i momenti e dividendo per la massa totale si ottiene il centro di gravità."

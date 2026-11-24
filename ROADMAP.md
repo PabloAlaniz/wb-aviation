@@ -6,7 +6,8 @@ Lo que viene, sin fechas. Las sugerencias son bienvenidas en
 ## Entregado
 
 - Calculadora multi-aeronave con envolvente de CG, alertas y PWA offline.
-- Español, inglés y portugués.
+- Español, inglés, portugués, italiano, francés y alemán (francés y alemán pendientes de
+  revisión por hablantes nativos).
 - Aeronave propia por matrícula, kg/lbs, gal/L, CG de aterrizaje y sin combustible.
 - Combustible de rodaje con condición de rampa y peso máximo de rampa.
 - Pesos estándar editables (tripulante, adulto, niño) con carga de un toque.
@@ -14,6 +15,9 @@ Lo que viene, sin fechas. Las sugerencias son bienvenidas en
 - Gráfico de conversiones rápidas de combustible (AVGAS y Jet A) en la hoja de carga y guía con conversor.
 - Hoja de carga imprimible / PDF, link y QR para compartir, import de flota para escuelas.
 - Página por aeronave e idioma y guías de peso y balance.
+- Glosario y página de metodología y fuentes por idioma.
+- SEO: datos estructurados enlazados (WebSite, Dataset, Article, DefinedTermSet), sitemap
+  con `lastmod`, página 404, `llms.txt`, IndexNow y manifest PWA por idioma.
 - Márgenes de carga: carga disponible, combustible que todavía se puede cargar (y qué
   límite lo frena) y combustible al aterrizar.
 - Máximo por estación (equipaje, combustible utilizable) validado en el veredicto, y
@@ -31,7 +35,6 @@ Lo que viene, sin fechas. Las sugerencias son bienvenidas en
 - Verificar B200 y 1900D contra el POH (hoy cargados desde planillas de operador).
 - Tabla de momentos de combustible por cantidad (turbohélices).
 - Confirmar MLW/MZFW del King Air E90.
-- Manifest PWA multilenguaje.
 - Más aeronaves de escuela, según pedidos y disponibilidad de datos verificables.
 
 ## Más adelante

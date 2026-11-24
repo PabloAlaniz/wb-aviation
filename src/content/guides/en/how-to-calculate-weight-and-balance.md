@@ -4,6 +4,7 @@ description: "The full weight and balance procedure: empty weight, arms, moments
 lang: en
 translationKey: how-to-calculate
 slug: how-to-calculate-weight-and-balance
+published: 2026-10-15
 updated: 2026-10-15
 steps:
   - name: "Get the empty weight and arm"

@@ -4,6 +4,7 @@ description: "O que é o envelope de centro de gravidade, por que os limites dia
 lang: pt
 translationKey: cg-envelope
 slug: envelope-de-cg
+published: 2026-10-15
 updated: 2026-10-15
 faq:
   - q: "O que acontece se eu voar com o CG atrás do limite traseiro?"

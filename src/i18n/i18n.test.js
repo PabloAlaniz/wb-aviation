@@ -14,11 +14,11 @@ describe("resolveLocale", () => {
   })
 
   it("ignores an unsupported stored preference", () => {
-    expect(resolveLocale("fr", "en-GB")).toBe("en")
+    expect(resolveLocale("ja", "en-GB")).toBe("en")
   })
 
   it("defaults when neither preference nor browser language is supported", () => {
-    expect(resolveLocale(null, "fr-FR")).toBe(DEFAULT_LOCALE)
+    expect(resolveLocale(null, "ja-JP")).toBe(DEFAULT_LOCALE)
     expect(resolveLocale(null, null)).toBe(DEFAULT_LOCALE)
   })
 })

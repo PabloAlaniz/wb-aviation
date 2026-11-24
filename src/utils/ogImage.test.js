@@ -167,6 +167,8 @@ describe("ogContent", () => {
       "Weight and balance",
       "Peso e balanceamento",
       "Massa e centraggio",
+      "Masse et centrage",
+      "Masse und Schwerpunkt",
     ])
   })
 })

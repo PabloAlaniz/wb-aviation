@@ -4,6 +4,7 @@ description: "What the center of gravity envelope is, why forward and aft limits
 lang: en
 translationKey: cg-envelope
 slug: cg-envelope-explained
+published: 2026-10-15
 updated: 2026-10-15
 faq:
   - q: "What happens if I fly with the CG aft of the aft limit?"

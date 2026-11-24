@@ -30,7 +30,7 @@ CheckCG does the math, draws your loading on the official CG envelope and warns 
 - **Advice to get back within limits**: how far off the weight or CG is, and the smallest change to baggage or fuel that fixes it.
 - **Saved loads** per aircraft (solo, dual, full cabin), applied in one tap.
 - **Offline PWA**, installable on phone or tablet.
-- **lbs/kg and gal/L**, in **English, Spanish and Portuguese**.
+- **lbs/kg and gal/L**, in **Spanish, English, Portuguese, Italian, French and German**.
 - **Free guides** on [how to calculate weight & balance](https://checkcg.com/en/guides/) with worked examples.
 
 ## Supported aircraft

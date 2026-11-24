@@ -1,0 +1,145 @@
+---
+/**
+ * Methodology and data sources of one language (/es/metodologia/,
+ * /en/methodology/...): where the data comes from, how the calculation is
+ * verified, limits, privacy and who maintains the site. The reliability table
+ * is generated from src/data/aircraft.js.
+ */
+import Base from "../../layouts/Base.astro"
+import LanguageNav from "../LanguageNav.astro"
+import GuidesFooter from "../guides/GuidesFooter.astro"
+import { AIRCRAFT_REQUEST_URL, REPO_URL } from "../Footer.jsx"
+import { locales } from "../../i18n"
+import { aircraftData } from "../../data/aircraft"
+import { ABOUT_SECTIONS, PAGES_UPDATED, pagesContent } from "../../content/pages"
+import {
+  aboutPath,
+  absoluteUrl,
+  aircraftPath,
+  alternateLinks,
+  localePath,
+  type RouteLocale,
+} from "../../utils/routes"
+import { aboutPageJsonLd, breadcrumbJsonLd, reliabilityLabel } from "../../utils/seoContent"
+
+interface Props {
+  lang: RouteLocale
+}
+
+const { lang } = Astro.props
+const m = locales[lang]
+const c = pagesContent[lang].about
+const path = aboutPath(lang)
+const url = absoluteUrl(path)
+
+const catalog = Object.entries(aircraftData).map(([id, aircraft]) => ({
+  name: aircraft.name,
+  path: aircraftPath(lang, id),
+  reliability: reliabilityLabel(aircraft, m),
+  verified: aircraft.dataValidation.lastUpdated ?? "—",
+}))
+
+const jsonLd = [
+  aboutPageJsonLd({
+    name: c.h1,
+    description: c.description,
+    url,
+    locale: lang,
+    dateModified: PAGES_UPDATED,
+  }),
+  breadcrumbJsonLd([
+    { name: m.guides.breadcrumbHome, url: absoluteUrl(localePath(lang)) },
+    { name: c.navLabel, url },
+  ]),
+]
+
+const th = "border-b border-gray-300 px-3 py-2 text-left font-semibold"
+const td = "border-b border-gray-200 px-3 py-1.5"
+---
+
+<Base
+  lang={lang}
+  title={c.title}
+  description={c.description}
+  path={path}
+  alternates={alternateLinks(aboutPath, aboutPath("es"))}
+  pinLocale
+  jsonLd={jsonLd}
+>
+  <div class="mx-auto max-w-3xl space-y-6 px-4 py-4">
+    <LanguageNav current={lang} pathFor={aboutPath} label={m.seo.languageLabel} />
+    <p class="text-sm">
+      <a href={localePath(lang)} class="text-blue-700 hover:underline">{m.guides.breadcrumbHome}</a>
+    </p>
+
+    <main>
+      <article class="space-y-6 rounded-xl bg-white/80 p-5 text-gray-800 shadow-sm sm:p-8">
+        <header class="space-y-2">
+          <h1 class="text-3xl font-bold leading-tight text-gray-900">{c.h1}</h1>
+          <p class="text-gray-700">{c.intro}</p>
+        </header>
+
+        {
+          ABOUT_SECTIONS.map((key) => (
+            <section class="space-y-2">
+              <h2 class="text-xl font-semibold text-gray-900">{c.sections[key].title}</h2>
+              <p>{c.sections[key].text}</p>
+              {key === "reliability" && (
+                <div class="overflow-x-auto">
+                  <table class="w-full text-sm">
+                    <thead>
+                      <tr>
+                        <th scope="col" class={th}>
+                          {c.aircraftColumn}
+                        </th>
+                        <th scope="col" class={th}>
+                          {c.reliabilityColumn}
+                        </th>
+                        <th scope="col" class={th}>
+                          {c.verifiedColumn}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {catalog.map((row) => (
+                        <tr>
+                          <th scope="row" class={`${td} text-left font-normal`}>
+                            <a href={row.path} class="text-blue-700 hover:underline">
+                              {row.name}
+                            </a>
+                          </th>
+                          <td class={td}>{row.reliability}</td>
+                          <td class={`${td} tabular-nums`}>{row.verified}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+              {key === "contact" && (
+                <ul class="list-disc pl-6">
+                  <li>
+                    <a href={REPO_URL} rel="noopener noreferrer" class="text-blue-700 hover:underline">
+                      {c.repoLink}
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href={AIRCRAFT_REQUEST_URL}
+                      rel="noopener noreferrer"
+                      class="text-blue-700 hover:underline"
+                    >
+                      {c.issuesLink}
+                    </a>
+                  </li>
+                </ul>
+              )}
+            </section>
+          ))
+        }
+      </article>
+    </main>
+
+    <GuidesFooter lang={lang} />
+  </div>
+</Base>

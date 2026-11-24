@@ -18,9 +18,11 @@ const guides = defineCollection({
   schema: z.object({
     title: z.string().min(10).max(70),
     description: z.string().min(50).max(170),
-    lang: z.enum(["es", "en", "pt", "it"]),
+    lang: z.enum(["es", "en", "pt", "it", "fr", "de"]),
     translationKey: z.string(),
     slug: z.string().regex(/^[a-z0-9-]+$/),
+    /** First publication of this translation (defaults to `updated`). */
+    published: z.coerce.date().optional(),
     updated: z.coerce.date(),
     faq: z.array(z.object({ q: z.string(), a: z.string() })).optional(),
     /** Steps for schema.org HowTo (procedural guides only). */

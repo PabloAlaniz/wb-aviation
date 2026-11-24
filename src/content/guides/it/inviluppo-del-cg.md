@@ -4,7 +4,8 @@ description: "Cos'è l'inviluppo del centro di gravità, perché contano i limit
 lang: it
 translationKey: cg-envelope
 slug: inviluppo-del-cg
-updated: 2026-10-30
+published: 2026-11-02
+updated: 2026-11-02
 faq:
   - q: "Cosa succede se volo con il CG oltre il limite posteriore?"
     a: "L'aereo perde stabilità longitudinale, le forze sui comandi diventano leggere e la rimessa da uno stallo o da una vite può diventare difficile o impossibile. Non volare mai fuori dai limiti."

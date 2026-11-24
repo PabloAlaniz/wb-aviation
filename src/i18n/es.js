@@ -516,10 +516,10 @@ export const es = {
     home: {
       title: "Calculadora de peso y balance de aeronaves gratis: CG y envolvente | CheckCG",
       description:
-        "Calculá el peso y balance (Weight & Balance) de tu avión en segundos: centro de gravedad, envolvente de CG al despegue y aterrizaje, y hoja de carga para imprimir. Gratis, offline y sin registro.",
+        "Calculá el peso y balance (carga y centrado) de tu avión en segundos: centro de gravedad, envolvente de CG al despegue y aterrizaje, y hoja de carga para imprimir. Gratis, offline y sin registro.",
       h1: "Calculadora de peso y balance de aeronaves",
       intro1:
-        "El peso y balance (Weight & Balance) verifica antes de cada vuelo que la aeronave no supere su peso máximo y que su centro de gravedad (CG) quede dentro de la envolvente aprobada. Un CG fuera de límites afecta la estabilidad y el control, aunque el peso total sea correcto.",
+        "El peso y balance (Weight & Balance; en España, carga y centrado o masa y centrado) verifica antes de cada vuelo que la aeronave no supere su peso máximo y que su centro de gravedad (CG) quede dentro de la envolvente aprobada. Un CG fuera de límites afecta la estabilidad y el control, aunque el peso total sea correcto.",
       intro2:
         "CheckCG suma el peso vacío y cada estación de carga (tripulación, pasajeros, equipaje y combustible), calcula el momento y el CG resultantes y los compara con la envolvente del fabricante, también para el aterrizaje y el peso sin combustible. Funciona en el navegador, sin registro y sin conexión.",
       aircraftListTitle: "Aeronaves disponibles",
