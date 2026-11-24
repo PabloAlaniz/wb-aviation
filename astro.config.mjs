@@ -2,7 +2,7 @@
 import { defineConfig } from "astro/config"
 import react from "@astrojs/react"
 import sitemap from "@astrojs/sitemap"
-import AstroPWA from "@vite-pwa/astro"
+import { AstroPWAIntegration } from "@vite-pwa/astro"
 import tailwindcss from "@tailwindcss/vite"
 import { SITE_URL, ROUTE_LOCALES, DEFAULT_ROUTE_LOCALE } from "./src/utils/routes.js"
 import { guideTranslationGroups } from "./src/content/guides/registry.js"
@@ -49,8 +49,13 @@ export default defineConfig({
         }
       },
     }),
-    AstroPWA({
+    AstroPWAIntegration({
       registerType: "autoUpdate",
+      // Registered from Base.astro through virtual:pwa-register.
+      injectRegister: false,
+      // pwa-512.png is listed twice in the manifest (any + maskable): precache
+      // the icons through globPatterns instead, once each.
+      includeManifestIcons: false,
       manifest: {
         name: "CheckCG - Peso y balance de aeronaves",
         short_name: "CheckCG",
@@ -69,7 +74,8 @@ export default defineConfig({
       },
       workbox: {
         // Precache every page so all localized calculators work offline.
-        globPatterns: ["**/*.{js,css,html,svg,ico,webmanifest}", "pwa-*.png"],
+        // The web manifest is added to the precache by the plugin.
+        globPatterns: ["**/*.{js,css,html,svg,ico}", "pwa-*.png"],
         // Offline navigations to an unknown URL fall back to the root
         // calculator (it redirects to the preferred language).
         navigateFallback: "/index.html",
