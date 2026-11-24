@@ -1,0 +1,39 @@
+# Dependabot: security fixes as they are published, plus one grouped pull
+# request a week for routine updates so they don't pile up one by one.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      # Astro, its integrations and the PWA plugin move together.
+      astro:
+        patterns:
+          - "astro"
+          - "@astrojs/*"
+          - "@vite-pwa/*"
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+        exclude-patterns:
+          - "astro"
+          - "@astrojs/*"
+          - "@vite-pwa/*"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    commit-message:
+      prefix: "chore(ci)"
+    groups:
+      actions:
+        patterns:
+          - "*"
