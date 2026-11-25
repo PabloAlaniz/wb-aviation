@@ -51,8 +51,14 @@ export function useSharedCalculation(actions) {
   const handled = useRef(false)
   // latest callbacks without re-running the one-shot effect
   const actionsRef = useRef(actions)
-  actionsRef.current = actions
+  // Declared before the one-shot effect, so it runs first on mount.
+  useEffect(() => {
+    actionsRef.current = actions
+  })
 
+  // The share param can only be read after hydration (the page is prerendered),
+  // so the resulting status is set from this one-shot mount effect.
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (handled.current || typeof window === "undefined") return
     handled.current = true
@@ -112,6 +118,7 @@ export function useSharedCalculation(actions) {
     setStatus("loaded")
     clearParam()
   }, [])
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   return { status, dismiss: () => setStatus(null) }
 }
