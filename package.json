@@ -19,8 +19,8 @@
     "marketing": "node marketing/build.mjs"
   },
   "dependencies": {
-    "@astrojs/react": "^7.0.1",
-    "@astrojs/sitemap": "^3.7.4",
+    "@astrojs/react": "^7.1.9",
+    "@astrojs/sitemap": "^3.7.6",
     "@tailwindcss/vite": "^4.1.12",
     "astro": "^7.4.13",
     "lucide-react": "^0.540.0",
@@ -31,7 +31,7 @@
     "tailwindcss": "^4.1.12"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.10",
+    "@astrojs/check": "^0.9.12",
     "@eslint/js": "^9.33.0",
     "@fontsource/inter": "^5.3.0",
     "@resvg/resvg-js": "^2.6.2",
