@@ -142,27 +142,6 @@ export function CGEnvelopeChart({
     .map((limit) => ({ label: limit.label, y: y(limit.value) }))
     .filter((limit) => limit.y > yScale.domain[0] && limit.y < yScale.domain[1])
 
-  // Tooltip personalizado
-  /** @param {{ active?: boolean, payload?: Array<{ payload: { x: number, y: number, label?: string } }> }} props */
-  const CustomTooltip = ({ active, payload }) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload
-      return (
-        <div className="bg-white border-2 border-black p-2 shadow-lg">
-          <p className="font-bold text-xs">{data.label ?? m.chart.tooltipTitle}</p>
-          <p className="text-xs">{m.chart.tooltipCg(data.x?.toFixed(1), armSuffix(units))}</p>
-          <p className="text-xs">
-            {m.chart.tooltipWeight(
-              data.y?.toLocaleString(undefined, { maximumFractionDigits: 1 }),
-              unitSymbols(units).weight
-            )}
-          </p>
-        </div>
-      )
-    }
-    return null
-  }
-
   return (
     <div className="w-full bg-white border-2 border-black">
       {/* Título superior como el documento original */}
@@ -232,7 +211,7 @@ export function CGEnvelopeChart({
             />
 
             {/* Tooltip para mostrar datos al pasar el mouse */}
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={<CustomTooltip units={units} />} />
 
             {/* Leyenda arriba: no compite con los ticks ni el título del eje X */}
             <Legend
@@ -345,6 +324,33 @@ export function CGEnvelopeChart({
       </div>
     </div>
   )
+}
+
+/**
+ * Tooltip personalizado. Recharts adds `active` and `payload` to the element.
+ * @param {{
+ *   active?: boolean,
+ *   payload?: Array<{ payload: { x: number, y: number, label?: string } }>,
+ *   units: import("../types").UnitSystem,
+ * }} props
+ */
+function CustomTooltip({ active, payload, units }) {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload
+    return (
+      <div className="bg-white border-2 border-black p-2 shadow-lg">
+        <p className="font-bold text-xs">{data.label ?? m.chart.tooltipTitle}</p>
+        <p className="text-xs">{m.chart.tooltipCg(data.x?.toFixed(1), armSuffix(units))}</p>
+        <p className="text-xs">
+          {m.chart.tooltipWeight(
+            data.y?.toLocaleString(undefined, { maximumFractionDigits: 1 }),
+            unitSymbols(units).weight
+          )}
+        </p>
+      </div>
+    )
+  }
+  return null
 }
 
 /**

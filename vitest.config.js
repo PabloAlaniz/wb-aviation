@@ -15,7 +15,7 @@ export default defineConfig({
       ? ["--no-experimental-webstorage"]
       : [],
     coverage: {
-      include: ["src/**"],
+      include: ["src/**/*.{js,jsx}"],
       exclude: ["src/pages/**", "src/layouts/**", "src/**/*.astro", "src/components/AppIsland.jsx"],
     },
   },
